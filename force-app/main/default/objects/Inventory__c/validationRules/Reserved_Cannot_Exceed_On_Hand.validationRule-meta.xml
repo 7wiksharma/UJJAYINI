@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reserved_Cannot_Exceed_On_Hand</fullName>
+    <active>true</active>
+    <description>Prevents reserved quantity from exceeding physical inventory.</description>
+    <errorConditionFormula>Reserved__c &gt; On_Hand__c</errorConditionFormula>
+    <errorDisplayField>Reserved__c</errorDisplayField>
+    <errorMessage>Reserved quantity cannot exceed On Hand quantity.</errorMessage>
+</ValidationRule>

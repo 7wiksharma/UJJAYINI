@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Refunded_At__c</fullName>
+    <description>The date and time when the payment refund was successfully processed by the payment gateway.</description>
+    <inlineHelpText>Timestamp recorded when the refund is confirmed as successfully processed.</inlineHelpText>
+    <label>Refunded At</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

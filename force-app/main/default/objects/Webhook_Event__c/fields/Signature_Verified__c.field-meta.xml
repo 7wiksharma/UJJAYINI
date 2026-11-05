@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Signature_Verified__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the Razorpay webhook signature was successfully verified by UJJAYINI.</description>
+    <inlineHelpText>Checked only when the webhook signature is successfully verified against the raw request payload.</inlineHelpText>
+    <label>Signature Verified</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

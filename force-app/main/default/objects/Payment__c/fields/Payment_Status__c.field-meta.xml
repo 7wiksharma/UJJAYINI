@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Status__c</fullName>
+    <description>Current lifecycle status of the payment transaction</description>
+    <inlineHelpText>Tracks payment processing from creation through successful verification or failure</inlineHelpText>
+    <label>Payment Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pending</fullName>
+                <default>true</default>
+                <label>Pending</label>
+            </value>
+            <value>
+                <fullName>Authorized</fullName>
+                <default>false</default>
+                <label>Authorized</label>
+            </value>
+            <value>
+                <fullName>Captured</fullName>
+                <default>false</default>
+                <label>Captured</label>
+            </value>
+            <value>
+                <fullName>Failed</fullName>
+                <default>false</default>
+                <label>Failed</label>
+            </value>
+            <value>
+                <fullName>Refunded</fullName>
+                <default>false</default>
+                <label>Refunded</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
