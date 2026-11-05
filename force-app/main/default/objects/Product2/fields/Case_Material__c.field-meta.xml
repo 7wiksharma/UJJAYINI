@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Case_Material__c</fullName>
+    <description>Material used to manufacture the watch case.</description>
+    <inlineHelpText>Select the material used for the watch case.</inlineHelpText>
+    <label>Case Material</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Stainless Steel</fullName>
+                <default>false</default>
+                <label>Stainless Steel</label>
+            </value>
+            <value>
+                <fullName>Titanium</fullName>
+                <default>false</default>
+                <label>Titanium</label>
+            </value>
+            <value>
+                <fullName>Gold</fullName>
+                <default>false</default>
+                <label>Gold</label>
+            </value>
+            <value>
+                <fullName>Rose Gold</fullName>
+                <default>false</default>
+                <label>Rose Gold</label>
+            </value>
+            <value>
+                <fullName>White Gold</fullName>
+                <default>false</default>
+                <label>White Gold</label>
+            </value>
+            <value>
+                <fullName>Platinum</fullName>
+                <default>false</default>
+                <label>Platinum</label>
+            </value>
+            <value>
+                <fullName>Ceramic</fullName>
+                <default>false</default>
+                <label>Ceramic</label>
+            </value>
+            <value>
+                <fullName>Carbon Fibre</fullName>
+                <default>false</default>
+                <label>Carbon Fibre</label>
+            </value>
+            <value>
+                <fullName>Bronze</fullName>
+                <default>false</default>
+                <label>Bronze</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
