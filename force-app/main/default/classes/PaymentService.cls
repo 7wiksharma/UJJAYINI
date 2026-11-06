@@ -4,6 +4,7 @@ public with sharing class PaymentService {
         public Id orderId;
         public Decimal amount;
         public String paymentMethod;
+        public String receipt;
     }
 
     public class PaymentResult {
@@ -11,6 +12,7 @@ public with sharing class PaymentService {
         public Id orderId;
         public Decimal amount;
         public String paymentStatus;
+        public String gatewayOrderId;
     }
 
     public static PaymentResult createPayment(PaymentRequest request) {
@@ -48,30 +50,71 @@ public with sharing class PaymentService {
             LIMIT 1
         ];
 
+        /*
+         * Create the Razorpay order first.
+         */
+        RazorpayGatewayService.CreateOrderRequest razorpayRequest =
+            new RazorpayGatewayService.CreateOrderRequest();
+
+        razorpayRequest.amount = request.amount;
+        razorpayRequest.currencyCode = 'INR';
+
+        if (!String.isBlank(request.receipt)) {
+            razorpayRequest.receipt = request.receipt;
+        } else {
+            razorpayRequest.receipt =
+                'UJ-' + String.valueOf(orderRecord.Id);
+        }
+
+        RazorpayGatewayService.CreateOrderResult razorpayResult =
+            RazorpayGatewayService.createOrder(
+                razorpayRequest
+            );
+
+        /*
+         * Store the Razorpay order information
+         * in the Salesforce Payment record.
+         */
         Payment__c payment = new Payment__c(
             Order__c = orderRecord.Id,
             Amount__c = request.amount,
-            Payment_Status__c = 'Pending'
+            Payment_Status__c = 'Pending',
+            Gateway_Order_ID__c =
+                razorpayResult.razorpayOrderId
         );
 
         if (request.paymentMethod != null) {
-            payment.Payment_Method__c = request.paymentMethod;
+            payment.Payment_Method__c =
+                request.paymentMethod;
         }
 
         insert payment;
 
-        PaymentResult result = new PaymentResult();
+        PaymentResult result =
+            new PaymentResult();
 
-        result.paymentId = payment.Id;
-        result.orderId = payment.Order__c;
-        result.amount = payment.Amount__c;
-        result.paymentStatus = payment.Payment_Status__c;
+        result.paymentId =
+            payment.Id;
+
+        result.orderId =
+            payment.Order__c;
+
+        result.amount =
+            payment.Amount__c;
+
+        result.paymentStatus =
+            payment.Payment_Status__c;
+
+        result.gatewayOrderId =
+            payment.Gateway_Order_ID__c;
 
         return result;
     }
 
 
-    private static Boolean isValidPaymentMethod(String paymentMethod) {
+    private static Boolean isValidPaymentMethod(
+        String paymentMethod
+    ) {
 
         Set<String> validMethods = new Set<String>{
             'UPI',

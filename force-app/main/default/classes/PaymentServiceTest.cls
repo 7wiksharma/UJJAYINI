@@ -1,6 +1,61 @@
 @IsTest
 private class PaymentServiceTest {
 
+    private class RazorpayOrderMock implements HttpCalloutMock {
+
+        public HttpResponse respond(HttpRequest request) {
+
+            System.assertEquals(
+                'POST',
+                request.getMethod()
+            );
+
+            System.assertEquals(
+                'callout:Razorpay_API/v1/orders',
+                request.getEndpoint()
+            );
+
+            Map<String, Object> requestBody =
+                (Map<String, Object>) JSON.deserializeUntyped(
+                    request.getBody()
+                );
+
+            System.assertEquals(
+                5000000,
+                requestBody.get('amount')
+            );
+
+            System.assertEquals(
+                'INR',
+                requestBody.get('currency')
+            );
+
+            HttpResponse response =
+                new HttpResponse();
+
+            response.setStatusCode(200);
+
+            response.setHeader(
+                'Content-Type',
+                'application/json'
+            );
+
+            response.setBody(
+                '{"id":"order_test_payment_123",' +
+                '"entity":"order",' +
+                '"amount":5000000,' +
+                '"amount_paid":0,' +
+                '"amount_due":5000000,' +
+                '"currency":"INR",' +
+                '"receipt":"UJ-TEST-PAYMENT",' +
+                '"status":"created"}'
+            );
+
+            return response;
+        }
+    }
+
+
     @IsTest
     static void createPaymentSuccessfully() {
 
@@ -22,6 +77,12 @@ private class PaymentServiceTest {
         request.orderId = orderRecord.Id;
         request.amount = 50000;
         request.paymentMethod = 'Credit Card';
+        request.receipt = 'UJ-TEST-PAYMENT';
+
+        Test.setMock(
+            HttpCalloutMock.class,
+            new RazorpayOrderMock()
+        );
 
         Test.startTest();
 
@@ -34,7 +95,8 @@ private class PaymentServiceTest {
             SELECT Order__c,
                    Amount__c,
                    Payment_Status__c,
-                   Payment_Method__c
+                   Payment_Method__c,
+                   Gateway_Order_ID__c
             FROM Payment__c
             WHERE Id = :result.paymentId
         ];
@@ -61,6 +123,11 @@ private class PaymentServiceTest {
         );
 
         System.assertEquals(
+            'order_test_payment_123',
+            result.gatewayOrderId
+        );
+
+        System.assertEquals(
             orderRecord.Id,
             payment.Order__c
         );
@@ -78,6 +145,11 @@ private class PaymentServiceTest {
         System.assertEquals(
             'Credit Card',
             payment.Payment_Method__c
+        );
+
+        System.assertEquals(
+            'order_test_payment_123',
+            payment.Gateway_Order_ID__c
         );
     }
 
@@ -107,6 +179,7 @@ private class PaymentServiceTest {
         Test.startTest();
 
         try {
+
             PaymentService.createPayment(request);
 
             System.assert(
@@ -151,6 +224,7 @@ private class PaymentServiceTest {
         Test.startTest();
 
         try {
+
             PaymentService.createPayment(request);
 
             System.assert(
