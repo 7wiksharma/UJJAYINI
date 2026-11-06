@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty_Duration_Must_Be_Positive</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Warranty_Duration__c)),
+    Warranty_Duration__c &lt;= 0
+)</errorConditionFormula>
+    <errorDisplayField>Warranty_Duration__c</errorDisplayField>
+    <errorMessage>Warranty Duration must be greater than 0 months.</errorMessage>
+</ValidationRule>

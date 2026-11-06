@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty_Duration_Must_Match_Dates</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Warranty_Start_Date__c)),
+    NOT(ISBLANK(Warranty_End_Date__c)),
+    NOT(ISBLANK(Warranty_Duration__c)),
+    Warranty_End_Date__c != ADDMONTHS(
+        Warranty_Start_Date__c,
+        Warranty_Duration__c
+    )
+)</errorConditionFormula>
+    <errorDisplayField>Warranty_End_Date__c</errorDisplayField>
+    <errorMessage>Warranty End Date must match the Warranty Duration from the Start Date.</errorMessage>
+</ValidationRule>
