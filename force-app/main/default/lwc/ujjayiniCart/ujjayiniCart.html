@@ -1,0 +1,159 @@
+<template>
+    <div class="cart-container">
+
+        <div class="cart-header">
+            <h1>Your Cart</h1>
+
+            <template if:true={hasItems}>
+                <span class="item-count">
+                    {cart.itemCount} item(s)
+                </span>
+            </template>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="loading">
+                Updating cart...
+            </div>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="error-message">
+                {errorMessage}
+            </div>
+        </template>
+
+        <template if:true={hasItems}>
+
+            <div class="cart-items">
+
+                <template
+                    for:each={cartItems}
+                    for:item="item"
+                >
+
+                    <div
+                        key={item.orderItemId}
+                        class="cart-item"
+                    >
+
+                        <!-- PRODUCT INFORMATION -->
+                        <div class="product-info">
+
+                            <h2>{item.productName}</h2>
+
+                            <template if:true={item.productCode}>
+                                <p class="product-code">
+                                    {item.productCode}
+                                </p>
+                            </template>
+
+                            <p class="unit-price">
+                                ₹{item.unitPrice}
+                            </p>
+
+                        </div>
+
+
+                        <!-- QUANTITY CONTROLS -->
+                        <div class="quantity-section">
+
+                            <button
+                                class="quantity-button"
+                                data-product-id={item.productId}
+                                onclick={handleDecrease}
+                                disabled={item.isMinimumQuantity}
+                                title="Decrease quantity"
+                            >
+                                −
+                            </button>
+
+                            <span class="quantity">
+                                {item.quantity}
+                            </span>
+
+                            <button
+                                class="quantity-button"
+                                data-product-id={item.productId}
+                                onclick={handleIncrease}
+                                title="Increase quantity"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        <!-- ITEM TOTAL -->
+                        <div class="item-total">
+                            ₹{item.totalPrice}
+                        </div>
+
+
+                        <!-- REMOVE -->
+                        <div class="remove-section">
+
+                            <button
+                                class="remove-button"
+                                data-product-id={item.productId}
+                                onclick={handleRemove}
+                                title="Remove item"
+                            >
+                                Remove
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </template>
+
+            </div>
+
+
+            <!-- CART SUMMARY -->
+            <div class="cart-summary">
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹{cart.totalAmount}</span>
+                </div>
+
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span>₹{cart.totalAmount}</span>
+                </div>
+
+                <button
+                    class="checkout-button"
+                    onclick={handleCheckout}
+                >
+                    Proceed to Checkout
+                </button>
+
+            </div>
+
+        </template>
+
+
+        <!-- EMPTY CART -->
+        <template if:true={isEmpty}>
+
+            <div class="empty-cart">
+
+                <h2>Your cart is empty</h2>
+
+                <p>
+                    Discover our collection of luxury timepieces.
+                </p>
+
+                <button class="browse-button">
+                    Browse Collection
+                </button>
+
+            </div>
+
+        </template>
+
+    </div>
+</template>

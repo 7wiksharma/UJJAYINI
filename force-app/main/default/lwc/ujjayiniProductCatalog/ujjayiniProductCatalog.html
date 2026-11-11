@@ -1,0 +1,105 @@
+<template>
+    <lightning-card title="UJJAYINI Collection" icon-name="utility:favorite">
+
+        <div class="catalog-container">
+
+            <!-- Loading -->
+            <template if:true={isLoading}>
+                <div class="loading-container">
+                    <lightning-spinner
+                        alternative-text="Loading watches..."
+                        size="medium">
+                    </lightning-spinner>
+                </div>
+            </template>
+
+
+            <!-- Error -->
+            <template if:true={hasError}>
+                <div class="error-container">
+                    <p>
+                        Unable to load the watch collection.
+                    </p>
+                </div>
+            </template>
+
+
+            <!-- Products -->
+            <template if:true={hasProducts}>
+
+                <div class="product-grid">
+
+                    <template
+                        for:each={products}
+                        for:item="product">
+
+                        <div
+                            key={product.productId}
+                            class="product-card">
+
+                            <div class="product-image">
+                                <lightning-icon
+                                    icon-name="utility:clock"
+                                    size="large"
+                                    alternative-text="Watch">
+                                </lightning-icon>
+                            </div>
+
+                            <div class="product-details">
+
+                                <h2 class="product-name">
+                                    {product.productName}
+                                </h2>
+
+                                <template if:true={product.collectionName}>
+                                    <p class="collection-name">
+                                        {product.collectionName}
+                                    </p>
+                                </template>
+
+                                <template if:true={product.productCode}>
+                                    <p class="product-code">
+                                        SKU: {product.productCode}
+                                    </p>
+                                </template>
+
+                                <template if:true={product.description}>
+                                    <p class="product-description">
+                                        {product.description}
+                                    </p>
+                                </template>
+
+                                <template if:true={product.price}>
+                                    <p class="product-price">
+                                        ₹{product.price}
+                                    </p>
+                                </template>
+
+                            </div>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- No Products -->
+            <template if:false={hasProducts}>
+                <template if:false={isLoading}>
+                    <template if:false={hasError}>
+                        <div class="empty-container">
+                            <p>
+                                No watches are currently available.
+                            </p>
+                        </div>
+                    </template>
+                </template>
+            </template>
+
+        </div>
+
+    </lightning-card>
+</template>
