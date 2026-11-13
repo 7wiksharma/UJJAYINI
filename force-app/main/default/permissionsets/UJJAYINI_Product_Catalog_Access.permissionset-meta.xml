@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>UJJAYINI Product Catalog Access</label>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <externalCredentialPrincipal>Razorpay_API-Razorpay</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <objectPermissions>
+        <object>Product2</object>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+<objectPermissions>
+    <object>UserExternalCredential</object>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>false</allowEdit>
+    <allowRead>true</allowRead>
+    <viewAllRecords>false</viewAllRecords>
+    <modifyAllRecords>false</modifyAllRecords>
+</objectPermissions>
+    <objectPermissions>
+        <object>Collection__c</object>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+
+    <objectPermissions>
+        <object>OrderItem</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+
+    <objectPermissions>
+        <object>PricebookEntry</object>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+
+<objectPermissions>
+    <object>Payment__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <viewAllRecords>false</viewAllRecords>
+    <modifyAllRecords>false</modifyAllRecords>
+</objectPermissions>
+<objectPermissions>
+    <object>Inventory__c</object>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <viewAllRecords>false</viewAllRecords>
+    <modifyAllRecords>false</modifyAllRecords>
+</objectPermissions>
+<objectPermissions>
+    <object>Reservation__c</object>
+    <allowCreate>true</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>true</allowEdit>
+    <allowRead>true</allowRead>
+    <viewAllRecords>false</viewAllRecords>
+    <modifyAllRecords>false</modifyAllRecords>
+</objectPermissions>
+<fieldPermissions>
+    <field>Reservation__c.Inventory__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Reservation__c.Order__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Reservation__c.Reserved_Quantity__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Reservation__c.Reservation_Status__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Reservation__c.Reservation_Expires_At__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Reservation__c.Reservation_Created_At__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Reservation__c.Reservation_Notes__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Inventory__c.Product__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Inventory__c.On_Hand__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Inventory__c.Reserved__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Inventory__c.Available__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Inventory__c.Inventory_Status__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
+    <fieldPermissions>
+        <field>Product2.Collection__c</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+
+    <fieldPermissions>
+        <field>Product2.ProductCode</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+
+    <fieldPermissions>
+        <field>Product2.Description</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+
+    <fieldPermissions>
+        <field>Product2.Family</field>
+        <editable>false</editable>
+        <readable>true</readable>
+    </fieldPermissions>
+<fieldPermissions>
+    <field>Payment__c.Order__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Payment__c.Amount__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Payment__c.Payment_Status__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Payment__c.Gateway_Order_ID__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Payment__c.Payment_Method__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+        <classAccesses>
+        <apexClass>UJJAYINICartController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+    <apexClass>UJJAYINICheckoutController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIPaymentLinkController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINICollectorVaultController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIWishlistController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIProductCatalogController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+
+<classAccesses>
+    <apexClass>UJJAYINIWatchRequestController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIWarrantyController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIServiceRequestController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIOrderHistoryController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIOrderDetailController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
+</PermissionSet>

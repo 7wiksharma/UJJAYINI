@@ -1,4 +1,4 @@
-public with sharing class AssetFulfillmentService {
+public without sharing class AssetFulfillmentService {
 
     public class FulfillmentResult {
         public Id orderId;
@@ -15,31 +15,24 @@ public with sharing class AssetFulfillmentService {
             );
         }
 
-        Order orderRecord = [
-            SELECT Id,
-                   AccountId,
-                   Status,
-                   EffectiveDate
-            FROM Order
-            WHERE Id = :orderId
-            LIMIT 1
-        ];
-
-        if (orderRecord.Status != 'Activated') {
-            throw new IllegalArgumentException(
-                'Assets can only be created for an Activated Order.'
-            );
-        }
-
+        /*
+         * Retrieve Order information through OrderItem.
+         * This avoids relying on a standalone Order query
+         * in the external webhook execution context.
+         */
         List<OrderItem> orderItems = [
             SELECT Id,
                    OrderId,
                    Product2Id,
                    Quantity,
                    UnitPrice,
-                   TotalPrice
+                   TotalPrice,
+                   Order.AccountId,
+                   Order.Status,
+                   Order.EffectiveDate
             FROM OrderItem
-            WHERE OrderId = :orderRecord.Id
+            WHERE OrderId = :orderId
+            WITH SYSTEM_MODE
         ];
 
         if (orderItems.isEmpty()) {
@@ -48,13 +41,26 @@ public with sharing class AssetFulfillmentService {
             );
         }
 
-        String fulfillmentMarker =
-            'UJJAYINI-' + String.valueOf(orderRecord.Id);
+        OrderItem firstItem = orderItems[0];
 
+        if (firstItem.Order.Status != 'Activated') {
+            throw new IllegalArgumentException(
+                'Assets can only be created for an Activated Order.'
+            );
+        }
+
+        String fulfillmentMarker =
+            'UJJAYINI-' + String.valueOf(orderId);
+
+        /*
+         * Check whether Assets already exist.
+         * This makes fulfillment idempotent.
+         */
         List<Asset> existingAssets = [
             SELECT Id
             FROM Asset
             WHERE SerialNumber = :fulfillmentMarker
+            WITH SYSTEM_MODE
         ];
 
         if (!existingAssets.isEmpty()) {
@@ -62,19 +68,22 @@ public with sharing class AssetFulfillmentService {
             FulfillmentResult existingResult =
                 new FulfillmentResult();
 
-            existingResult.orderId = orderRecord.Id;
+            existingResult.orderId = orderId;
             existingResult.status = 'ALREADY_FULFILLED';
             existingResult.message =
                 'Assets already exist for this Order.';
 
             for (Asset existingAsset : existingAssets) {
-                existingResult.assetIds.add(existingAsset.Id);
+                existingResult.assetIds.add(
+                    existingAsset.Id
+                );
             }
 
             return existingResult;
         }
 
-        List<Asset> assetsToCreate = new List<Asset>();
+        List<Asset> assetsToCreate =
+            new List<Asset>();
 
         for (OrderItem item : orderItems) {
 
@@ -84,42 +93,66 @@ public with sharing class AssetFulfillmentService {
                 );
             }
 
-            if (item.Quantity == null ||
-                item.Quantity <= 0) {
-
+            if (
+                item.Quantity == null ||
+                item.Quantity <= 0
+            ) {
                 throw new IllegalArgumentException(
                     'Order Item quantity must be greater than zero.'
                 );
             }
 
             Asset asset = new Asset();
-            asset.Name = 'UJJAYINI Asset - ' + String.valueOf(item.Id);
-            asset.AccountId = orderRecord.AccountId;
-            asset.Product2Id = item.Product2Id;
-            asset.Quantity = item.Quantity;
-            asset.Price = item.TotalPrice;
-            asset.PurchaseDate = orderRecord.EffectiveDate;
-            asset.Status = 'Purchased';
-            asset.SerialNumber = fulfillmentMarker;
+
+            asset.Name =
+                'UJJAYINI Asset - ' +
+                String.valueOf(item.Id);
+
+            asset.AccountId =
+                item.Order.AccountId;
+
+            asset.Product2Id =
+                item.Product2Id;
+
+            asset.Quantity =
+                item.Quantity;
+
+            asset.Price =
+                item.TotalPrice;
+
+            asset.PurchaseDate =
+                item.Order.EffectiveDate;
+
+            asset.Status =
+                'Purchased';
+
+            asset.SerialNumber =
+                fulfillmentMarker;
+
             asset.Description =
                 'UJJAYINI Order ' +
-                String.valueOf(orderRecord.Id);
+                String.valueOf(orderId);
 
             assetsToCreate.add(asset);
         }
 
-        insert assetsToCreate;
+        Database.insert(
+            assetsToCreate,
+            AccessLevel.SYSTEM_MODE
+        );
 
         FulfillmentResult result =
             new FulfillmentResult();
 
-        result.orderId = orderRecord.Id;
+        result.orderId = orderId;
         result.status = 'FULFILLED';
         result.message =
             'Assets created successfully for the Order.';
 
         for (Asset asset : assetsToCreate) {
-            result.assetIds.add(asset.Id);
+            result.assetIds.add(
+                asset.Id
+            );
         }
 
         return result;

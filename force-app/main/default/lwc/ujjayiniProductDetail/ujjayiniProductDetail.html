@@ -1,0 +1,86 @@
+<template>
+
+    <section class="product-detail">
+
+        <template if:true={isLoading}>
+            <div class="state">
+                <p>Loading watch...</p>
+            </div>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="state error">
+                <p>{errorMessage}</p>
+            </div>
+        </template>
+
+        <template if:true={hasProduct}>
+
+            <div class="product-layout">
+
+                <div class="product-visual">
+                    <div class="watch-placeholder">
+                        <span>U</span>
+                    </div>
+                </div>
+
+                <div class="product-info">
+
+                    <p class="eyebrow">
+                        UJJAYINI
+                    </p>
+
+                    <h1>
+                        {product.productName}
+                    </h1>
+
+                    <template if:true={product.collectionName}>
+                        <p class="collection">
+                            {product.collectionName}
+                        </p>
+                    </template>
+
+                    <p class="price">
+                        {formattedPrice}
+                    </p>
+
+                    <template if:true={product.description}>
+                        <p class="description">
+                            {product.description}
+                        </p>
+                    </template>
+
+                    <div class="product-meta">
+
+                        <template if:true={product.productCode}>
+                            <div>
+                                <span>Product Code</span>
+                                <strong>{product.productCode}</strong>
+                            </div>
+                        </template>
+
+                        <template if:true={product.family}>
+                            <div>
+                                <span>Collection Type</span>
+                                <strong>{product.family}</strong>
+                            </div>
+                        </template>
+
+                    </div>
+
+                    <!-- Watch Request -->
+                    <template if:true={product.productId}>
+                        <c-ujjayini-watch-request
+                            watch-id={product.productId}>
+                        </c-ujjayini-watch-request>
+                    </template>
+
+                </div>
+
+            </div>
+
+        </template>
+
+    </section>
+
+</template>

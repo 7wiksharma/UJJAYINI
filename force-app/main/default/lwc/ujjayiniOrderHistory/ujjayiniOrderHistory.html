@@ -1,0 +1,130 @@
+<template>
+
+    <section class="orders-container">
+
+        <div class="orders-header">
+
+            <p class="eyebrow">
+                UJJAYINI
+            </p>
+
+            <h2>
+                My Orders
+            </h2>
+
+            <p class="subtitle">
+                View your UJJAYINI purchase history.
+            </p>
+
+        </div>
+
+        <template if:true={isLoading}>
+
+            <div class="state">
+                <p>Loading your orders...</p>
+            </div>
+
+        </template>
+
+        <template if:true={errorMessage}>
+
+            <div class="state error">
+                <p>{errorMessage}</p>
+            </div>
+
+        </template>
+
+        <template if:true={hasOrders}>
+
+            <div class="orders-list">
+
+                <template
+                    for:each={orders}
+                    for:item="order">
+
+                    <article
+                        key={order.orderId}
+                        class="order-card">
+
+                        <div class="order-top">
+
+                            <div>
+
+                                <p class="order-label">
+                                    UJJAYINI ORDER
+                                </p>
+
+                               <button
+                                class="order-number"
+                                data-order-id={order.orderId}
+                                   onclick={openOrder}>
+                                   {order.orderNumber}
+                                  </button>
+
+                            </div>
+
+                            <span class="status">
+                                {order.status}
+                            </span>
+
+                        </div>
+
+                        <div class="order-details">
+
+                            <div>
+                                <span>Order Date</span>
+
+                                <strong>
+                                    {order.effectiveDate}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Items</span>
+
+                                <strong>
+                                    {order.itemCount}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Total</span>
+
+                                <strong>
+                                    ₹{order.totalAmount}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </template>
+
+            </div>
+
+        </template>
+
+        <template if:true={isEmpty}>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    U
+                </div>
+
+                <h3>
+                    No Orders Yet
+                </h3>
+
+                <p>
+                    Your completed purchases will appear here.
+                </p>
+
+            </div>
+
+        </template>
+
+    </section>
+
+</template>

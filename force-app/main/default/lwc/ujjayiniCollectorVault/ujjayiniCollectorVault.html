@@ -1,0 +1,203 @@
+<template>
+
+    <section class="vault">
+
+        <div class="vault-header">
+
+            <div>
+                <p class="eyebrow">UJJAYINI</p>
+
+                <h1>Collector's Vault</h1>
+
+                <p class="subtitle">
+                    Your private collection of purchased timepieces.
+                </p>
+            </div>
+
+        </div>
+
+        <template if:true={isLoading}>
+
+            <div class="state">
+                <p>Loading your collection...</p>
+            </div>
+
+        </template>
+
+        <template if:true={errorMessage}>
+
+            <div class="state error">
+                <p>{errorMessage}</p>
+            </div>
+
+        </template>
+
+        <template if:true={hasAssets}>
+
+            <div class="collection-grid">
+
+                <template for:each={assets} for:item="asset">
+
+                    <article
+                        key={asset.assetId}
+                        class="watch-card">
+
+                        <div class="watch-image">
+                            <span>U</span>
+                        </div>
+
+                        <div class="watch-content">
+
+                            <p class="watch-label">
+                                COLLECTOR ASSET
+                            </p>
+
+                            <h2>{asset.productName}</h2>
+
+                            <div class="watch-details">
+
+                                <div>
+                                    <span>Quantity</span>
+                                    <strong>{asset.quantity}</strong>
+                                </div>
+
+                                <div>
+                                    <span>Price</span>
+                                    <strong>
+                                        ₹{asset.price}
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>Status</span>
+                                    <strong>{asset.status}</strong>
+                                </div>
+
+                                <div>
+                                    <span>Purchase Date</span>
+                                    <strong>{asset.purchaseDate}</strong>
+                                </div>
+
+                            </div>
+
+                            <div class="serial">
+
+                                <span>Asset Reference</span>
+
+                                <strong>
+                                    {asset.serialNumber}
+                                </strong>
+
+                            </div>
+
+                            <!-- WARRANTY -->
+
+                            <template if:true={asset.warranty}>
+
+                                <div class="warranty-section">
+
+                                    <div class="warranty-header">
+
+                                        <p class="watch-label">
+                                            WARRANTY
+                                        </p>
+
+                                        <span class="warranty-status">
+                                            {asset.warranty.status}
+                                        </span>
+
+                                    </div>
+
+                                    <div class="warranty-details">
+
+                                        <div>
+                                            <span>Coverage</span>
+                                            <strong>
+                                                {asset.warranty.coverageType}
+                                            </strong>
+                                        </div>
+
+                                        <div>
+                                            <span>Duration</span>
+                                            <strong>
+                                                {asset.warranty.durationMonths}
+                                                months
+                                            </strong>
+                                        </div>
+
+                                        <div>
+                                            <span>Start Date</span>
+                                            <strong>
+                                                {asset.warranty.startDate}
+                                            </strong>
+                                        </div>
+
+                                        <div>
+                                            <span>End Date</span>
+                                            <strong>
+                                                {asset.warranty.endDate}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                    <template if:true={asset.warranty.notes}>
+
+                                        <div class="warranty-notes">
+
+                                            <span>Warranty Notes</span>
+
+                                            <p>
+                                                {asset.warranty.notes}
+                                            </p>
+
+                                        </div>
+
+                                    </template>
+
+                                </div>
+
+                            </template>
+
+                            <template if:false={asset.warranty}>
+
+                                <div class="no-warranty">
+
+                                    <span>
+                                        Warranty information unavailable
+                                    </span>
+
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                    </article>
+
+                </template>
+
+            </div>
+
+        </template>
+
+        <template if:true={isEmpty}>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">U</div>
+
+                <h2>Your Vault is Empty</h2>
+
+                <p>
+                    Your purchased timepieces will appear here
+                    after a successful payment.
+                </p>
+
+            </div>
+
+        </template>
+
+    </section>
+
+</template>

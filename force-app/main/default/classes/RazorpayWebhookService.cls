@@ -1,4 +1,4 @@
-public with sharing class RazorpayWebhookService {
+public without sharing class RazorpayWebhookService {
 
     public class WebhookRequest {
         public String eventId;
@@ -8,7 +8,7 @@ public with sharing class RazorpayWebhookService {
     }
 
     public class WebhookResult {
-        public Id webhookEventId;
+        public String webhookEventId;
         public String processingStatus;
         public Boolean signatureVerified;
         public Boolean duplicate;
@@ -18,6 +18,11 @@ public with sharing class RazorpayWebhookService {
     }
 
 
+    /*
+     * ============================================================
+     * MAIN WEBHOOK PROCESSOR
+     * ============================================================
+     */
     public static WebhookResult processWebhook(
         WebhookRequest request
     ) {
@@ -33,76 +38,189 @@ public with sharing class RazorpayWebhookService {
         );
 
         /*
-         * 2. Extract event type.
+         * 2. Extract actual event type from payload.
          */
         String eventType =
-            extractEventType(request.rawPayload);
+            extractEventType(
+                request.rawPayload
+            );
 
         /*
-         * 3. Idempotency check.
+         * 3. Extract payment identifiers.
          */
-        List<Webhook_Event__c> existingEvents = [
-            SELECT Id,
-                   Event_ID__c,
-                   Processing_Status__c,
-                   Signature_Verified__c
-            FROM Webhook_Event__c
-            WHERE Event_ID__c = :request.eventId
-            LIMIT 1
-        ];
+        Map<String, Object> payload =
+            (Map<String, Object>)
+                JSON.deserializeUntyped(
+                    request.rawPayload
+                );
 
-        if (!existingEvents.isEmpty()) {
+        Map<String, Object> payloadData =
+            getMap(
+                payload,
+                'payload'
+            );
 
-            Webhook_Event__c existingEvent =
-                existingEvents[0];
+        Map<String, Object> paymentLinkData =
+            getMap(
+                payloadData,
+                'payment_link'
+            );
 
-            WebhookResult duplicateResult =
-                new WebhookResult();
+        Map<String, Object> paymentLinkEntity =
+            getMap(
+                paymentLinkData,
+                'entity'
+            );
 
-            duplicateResult.webhookEventId =
-                existingEvent.Id;
+        Map<String, Object> paymentData =
+            getMap(
+                payloadData,
+                'payment'
+            );
 
-            duplicateResult.processingStatus =
-                existingEvent.Processing_Status__c;
+        Map<String, Object> paymentEntity =
+            getMap(
+                paymentData,
+                'entity'
+            );
 
-            duplicateResult.signatureVerified =
-                existingEvent.Signature_Verified__c;
+        String paymentLinkId =
+            getString(
+                paymentLinkEntity,
+                'id'
+            );
 
-            duplicateResult.duplicate = true;
+        String razorpayPaymentId =
+            getString(
+                paymentEntity,
+                'id'
+            );
 
-            return duplicateResult;
+        /*
+         * Payment Link events must contain a Payment Link ID.
+         */
+        if (String.isBlank(paymentLinkId)) {
+
+            /*
+             * For non-Payment-Link events, allow processing
+             * to continue because payment.captured,
+             * payment.authorized, etc. may use Order ID.
+             */
+            if (
+                eventType == 'payment_link.paid'
+            ) {
+                throw new IllegalArgumentException(
+                    'Razorpay Payment Link ID is missing from webhook payload.'
+                );
+            }
         }
 
 
         /*
-         * 4. Create webhook audit record.
+         * ========================================================
+         * PAYMENT-BASED IDEMPOTENCY
+         * ========================================================
+         *
+         * Payment__c is the business idempotency anchor.
+         *
+         * Webhook_Event__c remains an audit object.
          */
-        Webhook_Event__c webhookEvent =
-            new Webhook_Event__c(
-                Event_ID__c =
-                    request.eventId,
+        Payment__c paymentRecord = null;
 
-                Event_Type__c =
-                    mapEventType(eventType),
+        if (!String.isBlank(paymentLinkId)) {
 
-                Event_Received_At__c =
-                    System.now(),
+            paymentRecord =
+                findPaymentByGatewayIdentifiers(
+                    null,
+                    null,
+                    paymentLinkId
+                );
+        }
 
-                Processing_Status__c =
-                    'Received',
+        if (
+            paymentRecord == null &&
+            !String.isBlank(razorpayPaymentId)
+        ) {
 
-                Raw_Payload__c =
-                    request.rawPayload,
-
-                Signature_Verified__c =
-                    true
-            );
-
-        insert webhookEvent;
+            paymentRecord =
+                findPaymentByGatewayIdentifiers(
+                    razorpayPaymentId,
+                    null,
+                    null
+                );
+        }
 
 
         /*
-         * 5. Process the business event.
+         * If we found a payment that is already captured,
+         * treat the webhook as an idempotent duplicate.
+         */
+       if (
+    paymentRecord != null &&
+    paymentRecord.Payment_Status__c == 'Captured'
+) {
+
+    // Payment is already captured.
+    // Still ensure downstream fulfillment is completed.
+    fulfillOrder(
+        paymentRecord.Order__c
+    );
+
+    WebhookResult duplicateResult =
+        new WebhookResult();
+
+    duplicateResult.webhookEventId =
+        null;
+
+    duplicateResult.processingStatus =
+        'Processed';
+
+    duplicateResult.signatureVerified =
+        true;
+
+    duplicateResult.duplicate =
+        true;
+
+    return duplicateResult;
+}
+
+
+        /*
+         * ========================================================
+         * CREATE WEBHOOK AUDIT RECORD
+         * ========================================================
+         */
+        Webhook_Event__c webhookEvent =
+            new Webhook_Event__c();
+
+        webhookEvent.Event_ID__c =
+            request.eventId;
+
+        webhookEvent.Event_Type__c =
+            mapEventType(eventType);
+
+        webhookEvent.Event_Received_At__c =
+            System.now();
+
+        webhookEvent.Processing_Status__c =
+            'Received';
+
+        webhookEvent.Raw_Payload__c =
+            request.rawPayload;
+
+        webhookEvent.Signature_Verified__c =
+            true;
+
+        Database.insert(
+            webhookEvent,
+            AccessLevel.SYSTEM_MODE
+        );
+
+
+        /*
+         * ========================================================
+         * PROCESS BUSINESS EVENT
+         * ========================================================
          */
         try {
 
@@ -117,7 +235,10 @@ public with sharing class RazorpayWebhookService {
             webhookEvent.Processed_At__c =
                 System.now();
 
-            update webhookEvent;
+            Database.update(
+                webhookEvent,
+                AccessLevel.SYSTEM_MODE
+            );
 
         } catch (Exception e) {
 
@@ -127,20 +248,27 @@ public with sharing class RazorpayWebhookService {
             webhookEvent.Processing_Error__c =
                 e.getMessage();
 
-            update webhookEvent;
+            Database.update(
+                webhookEvent,
+                AccessLevel.SYSTEM_MODE
+            );
 
             throw e;
         }
 
 
         /*
-         * 6. Return result.
+         * ========================================================
+         * RETURN RESULT
+         * ========================================================
          */
         WebhookResult result =
             new WebhookResult();
 
         result.webhookEventId =
-            webhookEvent.Id;
+            String.valueOf(
+                webhookEvent.Id
+            );
 
         result.processingStatus =
             webhookEvent.Processing_Status__c;
@@ -148,14 +276,17 @@ public with sharing class RazorpayWebhookService {
         result.signatureVerified =
             webhookEvent.Signature_Verified__c;
 
-        result.duplicate = false;
+        result.duplicate =
+            false;
 
         return result;
     }
 
 
     /*
-     * Process supported Razorpay events.
+     * ============================================================
+     * EVENT DISPATCHER
+     * ============================================================
      */
     private static void processBusinessEvent(
         String eventType,
@@ -165,6 +296,12 @@ public with sharing class RazorpayWebhookService {
         if (eventType == 'payment.captured') {
 
             processPaymentCaptured(
+                rawPayload
+            );
+
+        } else if (eventType == 'payment_link.paid') {
+
+            processPaymentLinkPaid(
                 rawPayload
             );
 
@@ -194,25 +331,24 @@ public with sharing class RazorpayWebhookService {
 
         } else if (eventType == 'refund.failed') {
 
-            // No payment state transition yet.
-            // Event is still recorded for audit.
+            /*
+             * Audit only.
+             */
 
         } else {
 
-            // Unknown events are recorded as Other.
-            // No business action is performed.
+            /*
+             * Unknown events are audit only.
+             */
+
         }
     }
 
 
     /*
-     * payment.captured
-     *
-     * Extract Razorpay order ID and payment ID,
-     * find the Salesforce Payment__c record,
-     * mark it Captured,
-     * activate the Salesforce Order,
-     * then create Assets for the purchased Order Items.
+     * ============================================================
+     * PAYMENT CAPTURED
+     * ============================================================
      */
     private static void processPaymentCaptured(
         String rawPayload
@@ -266,103 +402,175 @@ public with sharing class RazorpayWebhookService {
                 'id'
             );
 
-        if (String.isBlank(razorpayOrderId)) {
+        if (
+            String.isBlank(razorpayPaymentId) &&
+            String.isBlank(razorpayOrderId)
+        ) {
 
             throw new IllegalArgumentException(
-                'Razorpay order ID is missing from payment.captured event.'
-            );
-        }
-
-        if (String.isBlank(razorpayPaymentId)) {
-
-            throw new IllegalArgumentException(
-                'Razorpay payment ID is missing from payment.captured event.'
+                'Razorpay Payment ID and Order ID are both missing from payment.captured event.'
             );
         }
 
 
-        /*
-         * Find Salesforce Payment.
-         */
-        List<Payment__c> payments = [
-            SELECT Id,
-                   Order__c,
-                   Amount__c,
-                   Payment_Status__c,
-                   Gateway_Order_ID__c,
-                   Gateway_Payment_ID__c,
-                   Paid_At__c
-            FROM Payment__c
-            WHERE Gateway_Order_ID__c =
-                :razorpayOrderId
-            LIMIT 1
-        ];
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(
+                razorpayPaymentId,
+                razorpayOrderId,
+                null
+            );
 
-        if (payments.isEmpty()) {
+        if (payment == null) {
 
             throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Order ID: ' +
+                'Payment record not found for Razorpay Payment ID: ' +
+                razorpayPaymentId +
+                ' or Razorpay Order ID: ' +
                 razorpayOrderId
             );
         }
 
-        Payment__c payment =
-            payments[0];
 
-
-        /*
-         * Idempotent payment state update.
-         */
         payment.Gateway_Payment_ID__c =
             razorpayPaymentId;
 
         payment.Payment_Status__c =
             'Captured';
 
-        payment.Paid_At__c =
-            System.now();
+        if (payment.Paid_At__c == null) {
 
-        update payment;
-
-
-        /*
-         * Activate the related Salesforce Order.
-         */
-        if (payment.Order__c != null) {
-
-            Order orderRecord = [
-                SELECT Id,
-                       Status
-                FROM Order
-                WHERE Id = :payment.Order__c
-                LIMIT 1
-            ];
-
-            if (orderRecord.Status == 'Draft') {
-
-                orderRecord.Status =
-                    'Activated';
-
-                update orderRecord;
-            }
-
-
-            /*
-             * Fulfill the activated Order.
-             *
-             * This creates Salesforce Assets
-             * for the purchased Order Items.
-             */
-            AssetFulfillmentService.FulfillmentResult fulfillmentResult =
-                AssetFulfillmentService.createAssetsForOrder(
-                    payment.Order__c
-                );
+            payment.Paid_At__c =
+                System.now();
         }
+
+        Database.update(
+            payment,
+            AccessLevel.SYSTEM_MODE
+        );
+
+
+        fulfillOrder(
+            payment.Order__c
+        );
     }
 
 
     /*
-     * payment.authorized
+     * ============================================================
+     * PAYMENT LINK PAID
+     * ============================================================
+     */
+    private static void processPaymentLinkPaid(
+        String rawPayload
+    ) {
+
+        Map<String, Object> payload =
+            (Map<String, Object>)
+                JSON.deserializeUntyped(
+                    rawPayload
+                );
+
+        Map<String, Object> payloadData =
+            getMap(
+                payload,
+                'payload'
+            );
+
+        Map<String, Object> paymentLinkData =
+            getMap(
+                payloadData,
+                'payment_link'
+            );
+
+        Map<String, Object> paymentLinkEntity =
+            getMap(
+                paymentLinkData,
+                'entity'
+            );
+
+        Map<String, Object> paymentData =
+            getMap(
+                payloadData,
+                'payment'
+            );
+
+        Map<String, Object> paymentEntity =
+            getMap(
+                paymentData,
+                'entity'
+            );
+
+        String paymentLinkId =
+            getString(
+                paymentLinkEntity,
+                'id'
+            );
+
+        String razorpayPaymentId =
+            getString(
+                paymentEntity,
+                'id'
+            );
+
+        if (String.isBlank(paymentLinkId)) {
+
+            throw new IllegalArgumentException(
+                'Razorpay Payment Link ID is missing from payment_link.paid event.'
+            );
+        }
+
+        if (String.isBlank(razorpayPaymentId)) {
+
+            throw new IllegalArgumentException(
+                'Razorpay Payment ID is missing from payment_link.paid event.'
+            );
+        }
+
+
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(
+                null,
+                null,
+                paymentLinkId
+            );
+
+        if (payment == null) {
+
+            throw new IllegalArgumentException(
+                'Payment record not found for Razorpay Payment Link ID: ' +
+                paymentLinkId
+            );
+        }
+
+
+        payment.Gateway_Payment_ID__c =
+            razorpayPaymentId;
+
+        payment.Payment_Status__c =
+            'Captured';
+
+        if (payment.Paid_At__c == null) {
+
+            payment.Paid_At__c =
+                System.now();
+        }
+
+        Database.update(
+            payment,
+            AccessLevel.SYSTEM_MODE
+        );
+
+
+        fulfillOrder(
+            payment.Order__c
+        );
+    }
+
+
+    /*
+     * ============================================================
+     * PAYMENT AUTHORIZED
+     * ============================================================
      */
     private static void processPaymentAuthorized(
         String rawPayload
@@ -416,47 +624,55 @@ public with sharing class RazorpayWebhookService {
                 'id'
             );
 
-        if (String.isBlank(razorpayOrderId)) {
+        if (
+            String.isBlank(razorpayPaymentId) &&
+            String.isBlank(razorpayOrderId)
+        ) {
 
             throw new IllegalArgumentException(
-                'Razorpay order ID is missing from payment.authorized event.'
+                'Razorpay Payment ID and Order ID are both missing from payment.authorized event.'
             );
         }
 
-        List<Payment__c> payments = [
-            SELECT Id,
-                   Gateway_Order_ID__c,
-                   Gateway_Payment_ID__c,
-                   Payment_Status__c
-            FROM Payment__c
-            WHERE Gateway_Order_ID__c =
-                :razorpayOrderId
-            LIMIT 1
-        ];
 
-        if (payments.isEmpty()) {
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(
+                razorpayPaymentId,
+                razorpayOrderId,
+                null
+            );
+
+        if (payment == null) {
 
             throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Order ID: ' +
+                'Payment record not found for Razorpay Payment ID: ' +
+                razorpayPaymentId +
+                ' or Razorpay Order ID: ' +
                 razorpayOrderId
             );
         }
 
-        Payment__c payment =
-            payments[0];
 
-        payment.Gateway_Payment_ID__c =
-            razorpayPaymentId;
+        if (!String.isBlank(razorpayPaymentId)) {
+
+            payment.Gateway_Payment_ID__c =
+                razorpayPaymentId;
+        }
 
         payment.Payment_Status__c =
             'Authorized';
 
-        update payment;
+        Database.update(
+            payment,
+            AccessLevel.SYSTEM_MODE
+        );
     }
 
 
     /*
-     * payment.failed
+     * ============================================================
+     * PAYMENT FAILED
+     * ============================================================
      */
     private static void processPaymentFailed(
         String rawPayload
@@ -498,6 +714,12 @@ public with sharing class RazorpayWebhookService {
                 'entity'
             );
 
+        String razorpayPaymentId =
+            getString(
+                paymentEntity,
+                'id'
+            );
+
         String razorpayOrderId =
             getString(
                 orderEntity,
@@ -510,34 +732,35 @@ public with sharing class RazorpayWebhookService {
                 'error_description'
             );
 
-        if (String.isBlank(razorpayOrderId)) {
+
+        if (
+            String.isBlank(razorpayPaymentId) &&
+            String.isBlank(razorpayOrderId)
+        ) {
 
             throw new IllegalArgumentException(
-                'Razorpay order ID is missing from payment.failed event.'
+                'Razorpay Payment ID and Order ID are both missing from payment.failed event.'
             );
         }
 
-        List<Payment__c> payments = [
-            SELECT Id,
-                   Gateway_Order_ID__c,
-                   Payment_Status__c,
-                   Failure_Reason__c
-            FROM Payment__c
-            WHERE Gateway_Order_ID__c =
-                :razorpayOrderId
-            LIMIT 1
-        ];
 
-        if (payments.isEmpty()) {
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(
+                razorpayPaymentId,
+                razorpayOrderId,
+                null
+            );
+
+        if (payment == null) {
 
             throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Order ID: ' +
+                'Payment record not found for Razorpay Payment ID: ' +
+                razorpayPaymentId +
+                ' or Razorpay Order ID: ' +
                 razorpayOrderId
             );
         }
 
-        Payment__c payment =
-            payments[0];
 
         payment.Payment_Status__c =
             'Failed';
@@ -548,12 +771,17 @@ public with sharing class RazorpayWebhookService {
                 failureReason;
         }
 
-        update payment;
+        Database.update(
+            payment,
+            AccessLevel.SYSTEM_MODE
+        );
     }
 
 
     /*
-     * payment.refunded
+     * ============================================================
+     * PAYMENT REFUNDED
+     * ============================================================
      */
     private static void processPaymentRefunded(
         String rawPayload
@@ -589,6 +817,7 @@ public with sharing class RazorpayWebhookService {
                 'id'
             );
 
+
         if (String.isBlank(razorpayPaymentId)) {
 
             throw new IllegalArgumentException(
@@ -596,16 +825,26 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
-        List<Payment__c> payments = [
-            SELECT Id,
-                   Gateway_Payment_ID__c,
-                   Payment_Status__c,
-                   Refunded_At__c
-            FROM Payment__c
-            WHERE Gateway_Payment_ID__c =
-                :razorpayPaymentId
-            LIMIT 1
-        ];
+
+        String refundQuery =
+            'SELECT Id, ' +
+            'Gateway_Payment_ID__c, ' +
+            'Payment_Status__c, ' +
+            'Refunded_At__c ' +
+            'FROM Payment__c ' +
+            'WHERE Gateway_Payment_ID__c = \'' +
+            String.escapeSingleQuotes(
+                razorpayPaymentId
+            ) +
+            '\' ' +
+            'LIMIT 1';
+
+        List<Payment__c> payments =
+            Database.query(
+                refundQuery,
+                AccessLevel.SYSTEM_MODE
+            );
+
 
         if (payments.isEmpty()) {
 
@@ -614,6 +853,7 @@ public with sharing class RazorpayWebhookService {
                 razorpayPaymentId
             );
         }
+
 
         Payment__c payment =
             payments[0];
@@ -624,18 +864,17 @@ public with sharing class RazorpayWebhookService {
         payment.Refunded_At__c =
             System.now();
 
-        update payment;
+        Database.update(
+            payment,
+            AccessLevel.SYSTEM_MODE
+        );
     }
 
 
     /*
-     * order.paid
-     *
-     * The payment.captured event is the main
-     * Payment__c state transition.
-     *
-     * For order.paid we activate the related
-     * Salesforce Order if the Payment is already captured.
+     * ============================================================
+     * ORDER PAID
+     * ============================================================
      */
     private static void processOrderPaid(
         String rawPayload
@@ -671,6 +910,7 @@ public with sharing class RazorpayWebhookService {
                 'id'
             );
 
+
         if (String.isBlank(razorpayOrderId)) {
 
             throw new IllegalArgumentException(
@@ -678,18 +918,16 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
-        List<Payment__c> payments = [
-            SELECT Id,
-                   Order__c,
-                   Payment_Status__c,
-                   Gateway_Order_ID__c
-            FROM Payment__c
-            WHERE Gateway_Order_ID__c =
-                :razorpayOrderId
-            LIMIT 1
-        ];
 
-        if (payments.isEmpty()) {
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(
+                null,
+                razorpayOrderId,
+                null
+            );
+
+
+        if (payment == null) {
 
             throw new IllegalArgumentException(
                 'Payment record not found for Razorpay Order ID: ' +
@@ -697,38 +935,213 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
-        Payment__c payment =
-            payments[0];
 
         if (
             payment.Payment_Status__c ==
             'Captured'
         ) {
 
-            if (payment.Order__c != null) {
-
-                Order orderRecord = [
-                    SELECT Id,
-                           Status
-                    FROM Order
-                    WHERE Id = :payment.Order__c
-                    LIMIT 1
-                ];
-
-                if (orderRecord.Status == 'Draft') {
-
-                    orderRecord.Status =
-                        'Activated';
-
-                    update orderRecord;
-                }
-            }
+            fulfillOrder(
+                payment.Order__c
+            );
         }
     }
 
 
     /*
-     * Safe map extraction helper.
+     * ============================================================
+     * FIND PAYMENT
+     * ============================================================
+     *
+     * Supports:
+     *
+     * 1. Razorpay Payment ID
+     * 2. Salesforce Order ID
+     * 3. Razorpay Payment Link ID
+     */
+    private static Payment__c findPaymentByGatewayIdentifiers(
+        String razorpayPaymentId,
+        Id orderId,
+        String paymentLinkId
+    ) {
+
+        /*
+         * --------------------------------------------------------
+         * 1. RAZORPAY PAYMENT ID
+         * --------------------------------------------------------
+         */
+        if (!String.isBlank(razorpayPaymentId)) {
+
+            String paymentIdQuery =
+                'SELECT Id, ' +
+                'Order__c, ' +
+                'Payment_Status__c, ' +
+                'Gateway_Order_ID__c, ' +
+                'Gateway_Payment_ID__c, ' +
+                'Paid_At__c ' +
+                'FROM Payment__c ' +
+                'WHERE Gateway_Payment_ID__c = \'' +
+                String.escapeSingleQuotes(
+                    razorpayPaymentId
+                ) +
+                '\' ' +
+                'LIMIT 1';
+
+            List<Payment__c> payments =
+                Database.query(
+                    paymentIdQuery,
+                    AccessLevel.SYSTEM_MODE
+                );
+
+            if (!payments.isEmpty()) {
+                return payments[0];
+            }
+        }
+
+
+        /*
+         * --------------------------------------------------------
+         * 2. SALESFORCE ORDER ID
+         * --------------------------------------------------------
+         */
+        if (orderId != null) {
+
+            String orderQuery =
+                'SELECT Id, ' +
+                'Order__c, ' +
+                'Payment_Status__c, ' +
+                'Gateway_Order_ID__c, ' +
+                'Gateway_Payment_ID__c, ' +
+                'Paid_At__c ' +
+                'FROM Payment__c ' +
+                'WHERE Order__c = \'' +
+                String.escapeSingleQuotes(
+                    String.valueOf(orderId)
+                ) +
+                '\' ' +
+                'ORDER BY CreatedDate DESC ' +
+                'LIMIT 1';
+
+            List<Payment__c> payments =
+                Database.query(
+                    orderQuery,
+                    AccessLevel.SYSTEM_MODE
+                );
+
+            if (!payments.isEmpty()) {
+                return payments[0];
+            }
+        }
+
+
+        /*
+         * --------------------------------------------------------
+         * 3. RAZORPAY PAYMENT LINK ID
+         * --------------------------------------------------------
+         */
+        if (!String.isBlank(paymentLinkId)) {
+
+            String paymentLinkQuery =
+                'SELECT Id, ' +
+                'Order__c, ' +
+                'Payment_Status__c, ' +
+                'Gateway_Order_ID__c, ' +
+                'Gateway_Payment_ID__c, ' +
+                'Paid_At__c ' +
+                'FROM Payment__c ' +
+                'WHERE Gateway_Order_ID__c = \'' +
+                String.escapeSingleQuotes(
+                    paymentLinkId
+                ) +
+                '\' ' +
+                'LIMIT 1';
+
+            List<Payment__c> payments =
+                Database.query(
+                    paymentLinkQuery,
+                    AccessLevel.SYSTEM_MODE
+                );
+
+            if (!payments.isEmpty()) {
+                return payments[0];
+            }
+        }
+
+        return null;
+    }
+
+
+    /*
+     * ============================================================
+     * ORDER FULFILLMENT
+     * ============================================================
+     */
+    private static void fulfillOrder(
+        Id orderId
+    ) {
+
+        if (orderId == null) {
+            return;
+        }
+
+
+        String orderQuery =
+            'SELECT Id, ' +
+            'Status ' +
+            'FROM Order ' +
+            'WHERE Id = \'' +
+            String.escapeSingleQuotes(
+                String.valueOf(orderId)
+            ) +
+            '\' ' +
+            'LIMIT 1';
+
+        List<Order> orders =
+            Database.query(
+                orderQuery,
+                AccessLevel.SYSTEM_MODE
+            );
+
+
+        if (orders.isEmpty()) {
+
+            throw new IllegalArgumentException(
+                'Salesforce Order was not found: ' +
+                orderId
+            );
+        }
+
+
+        Order orderRecord =
+            orders[0];
+
+
+        if (orderRecord.Status == 'Draft') {
+
+            orderRecord.Status =
+                'Activated';
+
+            Database.update(
+                orderRecord,
+                AccessLevel.SYSTEM_MODE
+            );
+        }
+
+
+        /*
+         * AssetFulfillmentService is idempotent.
+         */
+        AssetFulfillmentService.FulfillmentResult fulfillmentResult =
+            AssetFulfillmentService.createAssetsForOrder(
+                orderId
+            );
+    }
+
+
+    /*
+     * ============================================================
+     * SAFE MAP EXTRACTION
+     * ============================================================
      */
     private static Map<String, Object> getMap(
         Map<String, Object> parent,
@@ -751,7 +1164,9 @@ public with sharing class RazorpayWebhookService {
 
 
     /*
-     * Safe string extraction helper.
+     * ============================================================
+     * SAFE STRING EXTRACTION
+     * ============================================================
      */
     private static String getString(
         Map<String, Object> parent,
@@ -771,6 +1186,11 @@ public with sharing class RazorpayWebhookService {
     }
 
 
+    /*
+     * ============================================================
+     * REQUEST VALIDATION
+     * ============================================================
+     */
     private static void validateRequest(
         WebhookRequest request
     ) {
@@ -782,6 +1202,7 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
+
         if (String.isBlank(request.eventId)) {
 
             throw new IllegalArgumentException(
@@ -789,12 +1210,14 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
+
         if (String.isBlank(request.rawPayload)) {
 
             throw new IllegalArgumentException(
                 'Webhook raw payload is required.'
             );
         }
+
 
         if (String.isBlank(request.signature)) {
 
@@ -805,6 +1228,11 @@ public with sharing class RazorpayWebhookService {
     }
 
 
+    /*
+     * ============================================================
+     * RAZORPAY SIGNATURE VERIFICATION
+     * ============================================================
+     */
     private static void verifySignature(
         String rawPayload,
         String receivedSignature
@@ -812,6 +1240,7 @@ public with sharing class RazorpayWebhookService {
 
         UJJAYINI_Integration_Settings__c settings =
             UJJAYINI_Integration_Settings__c.getOrgDefaults();
+
 
         if (
             settings == null ||
@@ -825,13 +1254,17 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
+
         Blob payloadBlob =
-            Blob.valueOf(rawPayload);
+            Blob.valueOf(
+                rawPayload
+            );
 
         Blob secretBlob =
             Blob.valueOf(
                 settings.Razorpay_Webhook_Secret__c
             );
+
 
         Blob generatedSignature =
             Crypto.generateMac(
@@ -840,10 +1273,12 @@ public with sharing class RazorpayWebhookService {
                 secretBlob
             );
 
+
         String expectedSignature =
             EncodingUtil.convertToHex(
                 generatedSignature
             );
+
 
         if (
             expectedSignature.toLowerCase() !=
@@ -857,6 +1292,11 @@ public with sharing class RazorpayWebhookService {
     }
 
 
+    /*
+     * ============================================================
+     * EVENT TYPE EXTRACTION
+     * ============================================================
+     */
     private static String extractEventType(
         String rawPayload
     ) {
@@ -870,6 +1310,7 @@ public with sharing class RazorpayWebhookService {
         Object eventValue =
             payload.get('event');
 
+
         if (
             eventValue == null ||
             String.isBlank(
@@ -882,10 +1323,18 @@ public with sharing class RazorpayWebhookService {
             );
         }
 
-        return String.valueOf(eventValue);
+
+        return String.valueOf(
+            eventValue
+        );
     }
 
 
+    /*
+     * ============================================================
+     * EVENT TYPE MAPPING
+     * ============================================================
+     */
     private static String mapEventType(
         String eventType
     ) {
@@ -897,6 +1346,9 @@ public with sharing class RazorpayWebhookService {
                     => 'Payment Authorized',
 
                 'payment.captured'
+                    => 'Payment Captured',
+
+                'payment_link.paid'
                     => 'Payment Captured',
 
                 'payment.failed'
@@ -912,14 +1364,18 @@ public with sharing class RazorpayWebhookService {
                     => 'Order Paid'
             };
 
+
         if (
-            eventTypeMap.containsKey(eventType)
+            eventTypeMap.containsKey(
+                eventType
+            )
         ) {
 
             return eventTypeMap.get(
                 eventType
             );
         }
+
 
         return 'Other';
     }

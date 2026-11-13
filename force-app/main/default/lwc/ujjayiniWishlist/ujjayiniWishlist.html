@@ -1,0 +1,109 @@
+<template>
+
+    <section class="wishlist">
+
+        <div class="wishlist-header">
+
+            <p class="eyebrow">
+                UJJAYINI
+            </p>
+
+            <h1>
+                My Wishlist
+            </h1>
+
+            <p class="subtitle">
+                Watches you've saved for later.
+            </p>
+
+        </div>
+
+        <template if:true={isLoading}>
+
+            <div class="state">
+                <p>Loading your wishlist...</p>
+            </div>
+
+        </template>
+
+        <template if:true={errorMessage}>
+
+            <div class="state error">
+                <p>{errorMessage}</p>
+            </div>
+
+        </template>
+
+        <template if:true={hasItems}>
+
+            <div class="wishlist-grid">
+
+                <template
+                    for:each={wishlistItems}
+                    for:item="item">
+
+                    <article
+                        key={item.wishlistItemId}
+                        class="wishlist-card">
+
+                        <div class="watch-image">
+                            <span>U</span>
+                        </div>
+
+                        <div class="watch-content">
+
+                            <p class="watch-label">
+                                SAVED WATCH
+                            </p>
+
+                            <h2>
+                                {item.productName}
+                            </h2>
+
+                            <div class="actions">
+
+                                <button
+                                    class="remove-button"
+                                    data-product-id={item.productId}
+                                    onclick={handleRemove}>
+
+                                    Remove from Wishlist
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </template>
+
+            </div>
+
+        </template>
+
+        <template if:true={isEmpty}>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ♡
+                </div>
+
+                <h2>
+                    Your Wishlist is Empty
+                </h2>
+
+                <p>
+                    Save your favorite UJJAYINI watches
+                    and they'll appear here.
+                </p>
+
+            </div>
+
+        </template>
+
+    </section>
+
+</template>

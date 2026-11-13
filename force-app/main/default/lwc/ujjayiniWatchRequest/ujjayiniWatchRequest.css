@@ -1,0 +1,19 @@
+.success-message {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border: 1px solid #222;
+    background: #f7f7f7;
+    color: #111;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.error-message {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border: 1px solid #b00020;
+    background: #fff5f5;
+    color: #b00020;
+    font-size: 14px;
+    line-height: 1.5;
+}

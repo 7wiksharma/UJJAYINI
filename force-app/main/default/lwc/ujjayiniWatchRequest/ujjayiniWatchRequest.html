@@ -1,0 +1,89 @@
+<template>
+
+    <section class="request-container">
+
+        <div class="request-header">
+
+            <p class="eyebrow">
+                UJJAYINI
+            </p>
+
+            <h2>
+                Request This Watch
+            </h2>
+
+            <p class="description">
+                Can't find the watch you're looking for?
+                Submit a request and our team will get back to you.
+            </p>
+
+        </div>
+
+
+        <lightning-combobox
+            label="Request Type"
+            value={requestType}
+            options={requestTypeOptions}
+            onchange={handleRequestTypeChange}>
+        </lightning-combobox>
+
+
+        <lightning-input
+            type="number"
+            label="Quantity"
+            min="1"
+            value={requestedQuantity}
+            onchange={handleQuantityChange}>
+        </lightning-input>
+
+
+        <lightning-textarea
+            label="Message"
+            value={customerNote}
+            onchange={handleNoteChange}
+            placeholder="Tell us what you're looking for...">
+        </lightning-textarea>
+
+
+        <!-- SUCCESS MESSAGE -->
+        <template if:true={successMessage}>
+
+            <div class="success-message">
+                {successMessage}
+            </div>
+
+        </template>
+
+
+        <!-- ERROR MESSAGE -->
+        <template if:true={errorMessage}>
+
+            <div class="error-message">
+                {errorMessage}
+            </div>
+
+        </template>
+
+
+        <div class="actions">
+
+            <button
+                class="submit-button"
+                onclick={handleSubmit}
+                disabled={isSubmitting}>
+
+                <template if:true={isSubmitting}>
+                    Submitting...
+                </template>
+
+                <template if:false={isSubmitting}>
+                    Submit Request
+                </template>
+
+            </button>
+
+        </div>
+
+    </section>
+
+</template>

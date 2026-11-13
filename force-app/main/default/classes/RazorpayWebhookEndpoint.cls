@@ -3,7 +3,16 @@ global with sharing class RazorpayWebhookEndpoint {
 
     @HttpPost
     global static void receiveWebhook() {
-
+          System.debug(
+    'UJJAYINI WEBHOOK USER = ' +
+    UserInfo.getUserName() +
+    ' | USER ID = ' +
+    UserInfo.getUserId() +
+    ' | USER TYPE = ' +
+    UserInfo.getUserType() +
+    ' | PROFILE ID = ' +
+    UserInfo.getProfileId()
+);
         RestRequest request = RestContext.request;
         RestResponse response = RestContext.response;
 
@@ -23,11 +32,6 @@ global with sharing class RazorpayWebhookEndpoint {
         webhookRequest.eventId = eventId;
         webhookRequest.rawPayload = rawPayload;
         webhookRequest.signature = signature;
-
-        /*
-         * The event type will be extracted from the
-         * Razorpay payload by the webhook service.
-         */
         webhookRequest.eventType = 'Other';
 
         try {
@@ -57,24 +61,31 @@ global with sharing class RazorpayWebhookEndpoint {
                     )
                 );
 
-        } catch (Exception e) {
+        } catch(Exception e) {
 
-            response.statusCode = 400;
+    System.debug(
+        LoggingLevel.ERROR,
+        'UJJAYINI WEBHOOK ERROR: ' +
+        e.getTypeName() +
+        ' | ' +
+        e.getMessage() +
+        ' | ' +
+        e.getStackTraceString()
+    );
 
-            response.addHeader(
-                'Content-Type',
-                'application/json'
-            );
+    response.statusCode = 400;
+    response.addHeader('Content-Type','application/json');
 
-            response.responseBody =
-                Blob.valueOf(
-                    JSON.serialize(
-                        new Map<String, Object>{
-                            'success' => false,
-                            'error' => e.getMessage()
-                        }
-                    )
-                );
-        }
+    response.responseBody = Blob.valueOf(
+        JSON.serialize(
+            new Map<String,Object>{
+                'success' => false,
+                'error' => e.getMessage(),
+                'type' => e.getTypeName(),
+                'stackTrace' => e.getStackTraceString()
+            }
+        )
+    );
+}
     }
 }

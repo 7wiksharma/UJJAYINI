@@ -5,14 +5,14 @@ public with sharing class OrderCheckoutService {
         public String paymentMethod;
     }
 
-    public class CheckoutResult {
-        public Id orderId;
-        public Id paymentId;
-        public Id reservationId;
-        public String gatewayOrderId;
-        public String status;
-        public String message;
-    }
+  public class CheckoutResult {
+    @AuraEnabled public Id orderId;
+    @AuraEnabled public Id paymentId;
+    @AuraEnabled public Id reservationId;
+    @AuraEnabled public String gatewayOrderId;
+    @AuraEnabled public String status;
+    @AuraEnabled public String message;
+}
 
     public static CheckoutResult checkout(
         CheckoutRequest request
@@ -25,6 +25,7 @@ public with sharing class OrderCheckoutService {
         }
 
         /*
+         * STEP 1:
          * Load Order.
          */
         Order orderRecord = [
@@ -45,6 +46,7 @@ public with sharing class OrderCheckoutService {
         }
 
         /*
+         * STEP 2:
          * Load Order Items.
          */
         List<OrderItem> orderItems = [
@@ -64,12 +66,13 @@ public with sharing class OrderCheckoutService {
             );
         }
 
-        Decimal totalAmount = 0;
-
         /*
+         * STEP 3:
          * Validate Order Items
          * and calculate total.
          */
+        Decimal totalAmount = 0;
+
         for (OrderItem item : orderItems) {
 
             if (item.Product2Id == null) {
@@ -106,7 +109,7 @@ public with sharing class OrderCheckoutService {
         }
 
         /*
-         * STEP 1:
+         * STEP 4:
          * Create Razorpay payment order.
          *
          * This performs the HTTP callout.
@@ -133,73 +136,27 @@ public with sharing class OrderCheckoutService {
             );
 
         /*
-         * STEP 2:
-         * Load active inventory.
-         */
-        Set<Id> productIds =
-            getProductIds(orderItems);
-
-        List<Inventory__c> inventoryRecords = [
-            SELECT Id,
-                   Product__c,
-                   On_Hand__c,
-                   Reserved__c,
-                   Available__c,
-                   Inventory_Status__c
-            FROM Inventory__c
-            WHERE Product__c IN :productIds
-            AND Inventory_Status__c = 'Active'
-        ];
-
-        Map<Id, Inventory__c> inventoryByProduct =
-            new Map<Id, Inventory__c>();
-
-        for (Inventory__c inventory : inventoryRecords) {
-
-            inventoryByProduct.put(
-                inventory.Product__c,
-                inventory
-            );
-        }
-
-        /*
-         * STEP 3:
+         * STEP 5:
          * Reserve inventory.
+         *
+         * Inventory lookup is intentionally handled
+         * inside InventoryReservationService.
+         *
+         * InventoryReservationService runs without sharing
+         * so customer checkout does not require direct
+         * record-level visibility to Inventory__c.
          */
         List<Id> reservationIds =
             new List<Id>();
 
         for (OrderItem item : orderItems) {
 
-            Inventory__c inventory =
-                inventoryByProduct.get(
-                    item.Product2Id
-                );
-
-            if (inventory == null) {
-                throw new IllegalArgumentException(
-                    'Active inventory not found for product: ' +
-                    item.Product2Id
-                );
-            }
-
-            InventoryReservationService.ReservationRequest
-                reservationRequest =
-                    new InventoryReservationService.ReservationRequest();
-
-            reservationRequest.inventoryId =
-                inventory.Id;
-
-            reservationRequest.orderId =
-                orderRecord.Id;
-
-            reservationRequest.quantity =
-                Integer.valueOf(item.Quantity);
-
             InventoryReservationService.ReservationResult
                 reservationResult =
-                    InventoryReservationService.reserveInventory(
-                        reservationRequest
+                    InventoryReservationService.reserveInventoryForProduct(
+                        item.Product2Id,
+                        orderRecord.Id,
+                        Integer.valueOf(item.Quantity)
                     );
 
             reservationIds.add(
@@ -208,7 +165,7 @@ public with sharing class OrderCheckoutService {
         }
 
         /*
-         * STEP 4:
+         * STEP 6:
          * Return checkout result.
          */
         CheckoutResult result =
@@ -235,25 +192,5 @@ public with sharing class OrderCheckoutService {
             'Payment order created and inventory reserved successfully.';
 
         return result;
-    }
-
-
-    private static Set<Id> getProductIds(
-        List<OrderItem> orderItems
-    ) {
-
-        Set<Id> productIds =
-            new Set<Id>();
-
-        for (OrderItem item : orderItems) {
-
-            if (item.Product2Id != null) {
-                productIds.add(
-                    item.Product2Id
-                );
-            }
-        }
-
-        return productIds;
     }
 }

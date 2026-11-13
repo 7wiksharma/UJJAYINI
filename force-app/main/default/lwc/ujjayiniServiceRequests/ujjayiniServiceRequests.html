@@ -1,0 +1,156 @@
+<template>
+
+    <section class="requests-container">
+
+        <div class="requests-header">
+
+            <p class="eyebrow">
+                UJJAYINI
+            </p>
+
+            <h2>
+                My Service Requests
+            </h2>
+
+            <p class="subtitle">
+                Track your service and support requests.
+            </p>
+
+        </div>
+
+        <template if:true={isLoading}>
+
+            <div class="state">
+                <p>Loading your service requests...</p>
+            </div>
+
+        </template>
+
+        <template if:true={errorMessage}>
+
+            <div class="state error">
+                <p>{errorMessage}</p>
+            </div>
+
+        </template>
+
+        <template if:true={hasRequests}>
+
+            <div class="requests-list">
+
+                <template
+                    for:each={requests}
+                    for:item="request">
+
+                    <article
+                        key={request.serviceRequestId}
+                        class="request-card">
+
+                        <div class="request-top">
+
+                            <div>
+
+                                <p class="request-label">
+                                    SERVICE REQUEST
+                                </p>
+
+                                <h3>
+                                    {request.serviceType}
+                                </h3>
+
+                            </div>
+
+                            <span class="priority">
+                                {request.priority}
+                            </span>
+
+                        </div>
+
+                        <div class="request-details">
+
+                            <div>
+                                <span>Request Date</span>
+
+                                <strong>
+                                    {request.requestDate}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Case</span>
+
+                                <strong>
+                                    {request.caseId}
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="description">
+
+                            <span>Description</span>
+
+                            <p>
+                                {request.description}
+                            </p>
+
+                        </div>
+
+                        <template if:true={request.resolution}>
+
+                            <div class="resolution">
+
+                                <span>Resolution</span>
+
+                                <p>
+                                    {request.resolution}
+                                </p>
+
+                            </div>
+
+                        </template>
+
+                        <template if:false={request.resolution}>
+
+                            <div class="pending">
+
+                                <span>
+                                    Resolution pending
+                                </span>
+
+                            </div>
+
+                        </template>
+
+                    </article>
+
+                </template>
+
+            </div>
+
+        </template>
+
+        <template if:true={isEmpty}>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    U
+                </div>
+
+                <h3>
+                    No Service Requests
+                </h3>
+
+                <p>
+                    Your submitted service requests
+                    will appear here.
+                </p>
+
+            </div>
+
+        </template>
+
+    </section>
+
+</template>

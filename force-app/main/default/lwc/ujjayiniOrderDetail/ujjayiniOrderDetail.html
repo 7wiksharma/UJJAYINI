@@ -1,0 +1,141 @@
+<template>
+
+    <section class="order-container">
+
+        <template if:true={isLoading}>
+
+            <div class="state">
+                <p>Loading order details...</p>
+            </div>
+
+        </template>
+
+        <template if:true={errorMessage}>
+
+            <div class="state error">
+                <p>{errorMessage}</p>
+            </div>
+
+        </template>
+
+        <template if:true={hasOrder}>
+
+            <div class="order-header">
+
+                <p class="eyebrow">
+                    UJJAYINI ORDER
+                </p>
+
+                <h2>
+                    {order.orderNumber}
+                </h2>
+
+                <div class="order-summary">
+
+                    <span class="status">
+                        {order.status}
+                    </span>
+
+                    <span>
+                        Order Date: {order.effectiveDate}
+                    </span>
+
+                    <span>
+                        Total: ₹{order.totalAmount}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="items-section">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">
+                        ORDER ITEMS
+                    </p>
+
+                    <h3>
+                        Your Purchase
+                    </h3>
+
+                </div>
+
+                <template if:true={hasItems}>
+
+                    <div class="items-list">
+
+                        <template
+                            for:each={order.items}
+                            for:item="item">
+
+                            <article
+                                key={item.orderItemId}
+                                class="item-card">
+
+                                <div class="item-info">
+
+                                    <p class="item-label">
+                                        UJJAYINI WATCH
+                                    </p>
+
+                                    <h4>
+                                        {item.productName}
+                                    </h4>
+
+                                </div>
+
+                                <div class="item-details">
+
+                                    <div>
+                                        <span>Quantity</span>
+
+                                        <strong>
+                                            {item.quantity}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Unit Price</span>
+
+                                        <strong>
+                                            ₹{item.unitPrice}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Total</span>
+
+                                        <strong>
+                                            ₹{item.totalPrice}
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        </template>
+
+                    </div>
+
+                </template>
+
+            </div>
+
+            <div class="collection-action">
+
+                <button
+                    class="collection-button"
+                    onclick={goToCollection}>
+                    View in My Collection
+                </button>
+
+            </div>
+
+        </template>
+
+    </section>
+
+</template>

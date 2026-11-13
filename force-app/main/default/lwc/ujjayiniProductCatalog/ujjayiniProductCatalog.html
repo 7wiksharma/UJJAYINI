@@ -33,18 +33,50 @@
                         for:each={products}
                         for:item="product">
 
-                        <div
-                            key={product.productId}
-                            class="product-card">
+                       <div
+                          key={product.productId}
+                          class="product-card"
+                           data-product-id={product.productId}
+                            onclick={handleProductClick}>
+                            <!-- PRODUCT IMAGE -->
+                           <div class="product-image">
 
-                            <div class="product-image">
-                                <lightning-icon
-                                    icon-name="utility:clock"
-                                    size="large"
-                                    alternative-text="Watch">
-                                </lightning-icon>
+    <template if:true={product.productImageUrl}>
+        <img
+            src={product.productImageUrl}
+            alt={product.productName}
+            class="product-image-file">
+    </template>
+
+    <template if:false={product.productImageUrl}>
+        <lightning-icon
+            icon-name="utility:clock"
+            size="large"
+            alternative-text="Watch">
+        </lightning-icon>
+    </template>
+                                <!-- WISHLIST BUTTON -->
+                                <button
+                                    class="wishlist-button"
+                                    data-product-id={product.productId}
+                                    onclick={handleWishlist}
+                                    disabled={product.isAddingToWishlist}
+                                    title="Add to Wishlist">
+
+                                    <template if:true={product.isWishlisted}>
+                                        ♥
+                                    </template>
+
+                                    <template if:false={product.isWishlisted}>
+                                        ♡
+                                    </template>
+
+                                </button>
+
                             </div>
 
+
+                            <!-- PRODUCT DETAILS -->
                             <div class="product-details">
 
                                 <h2 class="product-name">
@@ -75,6 +107,24 @@
                                     </p>
                                 </template>
 
+
+                                <!-- ADD TO CART -->
+                                <button
+                                    class="add-to-cart-button"
+                                    data-product-id={product.productId}
+                                    onclick={handleAddToCart}
+                                    disabled={product.isAddingToCart}>
+
+                                    <template if:true={product.isAddingToCart}>
+                                        Adding...
+                                    </template>
+
+                                    <template if:false={product.isAddingToCart}>
+                                        Add to Cart
+                                    </template>
+
+                                </button>
+
                             </div>
 
                         </div>
@@ -88,15 +138,23 @@
 
             <!-- No Products -->
             <template if:false={hasProducts}>
+
                 <template if:false={isLoading}>
+
                     <template if:false={hasError}>
+
                         <div class="empty-container">
+
                             <p>
                                 No watches are currently available.
                             </p>
+
                         </div>
+
                     </template>
+
                 </template>
+
             </template>
 
         </div>

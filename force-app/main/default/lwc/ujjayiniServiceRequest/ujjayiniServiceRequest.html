@@ -1,0 +1,80 @@
+<template>
+
+    <section class="service-container">
+
+        <div class="service-header">
+
+            <p class="eyebrow">
+                UJJAYINI
+            </p>
+
+            <h2>
+                Service Request
+            </h2>
+
+            <p class="description">
+                Request repair, maintenance, inspection,
+                or other assistance for your timepiece.
+            </p>
+
+        </div>
+
+        <lightning-combobox
+            label="Service Type"
+            value={serviceType}
+            options={serviceTypeOptions}
+            onchange={handleServiceTypeChange}>
+        </lightning-combobox>
+
+        <lightning-combobox
+            label="Priority"
+            value={priority}
+            options={priorityOptions}
+            onchange={handlePriorityChange}>
+        </lightning-combobox>
+
+        <lightning-textarea
+            label="Service Description"
+            value={description}
+            onchange={handleDescriptionChange}
+            placeholder="Describe the service you need...">
+        </lightning-textarea>
+
+        <template if:true={successMessage}>
+
+            <div class="success-message">
+                {successMessage}
+            </div>
+
+        </template>
+
+        <template if:true={errorMessage}>
+
+            <div class="error-message">
+                {errorMessage}
+            </div>
+
+        </template>
+
+        <div class="actions">
+
+            <button
+                class="submit-button"
+                onclick={handleSubmit}
+                disabled={isSubmitting}>
+
+                <template if:true={isSubmitting}>
+                    Submitting...
+                </template>
+
+                <template if:false={isSubmitting}>
+                    Submit Service Request
+                </template>
+
+            </button>
+
+        </div>
+
+    </section>
+
+</template>
