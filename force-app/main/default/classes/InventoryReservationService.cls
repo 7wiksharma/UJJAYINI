@@ -79,14 +79,16 @@ public without sharing class InventoryReservationService {
     System.AccessLevel.SYSTEM_MODE
 );
 
-        Reservation__c reservation = new Reservation__c(
-            Inventory__c = inventory.Id,
-            Order__c = request.orderId,
-            Reserved_Quantity__c = request.quantity,
-            Reservation_Status__c = 'Pending',
-            Reservation_Created_At__c = System.now()
-        );
+       Datetime reservationCreatedAt = System.now();
 
+Reservation__c reservation = new Reservation__c(
+    Inventory__c = inventory.Id,
+    Order__c = request.orderId,
+    Reserved_Quantity__c = request.quantity,
+    Reservation_Status__c = 'Pending',
+    Reservation_Created_At__c = reservationCreatedAt,
+    Reservation_Expires_At__c = reservationCreatedAt.addMinutes(15)
+);
         insert reservation;
 
         ReservationResult result = new ReservationResult();
