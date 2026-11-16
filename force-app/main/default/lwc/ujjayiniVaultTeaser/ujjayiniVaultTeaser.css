@@ -1,0 +1,852 @@
+:host {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+     margin-bottom: -24px;
+}
+
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+.vault-section {
+
+    --cream: #f5dfc2;
+    --cream-soft: rgba(245, 223, 194, 0.78);
+    --cream-muted: rgba(245, 223, 194, 0.48);
+
+    --gold: #c9a24d;
+    --gold-bright: #e0b85d;
+
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+    isolation: isolate;
+
+    background:
+        #050505;
+
+    color: var(--cream);
+}
+
+
+/* =========================================================
+   CINEMATIC WATCH IMAGE
+========================================================= */
+
+.vault-visual {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: -3;
+
+    background-size: cover;
+
+    background-position:
+        center center;
+
+    background-repeat: no-repeat;
+
+    transform:
+        scale(1.015);
+
+}
+
+
+/* =========================================================
+   CINEMATIC OVERLAY
+========================================================= */
+
+.visual-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: -2;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(5, 5, 5, 0.97) 0%,
+            rgba(5, 5, 5, 0.88) 25%,
+            rgba(5, 5, 5, 0.46) 48%,
+            rgba(5, 5, 5, 0.12) 72%,
+            rgba(5, 5, 5, 0.38) 100%
+        ),
+
+        linear-gradient(
+            180deg,
+            rgba(5, 5, 5, 0.28) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(5, 5, 5, 0.78) 100%
+        );
+
+}
+
+
+/* =========================================================
+   GOLD ATMOSPHERE
+========================================================= */
+
+.gold-atmosphere {
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    right: 10%;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(201, 162, 77, 0.14) 0%,
+            rgba(201, 162, 77, 0.05) 38%,
+            transparent 72%
+        );
+
+    filter: blur(10px);
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+
+/* =========================================================
+   TOP METADATA
+========================================================= */
+
+.vault-meta {
+
+    position: absolute;
+
+    top: 58px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 9px;
+
+    line-height: 1.8;
+
+    letter-spacing: 0.28em;
+
+    color: var(--gold);
+
+    text-transform: uppercase;
+
+    z-index: 3;
+
+}
+
+.meta-left {
+    left: 7%;
+}
+
+.meta-right {
+    right: 8%;
+    text-align: left;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.vault-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+        110px 7% 130px;
+
+}
+
+
+.vault-copy {
+
+    width: min(580px, 48%);
+
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+
+    margin:
+        0 0 24px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.34em;
+
+    color: var(--gold);
+
+    text-transform: uppercase;
+
+}
+
+
+/* =========================================================
+   MAIN HEADING
+========================================================= */
+
+.vault-copy h2 {
+
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(64px, 7.2vw, 118px);
+
+    font-weight: 400;
+
+    line-height: 0.86;
+
+    letter-spacing: -0.055em;
+
+    color: var(--cream);
+
+    text-shadow:
+        0 0 35px rgba(0, 0, 0, 0.38);
+
+}
+
+
+.vault-copy h2 em {
+
+    display: inline-block;
+
+    color: var(--gold-bright);
+
+    font-style: italic;
+
+    font-weight: 400;
+
+}
+
+
+/* =========================================================
+   GOLD RULE
+========================================================= */
+
+.gold-rule {
+
+    width: 205px;
+
+    height: 1px;
+
+    margin:
+        34px 0 27px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold),
+            rgba(201, 162, 77, 0.08)
+        );
+
+}
+
+
+/* =========================================================
+   LEAD COPY
+========================================================= */
+
+.lead {
+
+    max-width: 520px;
+
+    margin:
+        0 0 24px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+
+    line-height: 1.8;
+
+    color: var(--cream);
+
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.description {
+
+    max-width: 500px;
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 13px;
+
+    line-height: 1.9;
+
+    color: var(--cream-muted);
+
+}
+
+
+/* =========================================================
+   VAULT BUTTON
+========================================================= */
+
+.vault-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 28px;
+
+    min-width: 230px;
+
+    margin-top: 42px;
+
+    padding:
+        18px 22px;
+
+    border:
+        1px solid rgba(201, 162, 77, 0.72);
+
+    background:
+        rgba(12, 5, 6, 0.72);
+
+    color: var(--cream);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.27em;
+
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition:
+        background 220ms ease,
+        border-color 220ms ease,
+        transform 220ms ease;
+
+}
+
+
+.vault-button:hover {
+
+    background:
+        rgba(201, 162, 77, 0.13);
+
+    border-color:
+        var(--gold-bright);
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+.vault-button .arrow {
+
+    color:
+        var(--gold-bright);
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    letter-spacing: 0;
+
+}
+
+
+/* =========================================================
+   SIDE LABEL
+========================================================= */
+
+.side-label {
+
+    position: absolute;
+
+    right: 9%;
+    bottom: 29%;
+
+    z-index: 3;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.3em;
+
+    color: var(--gold);
+
+    text-transform: uppercase;
+
+}
+
+
+.side-label span {
+
+    display: block;
+
+    width: 28px;
+
+    height: 1px;
+
+    margin-bottom: 4px;
+
+    background:
+        var(--gold);
+
+}
+
+
+.side-label small {
+
+    font-size: 7px;
+
+    letter-spacing: 0.28em;
+
+    color:
+        rgba(245, 223, 194, 0.42);
+
+}
+
+
+/* =========================================================
+   CLOSING STATEMENT
+========================================================= */
+
+.vault-closing {
+
+    position: absolute;
+
+    left: 7%;
+    right: 7%;
+    bottom: 70px;
+
+    z-index: 3;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 24px;
+
+}
+
+
+.closing-line {
+
+    flex: 1;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(201, 162, 77, 0.45)
+        );
+
+}
+
+
+.vault-closing p {
+
+    margin: 0;
+
+    white-space: nowrap;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 8px;
+
+    letter-spacing: 0.32em;
+
+    color:
+        rgba(245, 223, 194, 0.48);
+
+    text-transform: uppercase;
+
+}
+
+
+.vault-closing em {
+
+    color: var(--gold);
+
+    font-style: normal;
+
+}
+
+
+/* =========================================================
+   SECTION MARKER
+========================================================= */
+
+.section-marker {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 24px;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 8px;
+
+    letter-spacing: 0.32em;
+
+    color:
+        rgba(245, 223, 194, 0.42);
+
+    white-space: nowrap;
+
+}
+
+
+.marker-line {
+
+    width: 46px;
+
+    height: 1px;
+
+    background:
+        rgba(201, 162, 77, 0.48);
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .vault-content {
+
+        padding:
+            100px 6% 130px;
+
+    }
+
+
+    .vault-copy {
+
+        width: 58%;
+
+    }
+
+
+    .vault-copy h2 {
+
+        font-size:
+            clamp(54px, 9vw, 88px);
+
+    }
+
+
+    .side-label {
+
+        right: 6%;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .vault-section {
+
+        min-height: 850px;
+
+    }
+
+
+    .vault-visual {
+
+        background-position:
+            67% center;
+
+    }
+
+
+    .visual-overlay {
+
+        background:
+
+            linear-gradient(
+                90deg,
+                rgba(5, 5, 5, 0.97) 0%,
+                rgba(5, 5, 5, 0.78) 62%,
+                rgba(5, 5, 5, 0.40) 100%
+            ),
+
+            linear-gradient(
+                180deg,
+                rgba(5, 5, 5, 0.35),
+                rgba(5, 5, 5, 0.68)
+            );
+
+    }
+
+
+    .vault-meta {
+
+        top: 32px;
+
+        font-size: 7px;
+
+    }
+
+
+    .meta-left {
+        left: 6%;
+    }
+
+
+    .meta-right {
+        right: 6%;
+    }
+
+
+    .vault-content {
+
+        min-height: 850px;
+
+        align-items: flex-start;
+
+        padding:
+            145px 6% 130px;
+
+    }
+
+
+    .vault-copy {
+
+        width: 100%;
+
+    }
+
+
+    .eyebrow {
+
+        font-size: 8px;
+
+        letter-spacing: 0.25em;
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .vault-copy h2 {
+
+        font-size:
+            clamp(55px, 17vw, 82px);
+
+        line-height: 0.88;
+
+    }
+
+
+    .gold-rule {
+
+        margin:
+            28px 0 22px;
+
+        width: 150px;
+
+    }
+
+
+    .lead {
+
+        max-width: 330px;
+
+        font-size: 15px;
+
+        line-height: 1.7;
+
+    }
+
+
+    .description {
+
+        max-width: 330px;
+
+        font-size: 11px;
+
+        line-height: 1.8;
+
+    }
+
+
+    .vault-button {
+
+        min-width: 205px;
+
+        margin-top: 32px;
+
+        padding:
+            16px 18px;
+
+        font-size: 8px;
+
+    }
+
+
+    .side-label {
+
+        right: 6%;
+
+        bottom: 24%;
+
+        opacity: 0.8;
+
+    }
+
+
+    .vault-closing {
+
+        left: 6%;
+        right: 6%;
+
+        bottom: 68px;
+
+        gap: 12px;
+
+    }
+
+
+    .vault-closing p {
+
+        font-size: 6px;
+
+        letter-spacing: 0.2em;
+
+    }
+
+
+    .section-marker {
+
+        bottom: 20px;
+
+        font-size: 6px;
+
+        gap: 10px;
+
+    }
+
+
+    .marker-line {
+
+        width: 28px;
+
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .vault-button {
+        transition: none;
+    }
+
+}

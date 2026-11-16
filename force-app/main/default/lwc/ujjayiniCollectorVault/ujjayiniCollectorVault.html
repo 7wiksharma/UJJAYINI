@@ -2,7 +2,9 @@
 
     <section class="vault">
 
-        <!-- ATMOSPHERE -->
+        <!-- =========================================================
+             ATMOSPHERE
+        ========================================================== -->
 
         <div class="vault-atmosphere"></div>
 
@@ -16,22 +18,34 @@
         <div class="star star-four"></div>
         <div class="star star-five"></div>
 
-        <!-- MAIN CONTENT -->
+
+        <!-- =========================================================
+             MAIN CONTENT
+        ========================================================== -->
 
         <div class="vault-inner">
 
-            <!-- TOP MARKERS -->
+
+            <!-- =====================================================
+                 TOP MARKERS
+            ====================================================== -->
 
             <div class="section-markers">
 
-                <span>UJJAYINI · HOROLOGY</span>
+                <span>
+                    UJJAYINI · HOROLOGY
+                </span>
 
-                <span>VI · THE COLLECTOR'S VAULT</span>
+                <span>
+                    VI · THE COLLECTOR'S VAULT
+                </span>
 
             </div>
 
 
-            <!-- HEADER -->
+            <!-- =====================================================
+                 HEADER
+            ====================================================== -->
 
             <header class="vault-header">
 
@@ -39,24 +53,27 @@
                     THE PRIVATE COLLECTION
                 </p>
 
+
                 <h1>
                     Your time,<br>
                     <em>kept forever.</em>
                 </h1>
 
+
                 <div class="gold-rule"></div>
 
-                <p class="intro">
 
+                <p class="intro">
                     A private record of the timepieces that
                     have become part of your collection.
-
                 </p>
 
             </header>
 
 
-            <!-- LOADING -->
+            <!-- =====================================================
+                 LOADING
+            ====================================================== -->
 
             <template if:true={isLoading}>
 
@@ -75,7 +92,9 @@
             </template>
 
 
-            <!-- ERROR -->
+            <!-- =====================================================
+                 ERROR
+            ====================================================== -->
 
             <template if:true={errorMessage}>
 
@@ -94,7 +113,9 @@
             </template>
 
 
-            <!-- COLLECTION -->
+            <!-- =====================================================
+                 COLLECTION
+            ====================================================== -->
 
             <template if:true={hasAssets}>
 
@@ -112,6 +133,7 @@
 
                     </div>
 
+
                     <div class="collection-count">
 
                         <span>
@@ -127,19 +149,26 @@
                 </div>
 
 
-                <!-- WATCH GRID -->
+                <!-- =================================================
+                     WATCH GRID
+                ================================================== -->
 
                 <div class="collection-grid">
 
                     <template
                         for:each={assets}
-                        for:item="asset">
+                        for:item="asset"
+                    >
 
                         <article
                             key={asset.assetId}
-                            class="watch-card">
+                            class="watch-card"
+                        >
 
-                            <!-- WATCH VISUAL -->
+
+                            <!-- =====================================
+                                 WATCH VISUAL
+                            ====================================== -->
 
                             <div class="watch-visual">
 
@@ -147,21 +176,46 @@
 
                                 <div class="watch-glow"></div>
 
-                                <div class="watch-symbol">
 
-                                    <span class="watch-symbol-top">
-                                        XII
-                                    </span>
+                                <!-- =================================
+                                     PRODUCT IMAGE
+                                ================================== -->
 
-                                    <span class="watch-symbol-center">
-                                        U
-                                    </span>
+                                <template if:true={asset.productImageUrl}>
 
-                                    <span class="watch-symbol-bottom">
-                                        VI
-                                    </span>
+                                    <img
+                                        class="product-image"
+                                        src={asset.productImageUrl}
+                                        alt={asset.productName}
+                                    />
 
-                                </div>
+                                </template>
+
+
+                                <!-- =================================
+                                     FALLBACK UJJAYINI SYMBOL
+                                ================================== -->
+
+                                <template if:false={asset.productImageUrl}>
+
+                                    <div class="watch-symbol">
+
+                                        <span class="watch-symbol-top">
+                                            XII
+                                        </span>
+
+                                        <span class="watch-symbol-center">
+                                            U
+                                        </span>
+
+                                        <span class="watch-symbol-bottom">
+                                            VI
+                                        </span>
+
+                                    </div>
+
+                                </template>
+
 
                                 <span class="visual-caption">
                                     UJJAYINI
@@ -170,9 +224,12 @@
                             </div>
 
 
-                            <!-- WATCH INFORMATION -->
+                            <!-- =====================================
+                                 WATCH INFORMATION
+                            ====================================== -->
 
                             <div class="watch-content">
+
 
                                 <div class="watch-topline">
 
@@ -195,9 +252,12 @@
                                 <div class="watch-rule"></div>
 
 
-                                <!-- PRIMARY DETAILS -->
+                                <!-- =================================
+                                     PRIMARY DETAILS
+                                ================================== -->
 
                                 <div class="details-grid">
+
 
                                     <div class="detail">
 
@@ -253,7 +313,9 @@
                                 </div>
 
 
-                                <!-- WARRANTY -->
+                                <!-- =================================
+                                     WARRANTY
+                                ================================== -->
 
                                 <template if:true={asset.warranty}>
 
@@ -273,6 +335,7 @@
 
                                             </div>
 
+
                                             <span class="warranty-status">
                                                 {asset.warranty.status}
                                             </span>
@@ -281,6 +344,7 @@
 
 
                                         <div class="warranty-grid">
+
 
                                             <div>
 
@@ -338,7 +402,8 @@
 
 
                                         <template
-                                            if:true={asset.warranty.notes}>
+                                            if:true={asset.warranty.notes}
+                                        >
 
                                             <div class="warranty-note">
 
@@ -359,14 +424,14 @@
                                 </template>
 
 
-                                <!-- NO WARRANTY -->
+                                <!-- =================================
+                                     NO WARRANTY
+                                ================================== -->
 
                                 <template if:false={asset.warranty}>
 
                                     <div class="warranty-unavailable">
-
                                         Warranty information unavailable.
-
                                     </div>
 
                                 </template>
@@ -382,7 +447,9 @@
             </template>
 
 
-            <!-- EMPTY VAULT -->
+            <!-- =====================================================
+                 EMPTY VAULT
+            ====================================================== -->
 
             <template if:true={isEmpty}>
 
@@ -396,22 +463,24 @@
 
                     </div>
 
+
                     <p class="micro-label">
                         THE COLLECTOR'S VAULT
                     </p>
+
 
                     <h2>
                         Your collection<br>
                         <em>begins here.</em>
                     </h2>
 
+
                     <div class="gold-rule"></div>
 
-                    <p class="empty-copy">
 
+                    <p class="empty-copy">
                         Your purchased UJJAYINI timepieces will
                         appear here after a successful payment.
-
                     </p>
 
                 </div>
@@ -419,7 +488,9 @@
             </template>
 
 
-            <!-- FOOTER NOTE -->
+            <!-- =====================================================
+                 FOOTER NOTE
+            ====================================================== -->
 
             <footer class="vault-footer">
 

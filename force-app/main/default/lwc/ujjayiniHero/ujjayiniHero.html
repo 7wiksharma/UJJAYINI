@@ -1,63 +1,113 @@
 <template>
     <section class="hero">
 
-        <!-- Ambient atmosphere -->
+        <!-- =================================================
+             ATMOSPHERIC BACKGROUND
+        ================================================== -->
+
         <div class="hero-glow"></div>
+
+        <div class="hero-glow-secondary"></div>
+
         <div class="hero-vignette"></div>
 
-        <!-- Central meridian -->
+        <!-- Fine atmospheric rings -->
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="orbit orbit-three"></div>
+
+
+        <!-- =================================================
+             CENTRAL MERIDIAN
+        ================================================== -->
+
         <div class="meridian-line"></div>
 
-        <!-- Latitude marker -->
-        <div class="latitude-mark">23°N</div>
-
-        <!-- WATCH -->
-        <div class="watch-stage">
-            <canvas class="watch-canvas"></canvas>
+        <div class="latitude-mark">
+            23°N
         </div>
 
-        <!-- Brand content -->
+
+        <!-- =================================================
+             WATCH
+        ================================================== -->
+
+        <div class="watch-stage">
+
+            <canvas class="watch-canvas"></canvas>
+
+        </div>
+
+
+        <!-- =================================================
+             BRAND CONTENT
+        ================================================== -->
+
         <div class="hero-content">
 
             <p class="eyebrow">
                 MAISON OF VEDIC HOROLOGY
             </p>
 
+
             <h1>
                 UJJAYINI
             </h1>
 
+
             <p class="tagline">
                 The beginning of your time.
             </p>
+
 
             <button
                 class="explore-button"
                 type="button"
                 onclick={handleExplore}
             >
-                <span>EXPLORE THE COLLECTION</span>
-                <span class="arrow">↓</span>
+
+                <span>
+                    EXPLORE THE COLLECTION
+                </span>
+
+                <span class="arrow">
+                    ↓
+                </span>
+
             </button>
 
         </div>
 
-        <!-- Time HUD -->
+
+        <!-- =================================================
+             TIME HUD
+        ================================================== -->
+
         <div class="time-hud">
+
+            <span class="hud-label">
+                CURRENT GHAṬIKĀ
+            </span>
 
             <span class="time-value">
                 {ghatika}
             </span>
 
-            <span>/</span>
+            <span class="hud-divider">
+                /
+            </span>
 
             <span>
-                60 GHAṬIKĀ
+                60
             </span>
 
         </div>
 
-        <!-- Scroll indicator -->
+
+        <!-- =================================================
+             SCROLL INDICATOR
+        ================================================== -->
+
         <div class="scroll-indicator">
 
             <span>
@@ -68,13 +118,35 @@
 
         </div>
 
-        <!-- Small technical details -->
+
+        <!-- =================================================
+             TECHNICAL MARKERS
+        ================================================== -->
+
         <div class="technical-mark technical-left">
             UJJAYINI · 23°N
         </div>
 
+
         <div class="technical-mark technical-right">
             HOROLOGY · I
+        </div>
+
+
+        <!-- Bottom section marker -->
+
+        <div class="hero-section-marker">
+
+            <span>
+                I
+            </span>
+
+            <div></div>
+
+            <span>
+                THE BEGINNING OF YOUR TIME
+            </span>
+
         </div>
 
     </section>

@@ -1,0 +1,17 @@
+warning: in the working copy of 'force-app/main/default/classes/CollectorVaultService.cls', LF will be replaced by CRLF the next time Git touches it
+ .../main/default/classes/CollectorVaultService.cls |   26 [32m+[m
+ .../ujjayiniCollectionSection.css                  | 1910 [32m+++++++++++++[m[31m----[m
+ .../ujjayiniCollectionSection.html                 |  199 [32m+[m[31m-[m
+ .../ujjayiniCollectionSection.js                   |  114 [32m+[m[31m-[m
+ .../ujjayiniCollectorVault.css                     |   50 [32m+[m
+ .../ujjayiniCollectorVault.html                    |  145 [32m+[m[31m-[m
+ .../main/default/lwc/ujjayiniHero/ujjayiniHero.css |  785 [32m+++++[m[31m--[m
+ .../default/lwc/ujjayiniHero/ujjayiniHero.html     |   98 [32m+[m[31m-[m
+ .../ujjayiniMeasureSection.css                     | 1324 [32m++++[m[31m--------[m
+ .../lwc/ujjayiniSkySection/ujjayiniSkySection.css  | 1718 [32m++++++++++++[m[31m----[m
+ .../lwc/ujjayiniSkySection/ujjayiniSkySection.html |  150 [32m+[m[31m-[m
+ .../lwc/ujjayiniSkySection/ujjayiniSkySection.js   |  215 [32m+[m[31m-[m
+ .../ujjayiniUnseenPrecision.css                    | 2158 [32m++++++++++[m[31m----------[m
+ .../ujjayiniUnseenPrecision.html                   |  519 [32m++[m[31m---[m
+ ...I_Product_Catalog_Access.permissionset-meta.xml |   12 [32m+[m[31m-[m
+ 15 files changed, 6093 insertions(+), 3330 deletions(-)

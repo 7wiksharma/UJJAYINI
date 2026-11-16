@@ -1,9 +1,15 @@
 <template>
     <section class="collection-section">
 
-        <!-- ATMOSPHERIC BACKGROUND -->
+        <!-- ==================================================
+             ATMOSPHERE
+        =================================================== -->
+
         <div class="background-glow glow-left"></div>
         <div class="background-glow glow-right"></div>
+
+        <div class="ambient-bloom bloom-one"></div>
+        <div class="ambient-bloom bloom-two"></div>
 
         <div class="star-field">
             <span class="star star-01"></span>
@@ -18,113 +24,246 @@
             <span class="star star-10"></span>
         </div>
 
+        <!-- ==================================================
+             CELESTIAL GEOMETRY
+        =================================================== -->
+
         <div class="orbit orbit-one"></div>
         <div class="orbit orbit-two"></div>
+        <div class="orbit orbit-three"></div>
 
-        <!-- SECTION METADATA -->
-        <div class="section-meta meta-left">UJJAYINI · HOROLOGY</div>
-        <div class="section-meta meta-right">IV · THE COLLECTION</div>
+        <div class="vertical-axis"></div>
+
+        <!-- ==================================================
+             SECTION METADATA
+        =================================================== -->
+
+        <div class="section-meta meta-left">
+            UJJAYINI · HOROLOGY
+        </div>
+
+        <div class="section-meta meta-right">
+            IV · THE COLLECTION
+        </div>
+
+        <!-- ==================================================
+             MAIN CONTENT
+        =================================================== -->
 
         <div class="collection-container">
 
-            <!-- INTRO -->
+            <!-- ==================================================
+                 INTRO
+            =================================================== -->
+
             <header class="collection-intro reveal">
-                <div class="eyebrow">THE COLLECTION</div>
+
+                <div class="eyebrow">
+                    THE COLLECTION
+                </div>
 
                 <h2>
-                    Three expressions<br />
+                    Three expressions
+                    <br />
                     <em>of time.</em>
                 </h2>
 
-                <div class="intro-divider"></div>
+                <div class="intro-divider">
+                    <span></span>
+                </div>
 
                 <p class="intro-copy">
                     Every UJJAYINI timepiece begins with the same
                     question — not what time is, but what it means
                     to remember it.
                 </p>
+
             </header>
 
-            <!-- COLLECTION GRID -->
+            <!-- ==================================================
+                 COLLECTION GRID
+            =================================================== -->
+
             <div class="collection-grid">
-                <template for:each={collections} for:item="c">
-                    <article key={c.key} class={c.cardClass}>
+
+                <template
+                    for:each={collections}
+                    for:item="c"
+                >
+
+                    <article
+                        key={c.key}
+                        class={c.cardClass}
+                    >
+
+                        <!-- CARD HEADER -->
 
                         <div class="card-top">
-                            <span class="collection-number">{c.number}</span>
-                            <span class="collection-category">{c.category}</span>
+
+                            <span class="collection-number">
+                                {c.number}
+                            </span>
+
+                            <span class="collection-category">
+                                {c.category}
+                            </span>
+
                         </div>
 
-                        <!-- WATCH VISUAL -->
+                        <!-- ==================================================
+                             WATCH VISUAL
+                        =================================================== -->
+
                         <div class="watch-stage">
+
+                            <div class="watch-aura"></div>
+
                             <div class="orbit-ring ring-one"></div>
                             <div class="orbit-ring ring-two"></div>
+                            <div class="orbit-ring ring-three"></div>
+
+                            <div class="watch-shadow"></div>
 
                             <div class="watch-watch">
+
                                 <div class="watch-strap strap-top"></div>
 
                                 <span class="watch-lug lug-tl"></span>
                                 <span class="watch-lug lug-tr"></span>
                                 <span class="watch-lug lug-bl"></span>
                                 <span class="watch-lug lug-br"></span>
+
                                 <span class="watch-crown"></span>
 
                                 <div class="watch-case">
-                                    <div class="watch-dial">
-                                        <span class="dial-brand">UJJAYINI</span>
-                                        <span class="dial-coord">23°N</span>
 
-                                        <span class="hour hour-12">12</span>
-                                        <span class="hour hour-03">3</span>
-                                        <span class="hour hour-06">6</span>
-                                        <span class="hour hour-09">9</span>
+                                    <div class="case-highlight"></div>
+
+                                    <div class="watch-dial">
+
+                                        <div class="dial-sheen"></div>
+
+                                        <span class="dial-brand">
+                                            UJJAYINI
+                                        </span>
+
+                                        <span class="dial-coord">
+                                            23°N
+                                        </span>
+
+                                        <span class="hour hour-12">
+                                            12
+                                        </span>
+
+                                        <span class="hour hour-03">
+                                            3
+                                        </span>
+
+                                        <span class="hour hour-06">
+                                            6
+                                        </span>
+
+                                        <span class="hour hour-09">
+                                            9
+                                        </span>
+
+                                        <span class="minute-mark mark-01"></span>
+                                        <span class="minute-mark mark-02"></span>
+                                        <span class="minute-mark mark-03"></span>
+                                        <span class="minute-mark mark-04"></span>
+                                        <span class="minute-mark mark-05"></span>
+                                        <span class="minute-mark mark-06"></span>
+                                        <span class="minute-mark mark-07"></span>
+                                        <span class="minute-mark mark-08"></span>
 
                                         <span class="watch-hand hand-hour"></span>
                                         <span class="watch-hand hand-minute"></span>
                                         <span class="watch-hand hand-second"></span>
 
                                         <span class="watch-center"></span>
+
                                     </div>
+
                                 </div>
 
                                 <div class="watch-strap strap-bottom"></div>
+
                             </div>
+
                         </div>
 
-                        <!-- CARD CONTENT -->
+                        <!-- ==================================================
+                             CARD CONTENT
+                        =================================================== -->
+
                         <div class="card-content">
-                            <div class="collection-name">{c.name}</div>
+
+                            <div class="collection-name">
+                                {c.name}
+                            </div>
+
                             <div class="collection-line"></div>
-                            <p class="collection-description">{c.description}</p>
+
+                            <p class="collection-description">
+                                {c.description}
+                            </p>
 
                             <div class="collection-footer">
-                                <span>{c.footer}</span>
-                                <span class="collection-arrow">↗</span>
+
+                                <span>
+                                    {c.footer}
+                                </span>
+
+                                <span class="collection-arrow">
+                                    ↗
+                                </span>
+
                             </div>
+
                         </div>
 
                     </article>
+
                 </template>
+
             </div>
 
-            <!-- CLOSING STATEMENT -->
+            <!-- ==================================================
+                 CLOSING STATEMENT
+            =================================================== -->
+
             <div class="collection-closing reveal">
+
                 <div class="closing-rule"></div>
+
                 <p>
                     THREE MATERIALS.
                     <span>THREE WORLDS.</span>
                     ONE MEASURE OF TIME.
                 </p>
+
                 <div class="closing-rule"></div>
+
             </div>
 
         </div>
 
-        <!-- SECTION MARKER -->
+        <!-- ==================================================
+             SECTION MARKER
+        =================================================== -->
+
         <div class="section-marker">
-            <span class="marker-number">IV</span>
+
+            <span class="marker-number">
+                IV
+            </span>
+
             <span class="marker-line"></span>
-            <span class="marker-text">THE COLLECTION</span>
+
+            <span class="marker-text">
+                THE COLLECTION
+            </span>
+
         </div>
 
     </section>

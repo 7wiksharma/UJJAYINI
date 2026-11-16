@@ -203,9 +203,13 @@
     <editable>true</editable>
     <readable>true</readable>
 </fieldPermissions>
-
 <fieldPermissions>
-    <field>Product_Image_URL__c</field>
+    <editable>false</editable>
+    <field>Product2.Model_Number__c</field>
+    <readable>true</readable>
+</fieldPermissions>
+<fieldPermissions>
+    <field>Product2.Product_Image_URL__c</field>
     <editable>true</editable>
     <readable>true</readable>
 </fieldPermissions>
@@ -259,4 +263,8 @@
         <apexClass>OrderCancellationService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+    <apexClass>UJJAYINIFeaturedWatchesController</apexClass>
+    <enabled>true</enabled>
+</classAccesses>
 </PermissionSet>

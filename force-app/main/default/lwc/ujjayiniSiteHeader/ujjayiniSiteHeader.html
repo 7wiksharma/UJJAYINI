@@ -1,0 +1,104 @@
+<template>
+
+    <header class="site-header">
+
+        <!-- BRAND -->
+        <a
+            class="brand"
+            href="/ujjayini/"
+            aria-label="UJJAYINI Home"
+        >
+            <span class="brand-name">
+                UJJAYINI
+            </span>
+
+            <span class="brand-subtitle">
+                THE BEGINNING OF YOUR TIME
+            </span>
+        </a>
+
+
+        <!-- DESKTOP NAVIGATION -->
+        <nav class="desktop-nav" aria-label="Primary navigation">
+
+            <a
+                href="/ujjayini/"
+                class="nav-link active"
+            >
+                HOME
+            </a>
+
+            <a
+                href="/ujjayini/collections"
+                class="nav-link"
+            >
+                COLLECTIONS
+            </a>
+
+            <a
+                href="/ujjayini/collector-vault"
+                class="nav-link vault-link"
+            >
+                COLLECTOR'S VAULT
+            </a>
+
+        </nav>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="header-actions">
+
+            <a
+                href="/ujjayini/collector-vault"
+                class="vault-button"
+            >
+                <span>ENTER VAULT</span>
+                <span class="arrow">↗</span>
+            </a>
+
+            <button
+                class="menu-button"
+                type="button"
+                onclick={toggleMenu}
+                aria-label="Open navigation menu"
+            >
+                <span></span>
+                <span></span>
+            </button>
+
+        </div>
+
+
+        <!-- MOBILE MENU -->
+        <template if:true={menuOpen}>
+
+            <div class="mobile-menu">
+
+                <a
+                    href="/ujjayini/"
+                    onclick={closeMenu}
+                >
+                    HOME
+                </a>
+
+                <a
+                    href="/ujjayini/collections"
+                    onclick={closeMenu}
+                >
+                    COLLECTIONS
+                </a>
+
+                <a
+                    href="/ujjayini/collector-vault"
+                    onclick={closeMenu}
+                >
+                    COLLECTOR'S VAULT
+                </a>
+
+            </div>
+
+        </template>
+
+    </header>
+
+</template>

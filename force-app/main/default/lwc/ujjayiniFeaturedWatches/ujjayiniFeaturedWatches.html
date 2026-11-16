@@ -1,0 +1,249 @@
+<template>
+
+    <section class="featured-section">
+
+        <!-- ATMOSPHERIC BACKGROUND -->
+        <div class="ambient ambient-left"></div>
+        <div class="ambient ambient-right"></div>
+
+        <div class="star-field">
+            <span class="star star-01"></span>
+            <span class="star star-02"></span>
+            <span class="star star-03"></span>
+            <span class="star star-04"></span>
+            <span class="star star-05"></span>
+            <span class="star star-06"></span>
+        </div>
+
+        <!-- SECTION METADATA -->
+        <div class="section-meta meta-left">
+            UJJAYINI · HOROLOGY
+        </div>
+
+        <div class="section-meta meta-right">
+            IV · FEATURED TIMEPIECES
+        </div>
+
+
+        <!-- INTRO -->
+        <div class="intro">
+
+            <p class="eyebrow">
+                FEATURED WATCHES
+            </p>
+
+            <h2>
+                The
+                <em>timepieces.</em>
+            </h2>
+
+            <div class="intro-rule">
+                <span></span>
+            </div>
+
+            <p class="intro-copy">
+                Precision shaped by the sky,
+                crafted for the moments that become yours.
+            </p>
+
+        </div>
+
+
+        <!-- PRODUCTS -->
+        <div class="product-list">
+
+            <template
+                for:each={watches}
+                for:item="watch"
+                for:index="index"
+            >
+
+                <article
+                    key={watch.productId}
+                    class="product-card"
+                >
+
+                    <!-- PRODUCT IMAGE -->
+                    <div class="product-visual">
+
+                        <div class="visual-glow"></div>
+
+                        <div class="image-frame">
+
+                            <template if:true={watch.imageUrl}>
+
+                                <img
+                                    src={watch.imageUrl}
+                                    alt={watch.name}
+                                    loading="lazy"
+                                />
+
+                            </template>
+
+                            <template if:false={watch.imageUrl}>
+
+                                <div class="image-placeholder">
+                                    <span>U</span>
+                                </div>
+
+                            </template>
+
+                        </div>
+
+                        <div class="orbit orbit-one"></div>
+                        <div class="orbit orbit-two"></div>
+
+                    </div>
+
+
+                    <!-- PRODUCT INFORMATION -->
+                    <div class="product-info">
+
+                        <div class="product-index">
+                            {watch.displayIndex}
+                        </div>
+
+                        <div class="product-category">
+                            {watch.collection}
+                        </div>
+
+
+                        <h3>
+                            {watch.name}
+                        </h3>
+
+
+                        <p class="product-description">
+                            {watch.brand}
+                            <span>·</span>
+                            {watch.movement}
+                        </p>
+
+
+                        <div class="spec-line"></div>
+
+
+                        <div class="spec-grid">
+
+                            <div>
+                                <span class="spec-label">
+                                    MOVEMENT
+                                </span>
+
+                                <span class="spec-value">
+                                    {watch.movement}
+                                </span>
+                            </div>
+
+
+                            <div>
+                                <span class="spec-label">
+                                    CASE
+                                </span>
+
+                                <span class="spec-value">
+                                    {watch.caseMaterial}
+                                </span>
+                            </div>
+
+
+                            <div>
+                                <span class="spec-label">
+                                    DIAL
+                                </span>
+
+                                <span class="spec-value">
+                                    {watch.dialColor}
+                                </span>
+                            </div>
+
+
+                            <div>
+                                <span class="spec-label">
+                                    MODEL
+                                </span>
+
+                                <span class="spec-value">
+                                    {watch.modelNumber}
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="explore-button"
+                            data-id={watch.productId}
+                            onclick={handleExplore}
+                        >
+
+                            <span>
+                                EXPLORE TIMEPIECE
+                            </span>
+
+                            <span class="arrow">
+                                ↗
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+            </template>
+
+        </div>
+
+
+        <!-- EMPTY STATE -->
+        <template if:true={showEmpty}>
+
+            <div class="empty-state">
+
+                <p>
+                    THE COLLECTION IS BEING PREPARED.
+                </p>
+
+                <span>
+                    New UJJAYINI timepieces will appear here.
+                </span>
+
+            </div>
+
+        </template>
+
+
+        <!-- CLOSING -->
+        <div class="closing">
+
+            <div class="closing-rule"></div>
+
+            <p>
+                TIME IS NOT DISPLAYED.
+                <em>IT IS EXPERIENCED.</em>
+            </p>
+
+            <div class="closing-rule"></div>
+
+        </div>
+
+
+        <!-- SECTION MARKER -->
+        <div class="section-marker">
+
+            <span>
+                IV
+            </span>
+
+            <span class="marker-line"></span>
+
+            <span>
+                FEATURED WATCHES
+            </span>
+
+        </div>
+
+    </section>
+
+</template>

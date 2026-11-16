@@ -1,835 +1,1060 @@
-/* =========================================================
+/* ============================================================
    UJJAYINI — UNSEEN PRECISION
-========================================================= */
+   Art Direction:
+   Editorial / Horological / Luxury / Cinematic
+============================================================ */
 
 :host {
     display: block;
     width: 100%;
-
-    background: #05060a;
-    color: #f3ede0;
-
-    font-family:
-        "Inter",
-        Arial,
-        sans-serif;
+    margin: 0;
+    padding: 0;
+    margin-bottom: -28px;
 }
 
 
-/* =========================================================
-   MAIN SECTION
-========================================================= */
+/* ============================================================
+   ROOT
+============================================================ */
 
 .precision-section {
+
+    --black:
+        #030507;
+
+    --black-soft:
+        #080b0d;
+
+    --ivory:
+        #f4e5d2;
+
+    --ivory-soft:
+        rgba(244, 229, 210, 0.72);
+
+    --ivory-muted:
+        rgba(244, 229, 210, 0.42);
+
+    --gold:
+        #d7ad52;
+
+    --gold-bright:
+        #f0cb70;
+
+    --gold-soft:
+        rgba(215, 173, 82, 0.42);
+
+    --gold-faint:
+        rgba(215, 173, 82, 0.12);
+
     position: relative;
 
     width: 100%;
+
     min-height: 100vh;
-    min-height: 100svh;
+
+    margin: 0;
+
+    padding: 0;
 
     overflow: hidden;
 
+    isolation: isolate;
+
+    color: var(--ivory);
+
     background:
         radial-gradient(
-            circle at 50% 42%,
-            rgba(201, 162, 77, 0.035) 0%,
-            transparent 29%
+            circle at 74% 43%,
+            rgba(20, 55, 48, 0.34) 0%,
+            transparent 34%
         ),
+
         radial-gradient(
-            circle at 18% 52%,
-            rgba(42, 55, 91, 0.045) 0%,
-            transparent 31%
+            circle at 18% 60%,
+            rgba(83, 20, 26, 0.24) 0%,
+            transparent 32%
         ),
+
         linear-gradient(
-            180deg,
-            #030407 0%,
-            #05060a 48%,
-            #020306 100%
+            110deg,
+            #050607 0%,
+            #07090a 42%,
+            #06110f 100%
         );
+
 }
 
 
-/* =========================================================
-   ATMOSPHERIC GLOWS
-========================================================= */
+/* ============================================================
+   ATMOSPHERE
+============================================================ */
 
-.background-glow {
+.atmosphere {
+
     position: absolute;
+
+    width: 700px;
+    height: 700px;
 
     border-radius: 50%;
 
     pointer-events: none;
 
-    filter: blur(30px);
+    filter: blur(90px);
 
-    z-index: 0;
+    opacity: 0.34;
+
+    z-index: -5;
+
 }
 
-.glow-center {
-    width: 720px;
-    height: 720px;
+.atmosphere-left {
 
-    left: 50%;
-    top: 30%;
-
-    transform:
-        translateX(-50%);
+    left: -300px;
+    top: 20%;
 
     background:
         radial-gradient(
             circle,
-            rgba(201, 162, 77, 0.045) 0%,
-            rgba(201, 162, 77, 0.018) 35%,
-            transparent 70%
-        );
-}
-
-.glow-left {
-    width: 500px;
-    height: 500px;
-
-    left: -330px;
-    top: 48%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(43, 63, 108, 0.055),
+            rgba(91, 23, 31, 0.38),
             transparent 68%
         );
+
 }
 
-.glow-right {
-    width: 500px;
-    height: 500px;
+.atmosphere-right {
 
-    right: -330px;
-    top: 28%;
+    right: -250px;
+    top: 8%;
 
     background:
         radial-gradient(
             circle,
-            rgba(201, 162, 77, 0.035),
+            rgba(13, 76, 67, 0.45),
             transparent 68%
         );
+
 }
 
 
-/* =========================================================
-   STARS
-========================================================= */
+/* ============================================================
+   GRAIN
+============================================================ */
 
-.star-field {
+.grain {
+
     position: absolute;
 
     inset: 0;
 
-    z-index: 1;
-
     pointer-events: none;
+
+    opacity: 0.08;
+
+    z-index: 20;
+
+    background-image:
+        radial-gradient(
+            rgba(255,255,255,0.5) 0.5px,
+            transparent 0.5px
+        );
+
+    background-size: 4px 4px;
+
+    mix-blend-mode: overlay;
+
 }
 
-.star {
+
+/* ============================================================
+   GHOST TYPOGRAPHY
+============================================================ */
+
+.ghost-word {
+
     position: absolute;
 
-    width: 1px;
-    height: 1px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(243, 237, 224, 0.38);
-
-    box-shadow:
-        0 0 6px
-        rgba(243, 237, 224, 0.15);
-}
-
-.star-01 {
-    top: 9%;
-    left: 13%;
-}
-
-.star-02 {
-    top: 17%;
-    left: 83%;
-}
-
-.star-03 {
-    top: 27%;
-    left: 6%;
-}
-
-.star-04 {
-    top: 32%;
-    left: 92%;
-}
-
-.star-05 {
-    top: 42%;
-    left: 15%;
-}
-
-.star-06 {
-    top: 48%;
-    left: 88%;
-}
-
-.star-07 {
-    top: 58%;
-    left: 8%;
-}
-
-.star-08 {
-    top: 65%;
-    left: 94%;
-}
-
-.star-09 {
-    top: 73%;
-    left: 17%;
-}
-
-.star-10 {
-    top: 81%;
-    left: 83%;
-}
-
-.star-11 {
-    top: 89%;
-    left: 10%;
-}
-
-.star-12 {
-    top: 92%;
-    left: 91%;
-}
-
-
-/* =========================================================
-   BACKGROUND ORBITS
-========================================================= */
-
-.background-orbit {
-    position: absolute;
-
-    width: 1000px;
-    height: 360px;
-
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.045);
-
-    border-radius: 50%;
+    z-index: -1;
 
     pointer-events: none;
 
-    z-index: 1;
-}
+    font-family:
+        Georgia,
+        'Times New Roman',
+        serif;
 
-.orbit-left {
-    left: -540px;
-    top: 34%;
+    font-size:
+        clamp(120px, 17vw, 300px);
 
-    transform:
-        rotate(-17deg);
-}
+    font-weight: 700;
 
-.orbit-right {
-    right: -540px;
-    top: 58%;
+    line-height: 0.75;
 
-    transform:
-        rotate(17deg);
-}
+    letter-spacing: -0.055em;
 
+    color:
+        rgba(244, 229, 210, 0.035);
 
-/* =========================================================
-   SECTION METADATA
-========================================================= */
-
-.section-meta {
-    position: absolute;
-
-    top: 42px;
-
-    z-index: 10;
-
-    font-size: 8px;
-
-    letter-spacing: 0.34em;
+    white-space: nowrap;
 
     text-transform: uppercase;
 
+}
+
+.ghost-top {
+
+    top: 7%;
+
+    right: -2%;
+
+}
+
+.ghost-middle {
+
+    top: 40%;
+
+    left: 34%;
+
+    font-style: italic;
+
     color:
-        rgba(
-            201,
-            162,
-            77,
-            0.48
-        );
+        rgba(215, 173, 82, 0.045);
+
 }
 
-.meta-left {
-    left: 8vw;
-}
+.ghost-bottom {
 
-.meta-right {
-    right: 8vw;
+    bottom: -1%;
+
+    left: -3%;
+
 }
 
 
-/* =========================================================
-   MAIN CONTAINER
-========================================================= */
+/* ============================================================
+   ORBITS
+============================================================ */
 
-.precision-container {
+.orbit {
+
+    position: absolute;
+
+    border: 1px solid
+        rgba(215, 173, 82, 0.13);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: -2;
+
+}
+
+.orbit-01 {
+
+    width: 900px;
+    height: 430px;
+
+    right: -180px;
+    top: 12%;
+
+    transform:
+        rotate(-16deg);
+
+}
+
+.orbit-02 {
+
+    width: 780px;
+    height: 330px;
+
+    right: -80px;
+    top: 26%;
+
+    transform:
+        rotate(17deg);
+
+}
+
+.orbit-03 {
+
+    width: 620px;
+    height: 270px;
+
+    left: 40%;
+    top: 34%;
+
+    transform:
+        rotate(-28deg);
+
+}
+
+
+/* ============================================================
+   TOP META
+============================================================ */
+
+.top-meta {
+
+    position: absolute;
+
+    top: 34px;
+
+    z-index: 10;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.34em;
+
+    color:
+        rgba(215, 173, 82, 0.58);
+
+    text-transform: uppercase;
+
+}
+
+.top-left {
+
+    left: 7%;
+
+}
+
+.top-right {
+
+    right: 7%;
+
+}
+
+
+/* ============================================================
+   MAIN STAGE
+============================================================ */
+
+.precision-stage {
+
     position: relative;
 
-    z-index: 5;
+    display: grid;
 
-    width: min(1280px, 86vw);
+    grid-template-columns:
+        minmax(380px, 0.85fr)
+        minmax(520px, 1.15fr);
+
+    min-height: 760px;
+
+    width: min(1500px, 100%);
 
     margin: 0 auto;
 
     padding:
-        15vh 0 13vh;
+        110px 7% 50px;
+
+    box-sizing: border-box;
+
 }
 
 
-/* =========================================================
-   INTRO
-========================================================= */
+/* ============================================================
+   LEFT EDITORIAL PANEL
+============================================================ */
 
-.precision-intro {
-    width: min(820px, 100%);
+.editorial-panel {
 
-    margin:
-        0 auto 7vh;
+    position: relative;
 
-    text-align: center;
+    z-index: 5;
+
+    align-self: center;
+
+    max-width: 540px;
+
+    padding-bottom: 50px;
+
 }
 
-.eyebrow {
-    margin-bottom: 27px;
 
-    font-size: 9px;
+.editorial-eyebrow {
 
-    letter-spacing: 0.5em;
+    display: flex;
 
-    color:
-        rgba(
-            201,
-            162,
-            77,
-            0.82
-        );
+    align-items: center;
 
-    text-transform: uppercase;
-}
+    gap: 18px;
 
-h2 {
-    margin: 0;
+    margin-bottom: 28px;
 
     font-family:
-        "Cormorant Garamond",
-        Georgia,
-        serif;
+        Arial,
+        sans-serif;
 
-    font-size:
-        clamp(
-            58px,
-            7.6vw,
-            110px
-        );
+    font-size: 10px;
 
-    line-height: 0.88;
+    font-weight: 700;
 
-    font-weight: 300;
+    letter-spacing: 0.42em;
 
-    letter-spacing: 0.012em;
-
-    color: #f3ede0;
-}
-
-h2 em {
     color:
-        rgba(
-            243,
-            237,
-            224,
-            0.48
-        );
+        rgba(244, 229, 210, 0.62);
 
-    font-style: italic;
 }
 
-.intro-rule {
-    width: 70px;
-    height: 1px;
+.editorial-eyebrow::before {
 
-    margin:
-        32px auto 27px;
+    content: '';
+
+    width: 34px;
+
+    height: 1px;
 
     background:
         linear-gradient(
-            to right,
-            transparent,
-            rgba(201, 162, 77, 0.82),
+            90deg,
+            var(--gold),
             transparent
         );
+
 }
 
-.intro-copy {
-    width: min(570px, 100%);
 
-    margin: 0 auto;
+.editorial-title {
+
+    margin: 0;
 
     font-family:
-        "Cormorant Garamond",
         Georgia,
+        'Times New Roman',
         serif;
 
     font-size:
-        clamp(
-            18px,
-            1.6vw,
-            21px
-        );
+        clamp(68px, 7.4vw, 125px);
 
-    line-height: 1.5;
+    line-height: 0.82;
 
-    font-weight: 300;
+    letter-spacing: -0.055em;
+
+    font-weight: 600;
+
+    color: var(--ivory);
+
+    text-transform: uppercase;
+
+}
+
+.editorial-title em {
+
+    display: inline-block;
 
     color:
-        rgba(
-            243,
-            237,
-            224,
-            0.40
-        );
+        rgba(244, 229, 210, 0.68);
+
+    font-weight: 400;
+
+    text-transform: none;
+
+    transform:
+        translateX(22px);
+
 }
 
 
-/* =========================================================
-   MOVEMENT WRAPPER
-========================================================= */
+.editorial-rule {
 
-.movement-wrapper {
-    position: relative;
+    width: 120px;
 
-    width: min(640px, 76vw);
-
-    aspect-ratio: 1 / 1;
+    height: 1px;
 
     margin:
-        0 auto 7vh;
+        34px 0 28px;
+
+    background:
+        rgba(215, 173, 82, 0.18);
+
+    position: relative;
+
+}
+
+.editorial-rule span {
+
+    display: block;
+
+    width: 42px;
+
+    height: 1px;
+
+    background:
+        var(--gold);
+
+}
+
+
+.editorial-copy {
+
+    max-width: 430px;
+
+    margin: 0 0 17px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    line-height: 1.85;
+
+    color:
+        rgba(244, 229, 210, 0.62);
+
+}
+
+.editorial-copy.secondary {
+
+    color:
+        rgba(244, 229, 210, 0.42);
+
+}
+
+
+/* ============================================================
+   BUTTON
+============================================================ */
+
+.precision-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 34px;
+
+    min-width: 270px;
+
+    margin-top: 22px;
+
+    padding:
+        14px 16px 14px 22px;
+
+    border:
+        1px solid
+        rgba(215, 173, 82, 0.48);
+
+    border-radius: 0;
+
+    background:
+        rgba(255,255,255,0.015);
+
+    color:
+        var(--ivory);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.28em;
+
+    cursor: pointer;
+
+    transition:
+        background 350ms ease,
+        border-color 350ms ease,
+        transform 350ms ease;
+
+}
+
+.precision-button:hover {
+
+    background:
+        rgba(215, 173, 82, 0.10);
+
+    border-color:
+        var(--gold-bright);
+
+    transform:
+        translateX(6px);
+
+}
+
+.button-arrow {
+
+    display: grid;
+
+    place-items: center;
+
+    width: 30px;
+
+    height: 30px;
+
+    border:
+        1px solid
+        rgba(215, 173, 82, 0.42);
+
+    color:
+        var(--gold-bright);
+
+    font-size: 14px;
+
+}
+
+
+/* ============================================================
+   COORDINATE
+============================================================ */
+
+.editorial-coordinate {
+
+    margin-top: 48px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 8px;
+
+    letter-spacing: 0.38em;
+
+    color:
+        rgba(215, 173, 82, 0.46);
+
+}
+
+
+/* ============================================================
+   ARTIFACT STAGE
+============================================================ */
+
+.artifact-stage {
+
+    position: relative;
+
+    min-height: 680px;
 
     display: flex;
 
     align-items: center;
 
     justify-content: center;
+
 }
 
 
-/* =========================================================
-   MOVEMENT LABELS
-========================================================= */
+/* ============================================================
+   ARTIFACT GLOW
+============================================================ */
 
-.movement-label {
+.artifact-glow {
+
     position: absolute;
 
-    z-index: 20;
-
-    font-size: 7px;
-
-    letter-spacing: 0.32em;
-
-    color:
-        rgba(
-            243,
-            237,
-            224,
-            0.22
-        );
-}
-
-.label-top {
-    top: 3%;
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-}
-
-.label-bottom {
-    bottom: 3%;
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    color:
-        rgba(
-            201,
-            162,
-            77,
-            0.46
-        );
-}
-
-
-/* =========================================================
-   MOVEMENT HALO
-========================================================= */
-
-.movement-halo {
-    position: absolute;
-
-    width: 94%;
-    height: 94%;
+    width: 520px;
+    height: 520px;
 
     border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(201, 162, 77, 0.035) 0%,
-            transparent 62%
+            rgba(218, 174, 76, 0.23) 0%,
+            rgba(218, 174, 76, 0.09) 27%,
+            transparent 68%
         );
 
     filter: blur(20px);
+
+    animation:
+        artifactBreath 7s ease-in-out infinite;
+
+}
+
+@keyframes artifactBreath {
+
+    0%,
+    100% {
+        transform: scale(0.96);
+        opacity: 0.65;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
 }
 
 
-/* =========================================================
-   MAIN MOVEMENT
-========================================================= */
+/* ============================================================
+   HALOS
+============================================================ */
 
-.movement {
+.artifact-halo {
+
+    position: absolute;
+
+    border:
+        1px solid
+        rgba(215, 173, 82, 0.18);
+
+    border-radius: 50%;
+
+}
+
+.halo-one {
+
+    width: 620px;
+    height: 620px;
+
+    transform:
+        rotate(18deg)
+        scaleY(0.55);
+
+}
+
+.halo-two {
+
+    width: 550px;
+    height: 550px;
+
+    transform:
+        rotate(-28deg)
+        scaleY(0.42);
+
+}
+
+
+/* ============================================================
+   HOROLOGY ARTIFACT
+============================================================ */
+
+.horology-artifact {
+
     position: relative;
 
-    width: 88%;
-    height: 88%;
+    width: 410px;
+
+    height: 560px;
+
+    transform:
+        perspective(1200px)
+        rotateY(-8deg)
+        rotateX(3deg);
+
+    animation:
+        artifactFloat 8s ease-in-out infinite;
+
+    filter:
+        drop-shadow(
+            0 35px 40px
+            rgba(0,0,0,0.55)
+        );
+
+}
+
+@keyframes artifactFloat {
+
+    0%,
+    100% {
+        transform:
+            perspective(1200px)
+            rotateY(-8deg)
+            rotateX(3deg)
+            translateY(0);
+    }
+
+    50% {
+        transform:
+            perspective(1200px)
+            rotateY(-5deg)
+            rotateX(2deg)
+            translateY(-12px);
+    }
+
+}
+
+
+/* ============================================================
+   OUTER RINGS
+============================================================ */
+
+.artifact-outer-ring {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 380px;
+    height: 380px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    border:
+        7px solid
+        rgba(126, 87, 21, 0.82);
+
+    box-shadow:
+
+        inset 0 0 0 2px
+            rgba(246, 211, 116, 0.8),
+
+        inset 0 0 0 11px
+            rgba(45, 30, 9, 0.85),
+
+        inset 0 0 0 15px
+            rgba(225, 174, 61, 0.65),
+
+        0 0 0 2px
+            rgba(238, 197, 95, 0.45),
+
+        0 0 30px
+            rgba(215, 173, 82, 0.23);
+
+}
+
+
+.artifact-ring {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    border-radius: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    border:
+        1px solid
+        rgba(239, 199, 96, 0.72);
+
+}
+
+.ring-a {
+
+    width: 400px;
+    height: 400px;
+
+}
+
+.ring-b {
+
+    width: 365px;
+    height: 365px;
+
+    border-color:
+        rgba(215, 173, 82, 0.30);
+
+}
+
+.ring-c {
+
+    width: 335px;
+    height: 335px;
+
+    border-color:
+        rgba(255, 225, 145, 0.36);
+
+}
+
+
+/* ============================================================
+   CENTRAL BODY
+============================================================ */
+
+.artifact-body {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 315px;
+    height: 315px;
+
+    transform:
+        translate(-50%, -50%);
 
     border-radius: 50%;
 
     background:
+
         radial-gradient(
-            circle at 50% 48%,
-            rgba(201, 162, 77, 0.07) 0%,
-            rgba(17, 18, 19, 0.92) 31%,
-            rgba(5, 6, 8, 0.98) 67%,
-            #020305 100%
+            circle at 32% 27%,
+            rgba(255,255,255,0.12),
+            transparent 23%
+        ),
+
+        radial-gradient(
+            circle at 65% 70%,
+            rgba(215,173,82,0.08),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            145deg,
+            #342d21 0%,
+            #101112 30%,
+            #050607 68%,
+            #292218 100%
         );
 
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.24);
-
     box-shadow:
-        0 0 0 14px rgba(201, 162, 77, 0.012),
-        0 0 0 28px rgba(201, 162, 77, 0.008),
-        inset 0 0 80px rgba(0, 0, 0, 0.85),
-        0 40px 120px rgba(0, 0, 0, 0.65);
 
-    overflow: visible;
+        inset 0 0 0 2px
+            rgba(238, 197, 96, 0.55),
+
+        inset 0 0 45px
+            rgba(0,0,0,0.8),
+
+        0 0 40px
+            rgba(215,173,82,0.12);
+
 }
 
 
-/* =========================================================
-   OUTER RING
-========================================================= */
+/* ============================================================
+   SURFACE
+============================================================ */
 
-.movement-ring {
+.artifact-surface {
+
+    position: absolute;
+
+    inset: 18px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(232, 196, 104, 0.30);
+
+    background:
+        radial-gradient(
+            circle,
+            #151515 0%,
+            #090a0a 68%,
+            #020303 100%
+        );
+
+    box-shadow:
+        inset 0 0 35px
+        rgba(0,0,0,0.85);
+
+}
+
+.surface-highlight {
+
     position: absolute;
 
     inset: 0;
 
     border-radius: 50%;
-}
-
-.ring-outer {
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.18);
-
-    animation:
-        precisionOuterRotate 38s linear infinite;
-}
-
-
-/* =========================================================
-   27 NAKṢATRA DOTS
-========================================================= */
-
-.nakshatra-dot {
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    width: 4px;
-    height: 4px;
-
-    margin:
-        -2px 0 0 -2px;
-
-    border-radius: 50%;
 
     background:
-        #c9a24d;
+        linear-gradient(
+            125deg,
+            rgba(255,255,255,0.12),
+            transparent 18%,
+            transparent 75%,
+            rgba(215,173,82,0.06)
+        );
 
-    box-shadow:
-        0 0 7px
-        rgba(201, 162, 77, 0.48);
 }
 
 
-/* =========================================================
-   NAKṢATRA RING
-========================================================= */
+.artifact-inscription {
 
-.nakshatra-ring {
     position: absolute;
 
-    inset: 6%;
+    top: 77px;
 
-    border:
-        1px solid
-        rgba(243, 237, 224, 0.065);
-
-    border-radius: 50%;
-
-    animation:
-        precisionInnerRotate 52s linear infinite reverse;
-}
-
-.nakshatra-tick {
-    position: absolute;
-
-    top: 50%;
     left: 50%;
-
-    width: 1px;
-    height: 7px;
-
-    margin-left: -0.5px;
-
-    background:
-        rgba(
-            243,
-            237,
-            224,
-            0.30
-        );
-
-    transform-origin:
-        center
-        calc(
-            100% +
-            100%
-        );
-}
-
-
-/* =========================================================
-   RĀŚI RING
-========================================================= */
-
-.rashi-ring {
-    position: absolute;
-
-    inset: 13%;
-
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.10);
-
-    border-radius: 50%;
-
-    animation:
-        precisionRashiRotate 30s linear infinite;
-}
-
-.rashi-tick {
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    width: 2px;
-    height: 16px;
-
-    margin-left: -1px;
-
-    background:
-        rgba(
-            201,
-            162,
-            77,
-            0.58
-        );
-
-    transform-origin:
-        center
-        calc(
-            100% +
-            100%
-        );
-}
-
-
-/* =========================================================
-   GUILLoche
-========================================================= */
-
-.guilloche {
-    position: absolute;
-
-    inset: 20%;
-
-    border-radius: 50%;
-
-    overflow: hidden;
-
-    opacity: 0.34;
 
     transform:
-        rotate(-14deg);
+        translateX(-50%);
+
+    font-family:
+        Georgia,
+        serif;
+
+    font-size: 13px;
+
+    letter-spacing: 0.42em;
+
+    color:
+        rgba(244,229,210,0.72);
+
+    white-space: nowrap;
+
 }
 
-.guilloche-line {
+
+.artifact-coordinate {
+
+    position: absolute;
+
+    top: 102px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 6px;
+
+    letter-spacing: 0.38em;
+
+    color:
+        rgba(215,173,82,0.58);
+
+}
+
+
+/* ============================================================
+   SUN
+============================================================ */
+
+.artifact-sun {
+
     position: absolute;
 
     left: 50%;
     top: 50%;
 
-    width: 150%;
-    height: 150%;
-
-    border:
-        1px solid
-        rgba(243, 237, 224, 0.075);
-
-    border-radius: 50%;
-
-    transform:
-        translate(-50%, -50%);
-}
-
-.line-01 {
-    transform:
-        translate(-50%, -50%)
-        rotate(7deg)
-        scale(1);
-}
-
-.line-02 {
-    transform:
-        translate(-50%, -50%)
-        rotate(18deg)
-        scale(0.92);
-}
-
-.line-03 {
-    transform:
-        translate(-50%, -50%)
-        rotate(29deg)
-        scale(0.84);
-}
-
-.line-04 {
-    transform:
-        translate(-50%, -50%)
-        rotate(40deg)
-        scale(0.76);
-}
-
-.line-05 {
-    transform:
-        translate(-50%, -50%)
-        rotate(51deg)
-        scale(0.68);
-}
-
-.line-06 {
-    transform:
-        translate(-50%, -50%)
-        rotate(62deg)
-        scale(0.60);
-}
-
-.line-07 {
-    transform:
-        translate(-50%, -50%)
-        rotate(73deg)
-        scale(0.52);
-}
-
-.line-08 {
-    transform:
-        translate(-50%, -50%)
-        rotate(84deg)
-        scale(0.44);
-}
-
-
-/* =========================================================
-   INNER RINGS
-========================================================= */
-
-.inner-ring {
-    position: absolute;
-
-    border-radius: 50%;
-
-    left: 50%;
-    top: 50%;
+    width: 145px;
+    height: 145px;
 
     transform:
         translate(-50%, -50%);
 
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.13);
 }
 
-.inner-ring-one {
-    width: 57%;
-    height: 57%;
-}
+.sun-core {
 
-.inner-ring-two {
-    width: 43%;
-    height: 43%;
-
-    border-color:
-        rgba(243, 237, 224, 0.10);
-}
-
-.inner-ring-three {
-    width: 31%;
-    height: 31%;
-
-    border-color:
-        rgba(201, 162, 77, 0.18);
-}
-
-
-/* =========================================================
-   SUNBURST
-========================================================= */
-
-.sunburst {
     position: absolute;
-
-    width: 31%;
-    height: 31%;
 
     left: 50%;
     top: 50%;
+
+    width: 26px;
+    height: 26px;
 
     transform:
         translate(-50%, -50%);
@@ -838,142 +1063,65 @@ h2 em {
 
     background:
         radial-gradient(
-            circle,
-            rgba(201, 162, 77, 0.15) 0%,
-            rgba(201, 162, 77, 0.035) 48%,
-            transparent 72%
+            circle at 35% 30%,
+            #fff0a9 0%,
+            #d5a83f 42%,
+            #694712 100%
         );
-}
-
-.sunburst-core {
-    position: absolute;
-
-    width: 22%;
-    height: 22%;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    border-radius: 50%;
-
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.65);
 
     box-shadow:
         0 0 18px
-        rgba(201, 162, 77, 0.14);
+        rgba(238,194,83,0.48);
+
 }
 
-.ray {
+
+.sun-ray {
+
     position: absolute;
 
     left: 50%;
     top: 50%;
 
     width: 1px;
-    height: 50%;
+    height: 145px;
 
     transform-origin:
-        center bottom;
+        center center;
 
     background:
         linear-gradient(
-            to top,
-            rgba(201, 162, 77, 0.38),
-            transparent
+            to bottom,
+            transparent 0%,
+            rgba(215,173,82,0.65) 42%,
+            transparent 100%
         );
+
 }
 
-.ray-01 {
-    transform:
-        translate(-50%, -100%)
-        rotate(0deg);
-}
-
-.ray-02 {
-    transform:
-        translate(-50%, -100%)
-        rotate(30deg);
-}
-
-.ray-03 {
-    transform:
-        translate(-50%, -100%)
-        rotate(60deg);
-}
-
-.ray-04 {
-    transform:
-        translate(-50%, -100%)
-        rotate(90deg);
-}
-
-.ray-05 {
-    transform:
-        translate(-50%, -100%)
-        rotate(120deg);
-}
-
-.ray-06 {
-    transform:
-        translate(-50%, -100%)
-        rotate(150deg);
-}
-
-.ray-07 {
-    transform:
-        translate(-50%, -100%)
-        rotate(180deg);
-}
-
-.ray-08 {
-    transform:
-        translate(-50%, -100%)
-        rotate(210deg);
-}
-
-.ray-09 {
-    transform:
-        translate(-50%, -100%)
-        rotate(240deg);
-}
-
-.ray-10 {
-    transform:
-        translate(-50%, -100%)
-        rotate(270deg);
-}
-
-.ray-11 {
-    transform:
-        translate(-50%, -100%)
-        rotate(300deg);
-}
-
-.ray-12 {
-    transform:
-        translate(-50%, -100%)
-        rotate(330deg);
-}
+.ray-01 { transform: translate(-50%, -50%) rotate(0deg); }
+.ray-02 { transform: translate(-50%, -50%) rotate(45deg); }
+.ray-03 { transform: translate(-50%, -50%) rotate(90deg); }
+.ray-04 { transform: translate(-50%, -50%) rotate(135deg); }
+.ray-05 { transform: translate(-50%, -50%) rotate(180deg); }
+.ray-06 { transform: translate(-50%, -50%) rotate(225deg); }
+.ray-07 { transform: translate(-50%, -50%) rotate(270deg); }
+.ray-08 { transform: translate(-50%, -50%) rotate(315deg); }
 
 
-/* =========================================================
+/* ============================================================
    MERIDIAN
-========================================================= */
+============================================================ */
 
-.meridian {
+.artifact-meridian {
+
     position: absolute;
 
-    top: -4%;
-    bottom: -4%;
-
     left: 50%;
+    top: 25px;
 
     width: 1px;
+    height: 265px;
 
     transform:
         translateX(-50%);
@@ -981,777 +1129,701 @@ h2 em {
     background:
         linear-gradient(
             to bottom,
-            transparent 0%,
-            rgba(201, 162, 77, 0.15) 8%,
-            rgba(201, 162, 77, 0.72) 50%,
-            rgba(201, 162, 77, 0.15) 92%,
-            transparent 100%
+            transparent,
+            rgba(215,173,82,0.72) 20%,
+            rgba(215,173,82,0.72) 80%,
+            transparent
         );
 
-    z-index: 12;
-}
-
-.meridian-label {
-    position: absolute;
-
-    left: 50%;
-    top: 12%;
-
-    transform:
-        translateX(8px);
-
-    font-size: 6px;
-
-    letter-spacing: 0.35em;
-
-    color:
-        rgba(
-            201,
-            162,
-            77,
-            0.56
-        );
-
-    z-index: 15;
 }
 
 
-/* =========================================================
-   CENTER POINT
-========================================================= */
+/* ============================================================
+   MECHANICAL DOTS
+============================================================ */
 
-.center-point {
+.mechanical-dot {
+
     position: absolute;
 
-    width: 10%;
-    height: 10%;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
+    width: 5px;
+    height: 5px;
 
     border-radius: 50%;
 
     background:
-        radial-gradient(
-            circle,
-            rgba(201, 162, 77, 0.15),
-            transparent 68%
-        );
+        #d9ae4f;
 
-    border:
-        1px solid
-        rgba(201, 162, 77, 0.22);
+    box-shadow:
+        0 0 8px
+        rgba(215,173,82,0.55);
 
-    z-index: 20;
 }
 
-.center-inner {
+.dot-01 {
+    left: 62px;
+    top: 94px;
+}
+
+.dot-02 {
+    right: 62px;
+    top: 94px;
+}
+
+.dot-03 {
+    left: 62px;
+    bottom: 94px;
+}
+
+.dot-04 {
+    right: 62px;
+    bottom: 94px;
+}
+
+
+/* ============================================================
+   SIDE ARCHITECTURE
+============================================================ */
+
+.artifact-column {
+
     position: absolute;
 
-    width: 4px;
-    height: 4px;
-
-    left: 50%;
     top: 50%;
 
-    transform:
-        translate(-50%, -50%);
+    width: 24px;
+    height: 205px;
 
-    border-radius: 50%;
+    transform:
+        translateY(-50%);
+
+    border-radius: 5px;
 
     background:
-        #c9a24d;
+        linear-gradient(
+            90deg,
+            #090909,
+            #57504a 45%,
+            #151515 80%
+        );
+
+    box-shadow:
+        inset 1px 0 rgba(255,255,255,0.1);
+
+}
+
+.column-left {
+
+    left: 22px;
+
+}
+
+.column-right {
+
+    right: 22px;
+
+}
+
+
+.artifact-bridge {
+
+    position: absolute;
+
+    left: 50%;
+
+    width: 240px;
+    height: 17px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #121212,
+            #8a6523,
+            #1a1712
+        );
 
     box-shadow:
         0 0 12px
-        rgba(201, 162, 77, 0.55);
-}
-
-
-/* =========================================================
-   ROTATION
-========================================================= */
-
-@keyframes precisionOuterRotate {
-
-    from {
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            rotate(360deg);
-    }
+        rgba(215,173,82,0.12);
 
 }
 
-@keyframes precisionInnerRotate {
+.bridge-top {
 
-    from {
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            rotate(-360deg);
-    }
+    top: 116px;
 
 }
 
-@keyframes precisionRashiRotate {
+.bridge-bottom {
 
-    from {
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            rotate(360deg);
-    }
+    bottom: 116px;
 
 }
 
 
-/* =========================================================
-   MEASUREMENT LINE
-========================================================= */
+/* ============================================================
+   CROWN
+============================================================ */
 
-.measurement-line {
+.artifact-crown {
+
+    position: absolute;
+
+    right: -3px;
+
+    top: 50%;
+
+    width: 42px;
+    height: 88px;
+
+    transform:
+        translateY(-50%);
+
+    border-radius:
+        6px 10px 10px 6px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #76521a,
+            #f1c862 45%,
+            #8b641f 72%,
+            #4e3511
+        );
+
+    box-shadow:
+        inset 2px 0 rgba(255,255,255,0.24),
+        0 8px 20px rgba(0,0,0,0.4);
+
+}
+
+.artifact-crown span {
+
+    display: block;
+
+    height: 1px;
+
+    margin: 15px 7px 0;
+
+    background:
+        rgba(255,238,170,0.6);
+
+}
+
+
+/* ============================================================
+   FLOATING DATA
+============================================================ */
+
+.artifact-data {
+
+    position: absolute;
+
     display: flex;
 
-    align-items: center;
+    flex-direction: column;
 
-    justify-content: center;
+    gap: 4px;
 
-    gap: 24px;
-
-    width: min(760px, 100%);
-
-    margin:
-        0 auto 8vh;
-}
-
-.measurement-line span {
-    flex: 1;
-
-    height: 1px;
-
-    background:
-        linear-gradient(
-            to right,
-            transparent,
-            rgba(201, 162, 77, 0.25)
-        );
-}
-
-.measurement-line span:last-child {
-    background:
-        linear-gradient(
-            to left,
-            transparent,
-            rgba(201, 162, 77, 0.25)
-        );
-}
-
-.measurement-line p {
-    margin: 0;
-
-    white-space: nowrap;
-
-    font-size: 7px;
-
-    letter-spacing: 0.4em;
-
-    color:
-        rgba(
-            243,
-            237,
-            224,
-            0.23
-        );
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-.precision-stats {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    width: min(1000px, 100%);
-
-    margin:
-        0 auto 10vh;
-
-    border-top:
-        1px solid
-        rgba(201, 162, 77, 0.13);
-
-    border-bottom:
-        1px solid
-        rgba(201, 162, 77, 0.10);
-}
-
-.stat {
-    padding:
-        42px 42px 38px;
-
-    border-left:
-        1px solid
-        rgba(201, 162, 77, 0.10);
-
-    text-align: center;
-}
-
-.stat:first-child {
-    border-left: none;
-}
-
-.stat-number {
     font-family:
-        "Cormorant Garamond",
+        Arial,
+        sans-serif;
+
+}
+
+.artifact-data span {
+
+    font-family:
         Georgia,
         serif;
 
-    font-size:
-        clamp(
-            64px,
-            7vw,
-            92px
-        );
-
-    line-height: 0.8;
-
-    font-weight: 300;
+    font-size: 38px;
 
     color:
-        #f3ede0;
+        var(--ivory);
+
 }
 
-.counter {
-    display: inline-block;
-
-    min-width: 1.2em;
-}
-
-.stat-rule {
-    width: 34px;
-    height: 1px;
-
-    margin:
-        24px auto 18px;
-
-    background:
-        rgba(
-            201,
-            162,
-            77,
-            0.65
-        );
-}
-
-.stat-label {
-    font-size: 8px;
-
-    letter-spacing: 0.36em;
-
-    color:
-        rgba(
-            201,
-            162,
-            77,
-            0.78
-        );
-}
-
-.stat p {
-    width: min(220px, 100%);
-
-    margin:
-        17px auto 0;
-
-    font-family:
-        "Cormorant Garamond",
-        Georgia,
-        serif;
-
-    font-size: 16px;
-
-    line-height: 1.45;
-
-    color:
-        rgba(
-            243,
-            237,
-            224,
-            0.34
-        );
-}
-
-
-/* =========================================================
-   CRAFT NOTES
-========================================================= */
-
-.craft-notes {
-    width: min(980px, 100%);
-
-    margin:
-        0 auto 10vh;
-
-    border-top:
-        1px solid
-        rgba(201, 162, 77, 0.13);
-}
-
-.craft-intro {
-    padding:
-        22px 0;
+.artifact-data small {
 
     font-size: 7px;
 
     letter-spacing: 0.38em;
 
     color:
-        rgba(
-            201,
-            162,
-            77,
-            0.58
-        );
+        rgba(215,173,82,0.58);
+
 }
 
-.craft-note {
-    display: grid;
+.data-top {
 
-    grid-template-columns:
-        80px 1fr;
+    top: 18%;
 
-    gap: 30px;
+    right: 4%;
 
-    padding:
-        25px 0;
-
-    border-top:
-        1px solid
-        rgba(243, 237, 224, 0.055);
 }
 
-.craft-number {
-    font-size: 8px;
+.data-bottom {
+
+    bottom: 15%;
+
+    left: 4%;
+
+}
+
+
+/* ============================================================
+   AXIS
+============================================================ */
+
+.measurement-axis {
+
+    position: absolute;
+
+    right: 0;
+
+    top: 50%;
+
+    height: 390px;
+
+    transform:
+        translateY(-50%);
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 7px;
 
     letter-spacing: 0.25em;
 
     color:
-        rgba(
-            201,
-            162,
-            77,
-            0.52
-        );
+        rgba(215,173,82,0.48);
+
 }
 
-.craft-content {
+.measurement-axis div {
+
+    width: 1px;
+
+    flex: 1;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(215,173,82,0.42),
+            transparent
+        );
+
+}
+
+
+/* ============================================================
+   LOWER DATA BAND
+============================================================ */
+
+.precision-data {
+
+    position: relative;
+
     display: grid;
 
     grid-template-columns:
-        220px 1fr;
+        repeat(3, 1fr);
 
-    gap: 30px;
+    width: min(1050px, 82%);
+
+    margin:
+        0 auto;
+
+    border-top:
+        1px solid
+        rgba(215,173,82,0.22);
+
+    border-bottom:
+        1px solid
+        rgba(215,173,82,0.12);
+
 }
 
-.craft-content h3 {
-    margin: 0;
+.data-card {
+
+    min-height: 170px;
+
+    padding:
+        28px 34px;
+
+    border-right:
+        1px solid
+        rgba(215,173,82,0.16);
+
+}
+
+.data-card:last-child {
+
+    border-right: none;
+
+}
+
+.data-number {
+
+    display: block;
 
     font-family:
-        "Cormorant Garamond",
         Georgia,
         serif;
 
-    font-size: 25px;
+    font-size: 56px;
 
     line-height: 1;
 
-    font-weight: 400;
-
     color:
-        rgba(
-            243,
-            237,
-            224,
-            0.82
-        );
+        var(--ivory);
+
 }
 
-.craft-content p {
-    width: min(470px, 100%);
+.data-label {
 
-    margin: 0;
+    display: block;
+
+    margin-top: 10px;
 
     font-family:
-        "Cormorant Garamond",
-        Georgia,
-        serif;
+        Arial,
+        sans-serif;
 
-    font-size: 17px;
+    font-size: 8px;
 
-    line-height: 1.45;
+    font-weight: 700;
+
+    letter-spacing: 0.35em;
 
     color:
-        rgba(
-            243,
-            237,
-            224,
-            0.34
-        );
+        var(--gold);
+
+}
+
+.data-card p {
+
+    max-width: 230px;
+
+    margin:
+        12px 0 0;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 10px;
+
+    line-height: 1.65;
+
+    color:
+        rgba(244,229,210,0.42);
+
 }
 
 
-/* =========================================================
+/* ============================================================
    CLOSING
-========================================================= */
+============================================================ */
 
 .precision-closing {
+
     display: flex;
 
     align-items: center;
 
-    justify-content: center;
+    gap: 24px;
 
-    gap: 25px;
+    width: min(1000px, 80%);
 
-    padding-top: 3vh;
+    margin:
+        70px auto 100px;
+
 }
 
-.closing-line {
-    width: 100px;
+.precision-closing span {
+
+    flex: 1;
+
     height: 1px;
 
     background:
         linear-gradient(
-            to right,
+            90deg,
             transparent,
-            rgba(201, 162, 77, 0.42)
+            rgba(215,173,82,0.28)
         );
+
 }
 
-.closing-line:last-child {
+.precision-closing span:last-child {
+
     background:
         linear-gradient(
-            to left,
-            transparent,
-            rgba(201, 162, 77, 0.42)
+            90deg,
+            rgba(215,173,82,0.28),
+            transparent
         );
+
 }
 
 .precision-closing p {
+
     margin: 0;
 
-    text-align: center;
+    white-space: nowrap;
+
+    font-family:
+        Arial,
+        sans-serif;
 
     font-size: 8px;
 
-    line-height: 1.8;
+    font-weight: 600;
 
-    letter-spacing: 0.3em;
+    letter-spacing: 0.34em;
 
     color:
-        rgba(
-            243,
-            237,
-            224,
-            0.28
-        );
+        rgba(244,229,210,0.48);
+
 }
 
 .precision-closing em {
+
     color:
-        rgba(
-            201,
-            162,
-            77,
-            0.67
-        );
+        var(--ivory);
 
     font-family:
-        "Cormorant Garamond",
         Georgia,
         serif;
 
-    font-size: 17px;
+    font-size: 13px;
 
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
+
 }
 
 
-/* =========================================================
+/* ============================================================
    SECTION MARKER
-========================================================= */
+============================================================ */
 
 .section-marker {
+
     position: absolute;
 
-    left: 8vw;
-    bottom: 40px;
+    bottom: 30px;
 
-    z-index: 15;
+    left: 7%;
 
     display: flex;
 
     align-items: center;
 
-    gap: 13px;
+    gap: 14px;
+
+    font-family:
+        Arial,
+        sans-serif;
 
     font-size: 8px;
 
-    letter-spacing: 0.3em;
+    letter-spacing: 0.35em;
 
     color:
-        rgba(
-            243,
-            237,
-            224,
-            0.25
-        );
+        rgba(215,173,82,0.5);
+
 }
 
-.marker-number {
-    color:
-        #c9a24d;
-}
+.section-marker i {
 
-.marker-dash {
-    color:
-        rgba(
-            201,
-            162,
-            77,
-            0.5
-        );
-}
+    display: block;
 
-.marker-text {
-    color:
-        rgba(
-            243,
-            237,
-            224,
-            0.3
-        );
+    width: 40px;
+
+    height: 1px;
+
+    background:
+        rgba(215,173,82,0.35);
+
 }
 
 
-/* =========================================================
-   TABLET
-========================================================= */
+/* ============================================================
+   RESPONSIVE
+============================================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
 
-    .precision-container {
-        width: 90vw;
-    }
+    .precision-stage {
 
-    .movement-wrapper {
-        width: min(600px, 82vw);
-    }
-
-    .precision-stats {
-        width: 100%;
-    }
-
-    .stat {
-        padding:
-            36px 24px 32px;
-    }
-
-    .craft-content {
         grid-template-columns:
-            170px 1fr;
+            1fr;
+
+        padding:
+            100px 8% 60px;
+
+    }
+
+    .editorial-panel {
+
+        max-width: 700px;
+
+        margin:
+            0 auto;
+
+        text-align: center;
+
+    }
+
+    .editorial-eyebrow {
+
+        justify-content: center;
+
+    }
+
+    .editorial-rule {
+
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    .editorial-copy {
+
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    .precision-button {
+
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    .editorial-coordinate {
+
+        text-align: center;
+
+    }
+
+    .artifact-stage {
+
+        min-height: 620px;
+
+    }
+
+    .precision-data {
+
+        width: 86%;
+
     }
 
 }
 
-
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media (max-width: 700px) {
 
-    .section-meta {
-        top: 28px;
+    .ghost-word {
 
-        font-size: 7px;
-
-        letter-spacing: 0.27em;
-    }
-
-    .meta-left {
-        left: 7vw;
-    }
-
-    .meta-right {
-        right: 7vw;
-    }
-
-    .precision-container {
-        width: 86vw;
-
-        padding:
-            13vh 0 11vh;
-    }
-
-    .precision-intro {
-        margin-bottom: 6vh;
-    }
-
-    .eyebrow {
-        font-size: 8px;
-
-        letter-spacing: 0.37em;
-
-        margin-bottom: 22px;
-    }
-
-    h2 {
         font-size:
-            clamp(
-                48px,
-                14vw,
-                76px
-            );
+            90px;
+
     }
 
-    .intro-copy {
-        font-size: 18px;
+    .precision-stage {
+
+        padding:
+            90px 24px 40px;
+
     }
 
-    .movement-wrapper {
-        width: 94vw;
+    .editorial-title {
 
-        margin-bottom: 6vh;
+        font-size:
+            clamp(52px, 16vw, 82px);
+
     }
 
-    .movement {
-        width: 88%;
-        height: 88%;
+    .artifact-stage {
+
+        min-height: 500px;
+
     }
 
-    .movement-label {
-        font-size: 6px;
+    .horology-artifact {
+
+        transform:
+            scale(0.72);
+
     }
 
-    .measurement-line {
-        gap: 10px;
+    .precision-data {
 
-        margin-bottom: 6vh;
+        grid-template-columns: 1fr;
+
     }
 
-    .measurement-line p {
-        font-size: 6px;
+    .data-card {
 
-        letter-spacing: 0.28em;
-    }
+        border-right: none;
 
-    .precision-stats {
-        display: block;
-    }
-
-    .stat {
-        border-left: none;
-
-        border-top:
+        border-bottom:
             1px solid
-            rgba(201, 162, 77, 0.10);
+            rgba(215,173,82,0.14);
 
-        padding:
-            40px 20px 38px;
     }
 
-    .stat:first-child {
-        border-top: none;
-    }
+    .data-card:last-child {
 
-    .stat-number {
-        font-size: 76px;
-    }
+        border-bottom: none;
 
-    .craft-note {
-        grid-template-columns:
-            48px 1fr;
-
-        gap: 15px;
-
-        padding:
-            25px 0;
-    }
-
-    .craft-content {
-        display: block;
-    }
-
-    .craft-content h3 {
-        margin-bottom: 12px;
-
-        font-size: 24px;
-    }
-
-    .craft-content p {
-        font-size: 17px;
     }
 
     .precision-closing {
-        gap: 10px;
-    }
 
-    .closing-line {
-        width: 24px;
+        width: 88%;
+
     }
 
     .precision-closing p {
-        font-size: 7px;
 
-        letter-spacing: 0.22em;
+        white-space: normal;
+
+        text-align: center;
+
+        line-height: 2;
+
     }
 
-    .precision-closing em {
-        font-size: 15px;
+    .precision-closing span {
+
+        display: none;
+
     }
 
-    .section-marker {
-        position: relative;
+    .measurement-axis {
 
-        left: auto;
-        bottom: auto;
+        display: none;
 
-        width: 86vw;
-
-        margin:
-            0 auto 30px;
     }
 
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .ring-outer,
-    .nakshatra-ring,
-    .rashi-ring {
-        animation: none;
-    }
 }

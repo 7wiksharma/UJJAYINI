@@ -1,0 +1,191 @@
+<template>
+
+    <section class="craftsmanship-section">
+
+        <!-- ATMOSPHERE -->
+        <div class="atmosphere atmosphere-left"></div>
+        <div class="atmosphere atmosphere-right"></div>
+
+        <!-- STARS -->
+        <div class="star-field">
+            <span class="star star-01"></span>
+            <span class="star star-02"></span>
+            <span class="star star-03"></span>
+            <span class="star star-04"></span>
+            <span class="star star-05"></span>
+            <span class="star star-06"></span>
+            <span class="star star-07"></span>
+        </div>
+
+        <!-- TOP METADATA -->
+        <div class="section-meta meta-left">
+            UJJAYINI · HOROLOGY
+        </div>
+
+        <div class="section-meta meta-right">
+            V · THE MAKING
+        </div>
+
+        <div class="craft-container">
+
+            <!-- INTRO -->
+            <div class="craft-intro">
+
+                <div class="eyebrow">
+                    THE ART OF CRAFT
+                </div>
+
+                <h2>
+                    Made by hand.
+                    <em>Measured by time.</em>
+                </h2>
+
+                <div class="intro-rule"></div>
+
+                <p>
+                    A UJJAYINI timepiece is not assembled merely
+                    to tell the hour. Every surface, every edge
+                    and every movement is considered before it
+                    becomes part of the whole.
+                </p>
+
+            </div>
+
+
+            <!-- CINEMATIC VIDEO -->
+            <div class="craft-video-wrapper">
+
+                <div class="video-frame">
+
+                    <video
+                        class="craft-video"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    >
+
+                        <source
+                            src={videoUrl}
+                            type="video/mp4"
+                        />
+
+                        Your browser does not support
+                        HTML5 video.
+
+                    </video>
+
+                    <!-- VIDEO OVERLAY -->
+                    <div class="video-overlay"></div>
+
+                    <!-- VIDEO CORNERS -->
+                    <span class="video-corner corner-top-left"></span>
+                    <span class="video-corner corner-top-right"></span>
+                    <span class="video-corner corner-bottom-left"></span>
+                    <span class="video-corner corner-bottom-right"></span>
+
+                    <!-- VIDEO LABEL -->
+                    <div class="video-label">
+
+                        <span class="video-number">
+                            01
+                        </span>
+
+                        <span class="video-divider"></span>
+
+                        <span>
+                            THE MAKING
+                        </span>
+
+                    </div>
+
+                    <!-- VIDEO LOCATION -->
+                    <div class="video-location">
+                        UJJAYINI · INDIA
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CRAFT PILLARS -->
+            <div class="craft-grid">
+
+                <template
+                    for:each={craftPoints}
+                    for:item="point"
+                >
+
+                    <article
+                        key={point.id}
+                        class="craft-card"
+                    >
+
+                        <div class="card-number">
+                            {point.number}
+                        </div>
+
+                        <div class="card-content">
+
+                            <p class="card-category">
+                                {point.category}
+                            </p>
+
+                            <h3>
+                                {point.title}
+                            </h3>
+
+                            <p class="card-description">
+                                {point.description}
+                            </p>
+
+                        </div>
+
+                        <div class="card-arrow">
+                            ↗
+                        </div>
+
+                    </article>
+
+                </template>
+
+            </div>
+
+
+            <!-- CLOSING -->
+            <div class="craft-closing">
+
+                <div class="closing-line"></div>
+
+                <p>
+                    EVERY DETAIL HAS A PURPOSE.
+                    <em>EVERY SECOND HAS A STORY.</em>
+                </p>
+
+                <div class="closing-line"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SECTION MARKER -->
+        <div class="section-marker">
+
+            <span>
+                V
+            </span>
+
+            <span class="marker-line"></span>
+
+            <span>
+                THE CRAFT
+            </span>
+
+        </div>
+
+    </section>
+
+</template>

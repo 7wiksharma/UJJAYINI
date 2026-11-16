@@ -1,0 +1,825 @@
+:host {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-bottom: -32px;
+
+}
+
+.craftsmanship-section {
+    --black: #05060a;
+    --black-soft: #090b10;
+    --cream: #f4dfc4;
+    --cream-soft: rgba(244, 223, 196, 0.72);
+    --cream-muted: rgba(244, 223, 196, 0.42);
+    --gold: #c9a24d;
+    --gold-bright: #e0bd6b;
+    --gold-soft: rgba(201, 162, 77, 0.28);
+    --burgundy: #64151e;
+    --burgundy-bright: #8d222d;
+
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 120px 7vw 100px;
+
+    overflow: hidden;
+    isolation: isolate;
+
+    background:
+        radial-gradient(
+            circle at 18% 35%,
+            rgba(100, 21, 30, 0.24),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 82% 55%,
+            rgba(100, 21, 30, 0.16),
+            transparent 34%
+        ),
+        linear-gradient(
+            125deg,
+            #05060a 0%,
+            #09080c 48%,
+            #05060a 100%
+        );
+
+    color: var(--cream);
+}
+
+
+/* ==========================================
+   ATMOSPHERE
+========================================== */
+
+.atmosphere {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    z-index: -2;
+}
+
+.atmosphere-left {
+    width: 420px;
+    height: 420px;
+    left: -220px;
+    top: 20%;
+    background: rgba(100, 21, 30, 0.18);
+}
+
+.atmosphere-right {
+    width: 360px;
+    height: 360px;
+    right: -180px;
+    top: 50%;
+    background: rgba(100, 21, 30, 0.13);
+}
+
+
+/* ==========================================
+   STARS
+========================================== */
+
+.star-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(244, 223, 196, 0.7);
+    box-shadow: 0 0 8px rgba(244, 223, 196, 0.5);
+}
+
+.star-01 {
+    top: 12%;
+    left: 13%;
+}
+
+.star-02 {
+    top: 24%;
+    right: 18%;
+}
+
+.star-03 {
+    top: 48%;
+    left: 7%;
+}
+
+.star-04 {
+    top: 67%;
+    right: 10%;
+}
+
+.star-05 {
+    top: 78%;
+    left: 21%;
+}
+
+.star-06 {
+    top: 36%;
+    right: 34%;
+}
+
+.star-07 {
+    top: 89%;
+    right: 26%;
+}
+
+
+/* ==========================================
+   SECTION META
+========================================== */
+
+.section-meta {
+    position: absolute;
+    top: 34px;
+
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+
+    color: rgba(244, 223, 196, 0.42);
+
+    white-space: nowrap;
+}
+
+.meta-left {
+    left: 7vw;
+}
+
+.meta-right {
+    right: 7vw;
+}
+
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.craft-container {
+    position: relative;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+
+/* ==========================================
+   INTRO
+========================================== */
+
+.craft-intro {
+    max-width: 850px;
+    margin-bottom: 70px;
+}
+
+.eyebrow {
+    margin-bottom: 24px;
+
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+
+    color: var(--gold);
+}
+
+.craft-intro h2 {
+    margin: 0;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: clamp(48px, 7vw, 104px);
+    font-weight: 400;
+    line-height: 0.88;
+
+    letter-spacing: -0.035em;
+
+    color: var(--cream);
+}
+
+.craft-intro h2 em {
+    display: block;
+
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.intro-rule {
+    width: 150px;
+    height: 1px;
+
+    margin: 34px 0 28px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold),
+            rgba(201, 162, 77, 0)
+        );
+}
+
+.craft-intro > p {
+    max-width: 600px;
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+    line-height: 1.9;
+
+    color: var(--cream-soft);
+}
+
+
+/* ==========================================
+   VIDEO
+========================================== */
+
+.craft-video-wrapper {
+    position: relative;
+
+    width: 100%;
+    max-width: 1280px;
+
+    margin: 0 auto 80px;
+}
+
+.video-frame {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    background: #020304;
+
+    border: 1px solid rgba(201, 162, 77, 0.42);
+
+    box-shadow:
+        0 30px 100px rgba(0, 0, 0, 0.65),
+        0 0 70px rgba(100, 21, 30, 0.13);
+}
+
+
+/* VIDEO */
+
+.craft-video {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    background: #020304;
+}
+
+
+/* CINEMATIC OVERLAY */
+
+.video-overlay {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.28) 0%,
+            transparent 35%,
+            transparent 65%,
+            rgba(0, 0, 0, 0.5) 100%
+        ),
+        linear-gradient(
+            90deg,
+            rgba(5, 6, 10, 0.25),
+            transparent 30%,
+            transparent 70%,
+            rgba(5, 6, 10, 0.25)
+        );
+}
+
+
+/* VIDEO CORNERS */
+
+.video-corner {
+    position: absolute;
+
+    width: 22px;
+    height: 22px;
+
+    pointer-events: none;
+}
+
+.corner-top-left {
+    top: 18px;
+    left: 18px;
+
+    border-top: 1px solid var(--gold);
+    border-left: 1px solid var(--gold);
+}
+
+.corner-top-right {
+    top: 18px;
+    right: 18px;
+
+    border-top: 1px solid var(--gold);
+    border-right: 1px solid var(--gold);
+}
+
+.corner-bottom-left {
+    bottom: 18px;
+    left: 18px;
+
+    border-bottom: 1px solid var(--gold);
+    border-left: 1px solid var(--gold);
+}
+
+.corner-bottom-right {
+    bottom: 18px;
+    right: 18px;
+
+    border-bottom: 1px solid var(--gold);
+    border-right: 1px solid var(--gold);
+}
+
+
+/* VIDEO LABEL */
+
+.video-label {
+    position: absolute;
+
+    left: 32px;
+    bottom: 28px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+
+    color: rgba(244, 223, 196, 0.78);
+}
+
+.video-number {
+    color: var(--gold);
+    font-size: 11px;
+}
+
+.video-divider {
+    width: 38px;
+    height: 1px;
+
+    background: rgba(201, 162, 77, 0.7);
+}
+
+
+/* VIDEO LOCATION */
+
+.video-location {
+    position: absolute;
+
+    right: 32px;
+    bottom: 28px;
+
+    font-family: Arial, sans-serif;
+    font-size: 8px;
+
+    letter-spacing: 0.28em;
+
+    color: rgba(244, 223, 196, 0.48);
+}
+
+
+/* ==========================================
+   CRAFT GRID
+========================================== */
+
+.craft-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    border-top: 1px solid rgba(201, 162, 77, 0.26);
+    border-bottom: 1px solid rgba(201, 162, 77, 0.26);
+}
+
+.craft-card {
+    position: relative;
+
+    min-height: 290px;
+
+    padding: 30px 28px 34px;
+
+    border-right: 1px solid rgba(201, 162, 77, 0.18);
+
+    transition:
+        background 0.35s ease,
+        transform 0.35s ease;
+}
+
+.craft-card:last-child {
+    border-right: none;
+}
+
+.craft-card:hover {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(100, 21, 30, 0.14),
+            rgba(100, 21, 30, 0.03)
+        );
+
+    transform: translateY(-4px);
+}
+
+.card-number {
+    font-family: Georgia, serif;
+
+    font-size: 18px;
+
+    color: var(--gold);
+
+    margin-bottom: 65px;
+}
+
+.card-category {
+    margin: 0 0 12px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    letter-spacing: 0.3em;
+
+    color: rgba(244, 223, 196, 0.42);
+}
+
+.card-content h3 {
+    margin: 0 0 12px;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 36px;
+    font-weight: 400;
+
+    color: var(--cream);
+}
+
+.card-description {
+    max-width: 240px;
+
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+    line-height: 1.8;
+
+    color: rgba(244, 223, 196, 0.54);
+}
+
+.card-arrow {
+    position: absolute;
+
+    right: 25px;
+    bottom: 27px;
+
+    font-size: 20px;
+
+    color: rgba(201, 162, 77, 0.65);
+
+    transition:
+        transform 0.3s ease,
+        color 0.3s ease;
+}
+
+.craft-card:hover .card-arrow {
+    transform: translate(4px, -4px);
+    color: var(--gold-bright);
+}
+
+
+/* ==========================================
+   CLOSING
+========================================== */
+
+.craft-closing {
+    display: flex;
+
+    align-items: center;
+    gap: 28px;
+
+    margin-top: 80px;
+}
+
+.closing-line {
+    flex: 1;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(201, 162, 77, 0.32)
+        );
+}
+
+.closing-line:last-child {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(201, 162, 77, 0.32),
+            transparent
+        );
+}
+
+.craft-closing p {
+    flex: 0 0 auto;
+
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 9px;
+
+    letter-spacing: 0.27em;
+
+    color: rgba(244, 223, 196, 0.5);
+
+    text-align: center;
+}
+
+.craft-closing em {
+    color: var(--gold);
+    font-style: normal;
+}
+
+
+/* ==========================================
+   SECTION MARKER
+========================================== */
+
+.section-marker {
+    position: absolute;
+
+    bottom: 28px;
+    left: 7vw;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 8px;
+
+    letter-spacing: 0.25em;
+
+    color: rgba(244, 223, 196, 0.38);
+}
+
+.marker-line {
+    width: 55px;
+    height: 1px;
+
+    background: rgba(201, 162, 77, 0.4);
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+    .craftsmanship-section {
+        padding:
+            100px 5vw 90px;
+    }
+
+    .craft-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .craft-card:nth-child(2) {
+        border-right: none;
+    }
+
+    .craft-card:nth-child(-n + 2) {
+        border-bottom: 1px solid rgba(201, 162, 77, 0.18);
+    }
+
+    .craft-video-wrapper {
+        margin-bottom: 60px;
+    }
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .craftsmanship-section {
+        min-height: auto;
+
+        padding:
+            90px 22px 90px;
+    }
+
+    .section-meta {
+        top: 25px;
+
+        font-size: 7px;
+        letter-spacing: 0.2em;
+    }
+
+    .meta-left {
+        left: 22px;
+    }
+
+    .meta-right {
+        right: 22px;
+    }
+
+    .craft-intro {
+        margin-bottom: 48px;
+    }
+
+    .eyebrow {
+        font-size: 8px;
+        margin-bottom: 18px;
+    }
+
+    .craft-intro h2 {
+        font-size: 54px;
+        line-height: 0.9;
+    }
+
+    .craft-intro > p {
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .craft-video-wrapper {
+        margin-bottom: 50px;
+    }
+
+    .video-frame {
+        aspect-ratio: 16 / 10;
+    }
+
+    .video-corner {
+        width: 15px;
+        height: 15px;
+    }
+
+    .corner-top-left,
+    .corner-top-right {
+        top: 12px;
+    }
+
+    .corner-top-left,
+    .corner-bottom-left {
+        left: 12px;
+    }
+
+    .corner-top-right,
+    .corner-bottom-right {
+        right: 12px;
+    }
+
+    .corner-bottom-left,
+    .corner-bottom-right {
+        bottom: 12px;
+    }
+
+    .video-label {
+        left: 18px;
+        bottom: 18px;
+
+        font-size: 7px;
+
+        gap: 9px;
+    }
+
+    .video-location {
+        right: 18px;
+        bottom: 18px;
+
+        font-size: 6px;
+    }
+
+    .video-divider {
+        width: 22px;
+    }
+
+    .craft-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .craft-card {
+        min-height: 250px;
+
+        padding:
+            26px 20px 30px;
+
+        border-right: none;
+
+        border-bottom:
+            1px solid rgba(201, 162, 77, 0.18);
+    }
+
+    .craft-card:last-child {
+        border-bottom: none;
+    }
+
+    .craft-card:nth-child(-n + 2) {
+        border-bottom:
+            1px solid rgba(201, 162, 77, 0.18);
+    }
+
+    .card-number {
+        margin-bottom: 45px;
+    }
+
+    .card-content h3 {
+        font-size: 32px;
+    }
+
+    .card-description {
+        font-size: 11px;
+    }
+
+    .craft-closing {
+        gap: 15px;
+        margin-top: 55px;
+    }
+
+    .craft-closing p {
+        font-size: 7px;
+        line-height: 1.7;
+        letter-spacing: 0.18em;
+    }
+
+    .section-marker {
+        position: relative;
+
+        left: auto;
+        bottom: auto;
+
+        margin-top: 55px;
+    }
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .craft-card {
+        transition: none;
+    }
+
+    .craft-card:hover {
+        transform: none;
+    }
+
+}

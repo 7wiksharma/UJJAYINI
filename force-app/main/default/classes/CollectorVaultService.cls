@@ -15,6 +15,9 @@ public with sharing class CollectorVaultService {
         public Id productId;
 
         @AuraEnabled
+        public String productImageUrl;
+
+        @AuraEnabled
         public Decimal quantity;
 
         @AuraEnabled
@@ -30,6 +33,7 @@ public with sharing class CollectorVaultService {
         public Date purchaseDate;
     }
 
+
     @AuraEnabled(cacheable=true)
     public static List<AssetResult> getMyAssets() {
 
@@ -43,6 +47,7 @@ public with sharing class CollectorVaultService {
             LIMIT 1
         ];
 
+
         if (
             currentUser.ContactId == null ||
             currentUser.Contact.AccountId == null
@@ -50,11 +55,13 @@ public with sharing class CollectorVaultService {
             return new List<AssetResult>();
         }
 
+
         List<Asset> assets = [
             SELECT Id,
                    Name,
                    Product2Id,
                    Product2.Name,
+                   Product2.Product_Image_URL__c,
                    Quantity,
                    Price,
                    Status,
@@ -66,45 +73,64 @@ public with sharing class CollectorVaultService {
             ORDER BY PurchaseDate DESC, CreatedDate DESC
         ];
 
+
         List<AssetResult> results =
             new List<AssetResult>();
+
 
         for (Asset asset : assets) {
 
             AssetResult result =
                 new AssetResult();
 
+
             result.assetId =
                 asset.Id;
+
 
             result.name =
                 asset.Name;
 
+
             result.productId =
                 asset.Product2Id;
+
 
             result.productName =
                 asset.Product2 != null
                     ? asset.Product2.Name
                     : 'UJJAYINI Watch';
 
+
+            result.productImageUrl =
+                asset.Product2 != null
+                    ? asset.Product2.Product_Image_URL__c
+                    : null;
+
+
             result.quantity =
                 asset.Quantity;
+
 
             result.price =
                 asset.Price;
 
+
             result.status =
                 asset.Status;
+
 
             result.serialNumber =
                 asset.SerialNumber;
 
+
             result.purchaseDate =
                 asset.PurchaseDate;
 
+
             results.add(result);
         }
+
 
         return results;
     }
