@@ -1,0 +1,749 @@
+:host {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+
+    background: #06070b;
+
+    color: #f3ede0;
+
+    font-family:
+        "Inter",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    background:
+        radial-gradient(
+            circle at 72% 48%,
+            rgba(201, 162, 77, 0.075) 0%,
+            rgba(201, 162, 77, 0.025) 25%,
+            transparent 57%
+        ),
+
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.012) 0%,
+            transparent 55%
+        ),
+
+        #06070b;
+}
+
+
+/* =========================================================
+   ATMOSPHERIC GLOW
+========================================================= */
+
+.hero-glow {
+    position: absolute;
+
+    width: min(72vw, 1050px);
+    height: min(72vw, 1050px);
+
+    top: 50%;
+    left: 70%;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(201, 162, 77, 0.075) 0%,
+            rgba(201, 162, 77, 0.035) 27%,
+            rgba(201, 162, 77, 0.012) 48%,
+            transparent 72%
+        );
+
+    filter: blur(2px);
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* =========================================================
+   VIGNETTE
+========================================================= */
+
+.hero-vignette {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.18) 0%,
+            transparent 38%,
+            rgba(0, 0, 0, 0.12) 100%
+        );
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   MERIDIAN
+========================================================= */
+
+.meridian-line {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    left: 50%;
+
+    width: 1px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(201, 162, 77, 0.22) 18%,
+            rgba(201, 162, 77, 0.13) 50%,
+            rgba(201, 162, 77, 0.22) 82%,
+            transparent 100%
+        );
+
+    opacity: 0.65;
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   LATITUDE
+========================================================= */
+
+.latitude-mark {
+    position: absolute;
+
+    top: 50%;
+
+    left: calc(50% + 18px);
+
+    transform:
+        translateY(-50%);
+
+    writing-mode: vertical-rl;
+
+    text-transform: uppercase;
+
+    font-size: 9px;
+
+    letter-spacing: 0.34em;
+
+    color:
+        rgba(201, 162, 77, 0.58);
+
+    z-index: 4;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   WATCH STAGE
+========================================================= */
+
+.watch-stage {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 57%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 3;
+
+    pointer-events: none;
+
+    overflow: visible;
+}
+
+
+/* Canvas */
+
+.watch-canvas {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    overflow: visible;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.hero-content {
+    position: absolute;
+
+    z-index: 7;
+
+    top: 50%;
+
+    left: 8vw;
+
+    transform:
+        translateY(-50%);
+
+    width:
+        min(
+            520px,
+            42vw
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow {
+    margin: 0 0 22px;
+
+    font-size: 10px;
+
+    font-weight: 400;
+
+    letter-spacing: 0.42em;
+
+    color:
+        rgba(201, 162, 77, 0.9);
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+h1 {
+    margin: 0;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size:
+        clamp(
+            72px,
+            9.4vw,
+            158px
+        );
+
+    line-height: 0.78;
+
+    font-weight: 300;
+
+    letter-spacing: 0.075em;
+
+    color: #f3ede0;
+
+    text-shadow:
+        0 0 60px rgba(201, 162, 77, 0.035);
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TAGLINE
+========================================================= */
+
+.tagline {
+    margin:
+        30px 0 38px;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size:
+        clamp(
+            20px,
+            2vw,
+            30px
+        );
+
+    font-weight: 300;
+
+    font-style: italic;
+
+    letter-spacing: 0.035em;
+
+    color:
+        rgba(
+            243,
+            237,
+            224,
+            0.72
+        );
+}
+
+
+/* =========================================================
+   EXPLORE BUTTON
+========================================================= */
+
+.explore-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 24px;
+
+    min-width: 325px;
+
+    padding: 15px 23px;
+
+    border:
+        1px solid
+        rgba(201, 162, 77, 0.58);
+
+    border-radius: 999px;
+
+    background:
+        rgba(6, 7, 11, 0.18);
+
+    color: #f3ede0;
+
+    font-family:
+        "Inter",
+        sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 400;
+
+    letter-spacing: 0.28em;
+
+    cursor: pointer;
+
+    transition:
+        background 320ms ease,
+        color 320ms ease,
+        transform 320ms ease,
+        border-color 320ms ease,
+        box-shadow 320ms ease;
+
+    pointer-events: auto;
+
+    backdrop-filter: blur(8px);
+}
+
+
+.explore-button:hover {
+    background: #c9a24d;
+
+    border-color: #c9a24d;
+
+    color: #06070b;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 45px
+        rgba(201, 162, 77, 0.15);
+}
+
+
+.arrow {
+    font-size: 16px;
+
+    line-height: 1;
+
+    letter-spacing: 0;
+}
+
+
+/* =========================================================
+   TIME HUD
+========================================================= */
+
+.time-hud {
+    position: absolute;
+
+    z-index: 8;
+
+    top: 34px;
+
+    right: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.25em;
+
+    color:
+        rgba(
+            243,
+            237,
+            224,
+            0.42
+        );
+
+    white-space: nowrap;
+}
+
+
+.time-hud .time-value {
+    color: #c9a24d;
+
+    min-width: 18px;
+}
+
+
+/* =========================================================
+   SCROLL INDICATOR
+========================================================= */
+
+.scroll-indicator {
+    position: absolute;
+
+    z-index: 8;
+
+    left: 8vw;
+
+    bottom: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    font-size: 8px;
+
+    letter-spacing: 0.3em;
+
+    color:
+        rgba(
+            243,
+            237,
+            224,
+            0.35
+        );
+}
+
+
+.scroll-line {
+    width: 70px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(201, 162, 77, 0.8),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   TECHNICAL DETAILS
+========================================================= */
+
+.technical-mark {
+    position: absolute;
+
+    z-index: 5;
+
+    font-size: 7px;
+
+    letter-spacing: 0.32em;
+
+    color:
+        rgba(
+            243,
+            237,
+            224,
+            0.18
+        );
+
+    pointer-events: none;
+}
+
+
+.technical-left {
+    left: 8vw;
+    top: 31px;
+}
+
+
+.technical-right {
+    right: 42px;
+    bottom: 34px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .hero-content {
+        width: 45vw;
+    }
+
+    h1 {
+        font-size:
+            clamp(
+                64px,
+                9vw,
+                125px
+            );
+    }
+
+    .watch-stage {
+        width: 58%;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .hero {
+        min-height: 100svh;
+    }
+
+
+    .watch-stage {
+        top: 0;
+
+        width: 100%;
+
+        height: 61%;
+
+        align-items: center;
+
+        justify-content: center;
+    }
+
+
+    .hero-glow {
+        width: 110vw;
+        height: 110vw;
+
+        top: 31%;
+        left: 50%;
+    }
+
+
+    .meridian-line {
+        left: 50%;
+
+        opacity: 0.35;
+    }
+
+
+    .latitude-mark {
+        top: 34%;
+
+        left:
+            calc(50% + 10px);
+
+        font-size: 8px;
+    }
+
+
+    .hero-content {
+        top: auto;
+
+        bottom: 9vh;
+
+        left: 8vw;
+        right: 8vw;
+
+        width: auto;
+
+        transform: none;
+    }
+
+
+    .eyebrow {
+        font-size: 8px;
+
+        letter-spacing: 0.32em;
+
+        margin-bottom: 15px;
+    }
+
+
+    h1 {
+        font-size:
+            clamp(
+                58px,
+                18vw,
+                100px
+            );
+
+        letter-spacing: 0.065em;
+    }
+
+
+    .tagline {
+        margin:
+            20px 0 26px;
+
+        font-size: 21px;
+    }
+
+
+    .explore-button {
+        min-width: 0;
+
+        padding:
+            13px 19px;
+
+        font-size: 8px;
+
+        gap: 18px;
+    }
+
+
+    .time-hud {
+        top: 24px;
+
+        right: 24px;
+
+        font-size: 8px;
+    }
+
+
+    .technical-left {
+        top: 25px;
+
+        left: 24px;
+    }
+
+
+    .technical-right {
+        display: none;
+    }
+
+
+    .scroll-indicator {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .watch-stage {
+        height: 57%;
+    }
+
+
+    .hero-content {
+        bottom: 8vh;
+    }
+
+
+    h1 {
+        font-size: 18vw;
+    }
+
+
+    .tagline {
+        font-size: 19px;
+
+        margin-top: 18px;
+
+        margin-bottom: 22px;
+    }
+
+
+    .eyebrow {
+        font-size: 7px;
+    }
+
+
+    .explore-button {
+        width: auto;
+
+        max-width: 100%;
+
+        letter-spacing: 0.2em;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .explore-button {
+        transition: none;
+    }
+
+}

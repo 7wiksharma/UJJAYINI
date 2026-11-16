@@ -1,0 +1,131 @@
+<template>
+    <section class="collection-section">
+
+        <!-- ATMOSPHERIC BACKGROUND -->
+        <div class="background-glow glow-left"></div>
+        <div class="background-glow glow-right"></div>
+
+        <div class="star-field">
+            <span class="star star-01"></span>
+            <span class="star star-02"></span>
+            <span class="star star-03"></span>
+            <span class="star star-04"></span>
+            <span class="star star-05"></span>
+            <span class="star star-06"></span>
+            <span class="star star-07"></span>
+            <span class="star star-08"></span>
+            <span class="star star-09"></span>
+            <span class="star star-10"></span>
+        </div>
+
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+
+        <!-- SECTION METADATA -->
+        <div class="section-meta meta-left">UJJAYINI · HOROLOGY</div>
+        <div class="section-meta meta-right">IV · THE COLLECTION</div>
+
+        <div class="collection-container">
+
+            <!-- INTRO -->
+            <header class="collection-intro reveal">
+                <div class="eyebrow">THE COLLECTION</div>
+
+                <h2>
+                    Three expressions<br />
+                    <em>of time.</em>
+                </h2>
+
+                <div class="intro-divider"></div>
+
+                <p class="intro-copy">
+                    Every UJJAYINI timepiece begins with the same
+                    question — not what time is, but what it means
+                    to remember it.
+                </p>
+            </header>
+
+            <!-- COLLECTION GRID -->
+            <div class="collection-grid">
+                <template for:each={collections} for:item="c">
+                    <article key={c.key} class={c.cardClass}>
+
+                        <div class="card-top">
+                            <span class="collection-number">{c.number}</span>
+                            <span class="collection-category">{c.category}</span>
+                        </div>
+
+                        <!-- WATCH VISUAL -->
+                        <div class="watch-stage">
+                            <div class="orbit-ring ring-one"></div>
+                            <div class="orbit-ring ring-two"></div>
+
+                            <div class="watch-watch">
+                                <div class="watch-strap strap-top"></div>
+
+                                <span class="watch-lug lug-tl"></span>
+                                <span class="watch-lug lug-tr"></span>
+                                <span class="watch-lug lug-bl"></span>
+                                <span class="watch-lug lug-br"></span>
+                                <span class="watch-crown"></span>
+
+                                <div class="watch-case">
+                                    <div class="watch-dial">
+                                        <span class="dial-brand">UJJAYINI</span>
+                                        <span class="dial-coord">23°N</span>
+
+                                        <span class="hour hour-12">12</span>
+                                        <span class="hour hour-03">3</span>
+                                        <span class="hour hour-06">6</span>
+                                        <span class="hour hour-09">9</span>
+
+                                        <span class="watch-hand hand-hour"></span>
+                                        <span class="watch-hand hand-minute"></span>
+                                        <span class="watch-hand hand-second"></span>
+
+                                        <span class="watch-center"></span>
+                                    </div>
+                                </div>
+
+                                <div class="watch-strap strap-bottom"></div>
+                            </div>
+                        </div>
+
+                        <!-- CARD CONTENT -->
+                        <div class="card-content">
+                            <div class="collection-name">{c.name}</div>
+                            <div class="collection-line"></div>
+                            <p class="collection-description">{c.description}</p>
+
+                            <div class="collection-footer">
+                                <span>{c.footer}</span>
+                                <span class="collection-arrow">↗</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </template>
+            </div>
+
+            <!-- CLOSING STATEMENT -->
+            <div class="collection-closing reveal">
+                <div class="closing-rule"></div>
+                <p>
+                    THREE MATERIALS.
+                    <span>THREE WORLDS.</span>
+                    ONE MEASURE OF TIME.
+                </p>
+                <div class="closing-rule"></div>
+            </div>
+
+        </div>
+
+        <!-- SECTION MARKER -->
+        <div class="section-marker">
+            <span class="marker-number">IV</span>
+            <span class="marker-line"></span>
+            <span class="marker-text">THE COLLECTION</span>
+        </div>
+
+    </section>
+</template>

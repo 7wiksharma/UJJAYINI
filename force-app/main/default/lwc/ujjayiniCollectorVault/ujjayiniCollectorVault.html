@@ -2,201 +2,438 @@
 
     <section class="vault">
 
-        <div class="vault-header">
+        <!-- ATMOSPHERE -->
 
-            <div>
-                <p class="eyebrow">UJJAYINI</p>
+        <div class="vault-atmosphere"></div>
 
-                <h1>Collector's Vault</h1>
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="orbit orbit-three"></div>
 
-                <p class="subtitle">
-                    Your private collection of purchased timepieces.
+        <div class="star star-one"></div>
+        <div class="star star-two"></div>
+        <div class="star star-three"></div>
+        <div class="star star-four"></div>
+        <div class="star star-five"></div>
+
+        <!-- MAIN CONTENT -->
+
+        <div class="vault-inner">
+
+            <!-- TOP MARKERS -->
+
+            <div class="section-markers">
+
+                <span>UJJAYINI · HOROLOGY</span>
+
+                <span>VI · THE COLLECTOR'S VAULT</span>
+
+            </div>
+
+
+            <!-- HEADER -->
+
+            <header class="vault-header">
+
+                <p class="eyebrow">
+                    THE PRIVATE COLLECTION
                 </p>
-            </div>
 
-        </div>
+                <h1>
+                    Your time,<br>
+                    <em>kept forever.</em>
+                </h1>
 
-        <template if:true={isLoading}>
+                <div class="gold-rule"></div>
 
-            <div class="state">
-                <p>Loading your collection...</p>
-            </div>
+                <p class="intro">
 
-        </template>
+                    A private record of the timepieces that
+                    have become part of your collection.
 
-        <template if:true={errorMessage}>
+                </p>
 
-            <div class="state error">
-                <p>{errorMessage}</p>
-            </div>
+            </header>
 
-        </template>
 
-        <template if:true={hasAssets}>
+            <!-- LOADING -->
 
-            <div class="collection-grid">
+            <template if:true={isLoading}>
 
-                <template for:each={assets} for:item="asset">
+                <div class="state loading-state">
 
-                    <article
-                        key={asset.assetId}
-                        class="watch-card">
+                    <div class="loading-mark">
+                        U
+                    </div>
 
-                        <div class="watch-image">
-                            <span>U</span>
-                        </div>
+                    <p>
+                        Opening your collection...
+                    </p>
 
-                        <div class="watch-content">
+                </div>
 
-                            <p class="watch-label">
-                                COLLECTOR ASSET
-                            </p>
+            </template>
 
-                            <h2>{asset.productName}</h2>
 
-                            <div class="watch-details">
+            <!-- ERROR -->
 
-                                <div>
-                                    <span>Quantity</span>
-                                    <strong>{asset.quantity}</strong>
-                                </div>
+            <template if:true={errorMessage}>
 
-                                <div>
-                                    <span>Price</span>
-                                    <strong>
-                                        ₹{asset.price}
-                                    </strong>
-                                </div>
+                <div class="state error-state">
 
-                                <div>
-                                    <span>Status</span>
-                                    <strong>{asset.status}</strong>
-                                </div>
+                    <div class="state-label">
+                        COLLECTION UNAVAILABLE
+                    </div>
 
-                                <div>
-                                    <span>Purchase Date</span>
-                                    <strong>{asset.purchaseDate}</strong>
-                                </div>
+                    <p>
+                        {errorMessage}
+                    </p>
 
-                            </div>
+                </div>
 
-                            <div class="serial">
+            </template>
 
-                                <span>Asset Reference</span>
 
-                                <strong>
-                                    {asset.serialNumber}
-                                </strong>
+            <!-- COLLECTION -->
 
-                            </div>
+            <template if:true={hasAssets}>
 
-                            <!-- WARRANTY -->
+                <div class="collection-intro">
 
-                            <template if:true={asset.warranty}>
+                    <div>
 
-                                <div class="warranty-section">
+                        <p class="micro-label">
+                            YOUR TIMEPIECES
+                        </p>
 
-                                    <div class="warranty-header">
+                        <h2>
+                            The Collection
+                        </h2>
 
-                                        <p class="watch-label">
-                                            WARRANTY
-                                        </p>
+                    </div>
 
-                                        <span class="warranty-status">
-                                            {asset.warranty.status}
-                                        </span>
+                    <div class="collection-count">
 
-                                    </div>
+                        <span>
+                            {assets.length}
+                        </span>
 
-                                    <div class="warranty-details">
+                        <small>
+                            TIMEPIECE<span if:true={hasMultipleAssets}>S</span>
+                        </small>
 
-                                        <div>
-                                            <span>Coverage</span>
-                                            <strong>
-                                                {asset.warranty.coverageType}
-                                            </strong>
-                                        </div>
+                    </div>
 
-                                        <div>
-                                            <span>Duration</span>
-                                            <strong>
-                                                {asset.warranty.durationMonths}
-                                                months
-                                            </strong>
-                                        </div>
+                </div>
 
-                                        <div>
-                                            <span>Start Date</span>
-                                            <strong>
-                                                {asset.warranty.startDate}
-                                            </strong>
-                                        </div>
 
-                                        <div>
-                                            <span>End Date</span>
-                                            <strong>
-                                                {asset.warranty.endDate}
-                                            </strong>
-                                        </div>
+                <!-- WATCH GRID -->
 
-                                    </div>
+                <div class="collection-grid">
 
-                                    <template if:true={asset.warranty.notes}>
+                    <template
+                        for:each={assets}
+                        for:item="asset">
 
-                                        <div class="warranty-notes">
+                        <article
+                            key={asset.assetId}
+                            class="watch-card">
 
-                                            <span>Warranty Notes</span>
+                            <!-- WATCH VISUAL -->
 
-                                            <p>
-                                                {asset.warranty.notes}
-                                            </p>
+                            <div class="watch-visual">
 
-                                        </div>
+                                <div class="watch-orbit"></div>
 
-                                    </template>
+                                <div class="watch-glow"></div>
 
-                                </div>
+                                <div class="watch-symbol">
 
-                            </template>
+                                    <span class="watch-symbol-top">
+                                        XII
+                                    </span>
 
-                            <template if:false={asset.warranty}>
+                                    <span class="watch-symbol-center">
+                                        U
+                                    </span>
 
-                                <div class="no-warranty">
-
-                                    <span>
-                                        Warranty information unavailable
+                                    <span class="watch-symbol-bottom">
+                                        VI
                                     </span>
 
                                 </div>
 
-                            </template>
+                                <span class="visual-caption">
+                                    UJJAYINI
+                                </span>
 
+                            </div>
+
+
+                            <!-- WATCH INFORMATION -->
+
+                            <div class="watch-content">
+
+                                <div class="watch-topline">
+
+                                    <p class="watch-label">
+                                        COLLECTOR ASSET
+                                    </p>
+
+                                    <span class="asset-status">
+                                        {asset.status}
+                                    </span>
+
+                                </div>
+
+
+                                <h3>
+                                    {asset.productName}
+                                </h3>
+
+
+                                <div class="watch-rule"></div>
+
+
+                                <!-- PRIMARY DETAILS -->
+
+                                <div class="details-grid">
+
+                                    <div class="detail">
+
+                                        <span>
+                                            PURCHASE DATE
+                                        </span>
+
+                                        <strong>
+                                            {asset.purchaseDate}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="detail">
+
+                                        <span>
+                                            QUANTITY
+                                        </span>
+
+                                        <strong>
+                                            {asset.quantity}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="detail">
+
+                                        <span>
+                                            VALUE
+                                        </span>
+
+                                        <strong>
+                                            ₹{asset.price}
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="detail">
+
+                                        <span>
+                                            ASSET REFERENCE
+                                        </span>
+
+                                        <strong class="reference">
+                                            {asset.serialNumber}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- WARRANTY -->
+
+                                <template if:true={asset.warranty}>
+
+                                    <div class="warranty">
+
+                                        <div class="warranty-heading">
+
+                                            <div>
+
+                                                <p class="watch-label">
+                                                    WARRANTY
+                                                </p>
+
+                                                <h4>
+                                                    Protected time
+                                                </h4>
+
+                                            </div>
+
+                                            <span class="warranty-status">
+                                                {asset.warranty.status}
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="warranty-grid">
+
+                                            <div>
+
+                                                <span>
+                                                    COVERAGE
+                                                </span>
+
+                                                <strong>
+                                                    {asset.warranty.coverageType}
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <span>
+                                                    DURATION
+                                                </span>
+
+                                                <strong>
+                                                    {asset.warranty.durationMonths}
+                                                    months
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <span>
+                                                    START
+                                                </span>
+
+                                                <strong>
+                                                    {asset.warranty.startDate}
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <span>
+                                                    END
+                                                </span>
+
+                                                <strong>
+                                                    {asset.warranty.endDate}
+                                                </strong>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <template
+                                            if:true={asset.warranty.notes}>
+
+                                            <div class="warranty-note">
+
+                                                <span>
+                                                    NOTE
+                                                </span>
+
+                                                <p>
+                                                    {asset.warranty.notes}
+                                                </p>
+
+                                            </div>
+
+                                        </template>
+
+                                    </div>
+
+                                </template>
+
+
+                                <!-- NO WARRANTY -->
+
+                                <template if:false={asset.warranty}>
+
+                                    <div class="warranty-unavailable">
+
+                                        Warranty information unavailable.
+
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+                        </article>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- EMPTY VAULT -->
+
+            <template if:true={isEmpty}>
+
+                <div class="empty-vault">
+
+                    <div class="empty-orbit">
+
+                        <div class="empty-mark">
+                            U
                         </div>
 
-                    </article>
+                    </div>
 
-                </template>
+                    <p class="micro-label">
+                        THE COLLECTOR'S VAULT
+                    </p>
 
-            </div>
+                    <h2>
+                        Your collection<br>
+                        <em>begins here.</em>
+                    </h2>
 
-        </template>
+                    <div class="gold-rule"></div>
 
-        <template if:true={isEmpty}>
+                    <p class="empty-copy">
 
-            <div class="empty-state">
+                        Your purchased UJJAYINI timepieces will
+                        appear here after a successful payment.
 
-                <div class="empty-icon">U</div>
+                    </p>
 
-                <h2>Your Vault is Empty</h2>
+                </div>
 
-                <p>
-                    Your purchased timepieces will appear here
-                    after a successful payment.
-                </p>
+            </template>
 
-            </div>
 
-        </template>
+            <!-- FOOTER NOTE -->
+
+            <footer class="vault-footer">
+
+                <div class="footer-marker">
+                    VI — THE COLLECTOR'S VAULT
+                </div>
+
+                <div class="footer-note">
+                    TIME, KEPT WITHIN.
+                </div>
+
+            </footer>
+
+        </div>
 
     </section>
 

@@ -1,0 +1,487 @@
+<template>
+
+    <section class="precision-section">
+
+        <!-- =====================================================
+             ATMOSPHERIC BACKGROUND
+        ====================================================== -->
+
+        <div class="background-glow glow-center"></div>
+        <div class="background-glow glow-left"></div>
+        <div class="background-glow glow-right"></div>
+
+        <!-- Stars -->
+        <div class="star-field">
+
+            <span class="star star-01"></span>
+            <span class="star star-02"></span>
+            <span class="star star-03"></span>
+            <span class="star star-04"></span>
+            <span class="star star-05"></span>
+            <span class="star star-06"></span>
+            <span class="star star-07"></span>
+            <span class="star star-08"></span>
+            <span class="star star-09"></span>
+            <span class="star star-10"></span>
+            <span class="star star-11"></span>
+            <span class="star star-12"></span>
+
+        </div>
+
+
+        <!-- =====================================================
+             ORBITAL BACKGROUND LINES
+        ====================================================== -->
+
+        <div class="background-orbit orbit-left"></div>
+        <div class="background-orbit orbit-right"></div>
+
+
+        <!-- =====================================================
+             SECTION METADATA
+        ====================================================== -->
+
+        <div class="section-meta meta-left">
+            UJJAYINI · HOROLOGY
+        </div>
+
+        <div class="section-meta meta-right">
+            V · UNSEEN PRECISION
+        </div>
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <div class="precision-container">
+
+
+            <!-- =================================================
+                 INTRO
+            ================================================== -->
+
+            <header class="precision-intro">
+
+                <div class="eyebrow">
+                    UNSEEN PRECISION
+                </div>
+
+                <h2>
+                    Every second,<br />
+                    <em>measured by the sky.</em>
+                </h2>
+
+                <div class="intro-rule"></div>
+
+                <p class="intro-copy">
+                    Beneath every measured hour lies a quieter
+                    system — cycles of stars, divisions of the day,
+                    and the geometry of the heavens.
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 MACRO MOVEMENT
+            ================================================== -->
+
+            <div class="movement-wrapper">
+
+                <div class="movement-label label-top">
+                    CELESTIAL CALIBRATION
+                </div>
+
+                <div class="movement-label label-bottom">
+                    UJJAIN · 23°N
+                </div>
+
+
+                <!-- Outer halo -->
+                <div class="movement-halo"></div>
+
+
+                <!-- Main movement -->
+                <div class="movement">
+
+                    <!-- =================================================
+                         OUTER RING
+                    ================================================== -->
+
+                    <div class="movement-ring ring-outer">
+
+                        <template
+                            for:each={nakshatraDots}
+                            for:item="dot"
+                        >
+
+                            <span
+                                key={dot.id}
+                                class="nakshatra-dot"
+                                style={dot.style}
+                            ></span>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         27 NAKSHATRA MARKS
+                    ================================================== -->
+
+                    <div class="nakshatra-ring">
+
+                        <template
+                            for:each={nakshatraTicks}
+                            for:item="tick"
+                        >
+
+                            <span
+                                key={tick.id}
+                                class="nakshatra-tick"
+                                style={tick.style}
+                            ></span>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         12 RASHI TICKS
+                    ================================================== -->
+
+                    <div class="rashi-ring">
+
+                        <template
+                            for:each={rashiTicks}
+                            for:item="tick"
+                        >
+
+                            <span
+                                key={tick.id}
+                                class="rashi-tick"
+                                style={tick.style}
+                            ></span>
+
+                        </template>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         INNER GUILLoche
+                    ================================================== -->
+
+                    <div class="guilloche">
+
+                        <div class="guilloche-line line-01"></div>
+                        <div class="guilloche-line line-02"></div>
+                        <div class="guilloche-line line-03"></div>
+                        <div class="guilloche-line line-04"></div>
+                        <div class="guilloche-line line-05"></div>
+                        <div class="guilloche-line line-06"></div>
+                        <div class="guilloche-line line-07"></div>
+                        <div class="guilloche-line line-08"></div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         INNER MECHANICAL RING
+                    ================================================== -->
+
+                    <div class="inner-ring inner-ring-one"></div>
+                    <div class="inner-ring inner-ring-two"></div>
+                    <div class="inner-ring inner-ring-three"></div>
+
+
+                    <!-- =================================================
+                         CENTRAL SUNBURST
+                    ================================================== -->
+
+                    <div class="sunburst">
+
+                        <span class="sunburst-core"></span>
+
+                        <span class="ray ray-01"></span>
+                        <span class="ray ray-02"></span>
+                        <span class="ray ray-03"></span>
+                        <span class="ray ray-04"></span>
+                        <span class="ray ray-05"></span>
+                        <span class="ray ray-06"></span>
+                        <span class="ray ray-07"></span>
+                        <span class="ray ray-08"></span>
+                        <span class="ray ray-09"></span>
+                        <span class="ray ray-10"></span>
+                        <span class="ray ray-11"></span>
+                        <span class="ray ray-12"></span>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         MERIDIAN
+                    ================================================== -->
+
+                    <div class="meridian"></div>
+
+                    <div class="meridian-label">
+                        UJJAIN
+                    </div>
+
+
+                    <!-- =================================================
+                         CENTRAL POINT
+                    ================================================== -->
+
+                    <div class="center-point">
+
+                        <div class="center-inner"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MEASUREMENT LINE
+            ================================================== -->
+
+            <div class="measurement-line">
+
+                <span></span>
+
+                <p>
+                    TIME · OBSERVED · DIVIDED · MEASURED
+                </p>
+
+                <span></span>
+
+            </div>
+
+
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+            <section
+                class="precision-stats"
+                aria-label="Time measurements"
+            >
+
+                <article class="stat">
+
+                    <div class="stat-number">
+
+                        <span
+                            class="counter"
+                            data-target="27"
+                        >
+                            {nakshatraCount}
+                        </span>
+
+                    </div>
+
+                    <div class="stat-rule"></div>
+
+                    <div class="stat-label">
+                        NAKṢATRAS
+                    </div>
+
+                    <p>
+                        The twenty-seven stellar divisions
+                        used to mark celestial passage.
+                    </p>
+
+                </article>
+
+
+                <article class="stat">
+
+                    <div class="stat-number">
+
+                        <span
+                            class="counter"
+                            data-target="12"
+                        >
+                            {rashiCount}
+                        </span>
+
+                    </div>
+
+                    <div class="stat-rule"></div>
+
+                    <div class="stat-label">
+                        RĀŚIS
+                    </div>
+
+                    <p>
+                        Twelve divisions tracing the
+                        zodiacal path across the sky.
+                    </p>
+
+                </article>
+
+
+                <article class="stat">
+
+                    <div class="stat-number">
+
+                        <span
+                            class="counter"
+                            data-target="60"
+                        >
+                            {ghatikaCount}
+                        </span>
+
+                    </div>
+
+                    <div class="stat-rule"></div>
+
+                    <div class="stat-label">
+                        GHAṬIKĀS A DAY
+                    </div>
+
+                    <p>
+                        A traditional division of the
+                        day into sixty ghaṭikās.
+                    </p>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 CRAFT NOTES
+            ================================================== -->
+
+            <section class="craft-notes">
+
+                <div class="craft-intro">
+
+                    <span>
+                        THE QUIET CRAFT
+                    </span>
+
+                </div>
+
+
+                <article class="craft-note">
+
+                    <div class="craft-number">
+                        01
+                    </div>
+
+                    <div class="craft-content">
+
+                        <h3>
+                            Movement
+                        </h3>
+
+                        <p>
+                            Components arranged as a precise
+                            mechanical system, where every
+                            interaction has a purpose.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="craft-note">
+
+                    <div class="craft-number">
+                        02
+                    </div>
+
+                    <div class="craft-content">
+
+                        <h3>
+                            Finishing
+                        </h3>
+
+                        <p>
+                            Surface, edge and texture become
+                            part of the visual language of time.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="craft-note">
+
+                    <div class="craft-number">
+                        03
+                    </div>
+
+                    <div class="craft-content">
+
+                        <h3>
+                            Testing
+                        </h3>
+
+                        <p>
+                            Precision and function are verified
+                            through controlled checks.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 CLOSING STATEMENT
+            ================================================== -->
+
+            <div class="precision-closing">
+
+                <div class="closing-line"></div>
+
+                <p>
+                    WHAT WE SEE IS A WATCH.
+                    <br />
+                    <em>WHAT WE MEASURE IS TIME.</em>
+                </p>
+
+                <div class="closing-line"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SECTION MARKER
+        ====================================================== -->
+
+        <div class="section-marker">
+
+            <span class="marker-number">
+                V
+            </span>
+
+            <span class="marker-dash">
+                —
+            </span>
+
+            <span class="marker-text">
+                UNSEEN PRECISION
+            </span>
+
+        </div>
+
+    </section>
+
+</template>

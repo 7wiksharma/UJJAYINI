@@ -204,6 +204,12 @@
     <readable>true</readable>
 </fieldPermissions>
 
+<fieldPermissions>
+    <field>Product_Image_URL__c</field>
+    <editable>true</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
         <classAccesses>
         <apexClass>UJJAYINICartController</apexClass>
         <enabled>true</enabled>
@@ -249,4 +255,8 @@
     <apexClass>UJJAYINIOrderDetailController</apexClass>
     <enabled>true</enabled>
 </classAccesses>
+ <classAccesses>
+        <apexClass>OrderCancellationService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
 </PermissionSet>

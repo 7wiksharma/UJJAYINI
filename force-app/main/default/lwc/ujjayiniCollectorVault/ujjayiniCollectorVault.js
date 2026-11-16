@@ -6,6 +6,7 @@ import getMyAssets
 import getMyWarranties
     from '@salesforce/apex/UJJAYINIWarrantyController.getMyWarranties';
 
+
 export default class UjjayiniCollectorVault extends LightningElement {
 
     assets = [];
@@ -13,6 +14,7 @@ export default class UjjayiniCollectorVault extends LightningElement {
 
     isLoading = true;
     errorMessage;
+
 
     @wire(getMyAssets)
     wiredAssets({ data, error }) {
@@ -28,11 +30,14 @@ export default class UjjayiniCollectorVault extends LightningElement {
         } else if (error) {
 
             this.isLoading = false;
+
             this.errorMessage =
                 this.getErrorMessage(error);
 
         }
+
     }
+
 
     async loadWarranties() {
 
@@ -54,9 +59,10 @@ export default class UjjayiniCollectorVault extends LightningElement {
         } finally {
 
             this.isLoading = false;
-
         }
+
     }
+
 
     attachWarrantiesToAssets() {
 
@@ -73,20 +79,36 @@ export default class UjjayiniCollectorVault extends LightningElement {
                     ...asset,
                     warranty: warranty || null
                 };
+
             });
+
     }
+
 
     get hasAssets() {
+
         return this.assets.length > 0;
+
     }
 
+
+    get hasMultipleAssets() {
+
+        return this.assets.length > 1;
+
+    }
+
+
     get isEmpty() {
+
         return (
             !this.isLoading &&
             !this.errorMessage &&
             this.assets.length === 0
         );
+
     }
+
 
     getErrorMessage(error) {
 
@@ -95,13 +117,21 @@ export default class UjjayiniCollectorVault extends LightningElement {
             error.body &&
             error.body.message
         ) {
+
             return error.body.message;
+
         }
+
 
         if (error?.message) {
+
             return error.message;
+
         }
 
+
         return 'Unable to load your collection.';
+
     }
+
 }
