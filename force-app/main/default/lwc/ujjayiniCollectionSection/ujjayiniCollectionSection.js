@@ -1,138 +1,216 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+
+import getCollectionsWithWatches
+    from '@salesforce/apex/UJJAYINICollectionController.getCollectionsWithWatches';
+
+import HERO_IMAGE
+    from '@salesforce/resourceUrl/UJJAYINI_Collections_Hero';
 
 export default class UjjayiniCollectionSection extends LightningElement {
 
-    collections = [
-        {
-            key: 'indranila',
-            cardClass:
-                'collection-card indranila reveal',
+    collections = [];
+    errorMessage;
 
-            number: '01',
 
-            category: 'CELESTIAL',
+    // =========================================================
+    // HERO STATIC RESOURCE
+    // =========================================================
 
-            name: 'INDRANĪLA',
+    get heroPhotoStyle() {
 
-            description:
-                'Born beneath the quiet of the night, Indranīla carries the depth of the celestial sky within its measure.',
-
-            footer:
-                'SAPPHIRE · MIDNIGHT'
-        },
-
-        {
-            key: 'hiranya',
-            cardClass:
-                'collection-card hiranya reveal',
-
-            number: '02',
-
-            category: 'RADIANCE',
-
-            name: 'HIRANYA',
-
-            description:
-                'Inspired by the first light of dawn, Hiranya reflects time through warmth, brilliance and quiet opulence.',
-
-            footer:
-                'GOLD · DAWN'
-        },
-
-        {
-            key: 'ayas',
-            cardClass:
-                'collection-card ayas reveal',
-
-            number: '03',
-
-            category: 'PERMANENCE',
-
-            name: 'AYAS',
-
-            description:
-                'Forged around the idea of permanence, Ayas gives time an architectural, uncompromising presence.',
-
-            footer:
-                'STEEL · ETERNAL'
-        }
-    ];
-
-    _observer;
-
-    renderedCallback() {
-
-        if (this._observer) {
-            return;
-        }
-
-        const section =
-            this.template.querySelector(
-                '.collection-section'
-            );
-
-        if (
-            !section ||
-            typeof IntersectionObserver === 'undefined'
-        ) {
-            return;
-        }
-
-        section.setAttribute(
-            'data-ready',
-            'true'
-        );
-
-        this._observer =
-            new IntersectionObserver(
-                (entries) => {
-
-                    entries.forEach(
-                        (entry) => {
-
-                            if (
-                                entry.isIntersecting
-                            ) {
-
-                                entry.target.setAttribute(
-                                    'data-in',
-                                    'true'
-                                );
-
-                                this._observer.unobserve(
-                                    entry.target
-                                );
-                            }
-
-                        }
-                    );
-
-                },
-                {
-                    threshold: 0.12
-                }
-            );
-
-        this.template
-            .querySelectorAll('.reveal')
-            .forEach(
-                (element) => {
-
-                    this._observer.observe(
-                        element
-                    );
-
-                }
-            );
+        return `
+            background-image: url("${HERO_IMAGE}");
+        `;
     }
 
-    disconnectedCallback() {
 
-        if (this._observer) {
+    // =========================================================
+    // LOAD COLLECTIONS
+    // =========================================================
 
-            this._observer.disconnect();
+    @wire(getCollectionsWithWatches)
+    wiredCollections({ data, error }) {
 
-            this._observer = null;
+        if (data) {
+
+            this.collections = data.map(
+                (collection, index) => {
+
+                    const displayIndex =
+                        String(index + 1).padStart(2, '0');
+
+                    return {
+                        ...collection,
+
+                        displayIndex,
+
+                        /*
+                         * Apex returns:
+                         * description
+                         *
+                         * HTML expects:
+                         * shortDescription
+                         */
+                        shortDescription:
+                            collection.description,
+
+                        categoryLabel:
+                            this.getCategoryLabel(
+                                collection.name
+                            ),
+
+                        signature:
+                            this.getSignature(
+                                collection.name
+                            )
+                    };
+                }
+            );
+
+            this.errorMessage = undefined;
+
+        } else if (error) {
+
+            this.collections = [];
+
+            this.errorMessage =
+                this.getErrorMessage(error);
         }
+    }
+
+
+    // =========================================================
+    // EMPTY STATE
+    // =========================================================
+
+    get showEmpty() {
+
+        return (
+            !this.errorMessage &&
+            this.collections.length === 0
+        );
+    }
+
+
+    // =========================================================
+    // COLLECTION CARD CLICK
+    // =========================================================
+    //
+    // ALL collection cards intentionally go to:
+    //
+    // /ujjayini/watches
+    //
+    // We DO NOT use:
+    //
+    // /ujjayini/watches?collection=Ayas
+    // /ujjayini/watches?collection=Indranila
+    // /ujjayini/watches?collection=Hiranya
+    //
+    // The Watches page will contain every collection
+    // section-wise.
+    //
+    // =========================================================
+
+    handleCollectionClick() {
+
+        window.location.href =
+            '/ujjayini/watches';
+    }
+
+
+    // =========================================================
+    // CATEGORY LABEL
+    // =========================================================
+
+    getCategoryLabel(name) {
+
+        if (!name) {
+            return 'HOROLOGY';
+        }
+
+        const normalized =
+            name.toLowerCase();
+
+        if (
+            normalized.includes('indran')
+        ) {
+            return 'CELESTIAL';
+        }
+
+        if (
+            normalized.includes('hiranya')
+        ) {
+            return 'RADIANCE';
+        }
+
+        if (
+            normalized.includes('ayas')
+        ) {
+            return 'PERMANENCE';
+        }
+
+        return 'THE COLLECTION';
+    }
+
+
+    // =========================================================
+    // SIGNATURE
+    // =========================================================
+
+    getSignature(name) {
+
+        if (!name) {
+            return 'TIME · UJJAYINI';
+        }
+
+        const normalized =
+            name.toLowerCase();
+
+        if (
+            normalized.includes('indran')
+        ) {
+            return 'SAPPHIRE · MIDNIGHT';
+        }
+
+        if (
+            normalized.includes('hiranya')
+        ) {
+            return 'GOLD · DAWN';
+        }
+
+        if (
+            normalized.includes('ayas')
+        ) {
+            return 'STEEL · ETERNAL';
+        }
+
+        return 'UJJAYINI · HOROLOGY';
+    }
+
+
+    // =========================================================
+    // ERROR MESSAGE
+    // =========================================================
+
+    getErrorMessage(error) {
+
+        if (
+            error &&
+            error.body &&
+            error.body.message
+        ) {
+            return error.body.message;
+        }
+
+        if (
+            error &&
+            error.message
+        ) {
+            return error.message;
+        }
+
+        return (
+            'Unable to load the UJJAYINI collections.'
+        );
     }
 }

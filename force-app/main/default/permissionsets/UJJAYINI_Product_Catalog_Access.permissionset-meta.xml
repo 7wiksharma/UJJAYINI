@@ -213,7 +213,29 @@
     <editable>true</editable>
     <readable>true</readable>
 </fieldPermissions>
+<fieldPermissions>
+    <field>Collection__c.Name</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
 
+<fieldPermissions>
+    <field>Collection__c.Hero_Image_URL__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Collection__c.Description__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
+
+<fieldPermissions>
+    <field>Collection__c.Display_Order__c</field>
+    <editable>false</editable>
+    <readable>true</readable>
+</fieldPermissions>
         <classAccesses>
         <apexClass>UJJAYINICartController</apexClass>
         <enabled>true</enabled>
@@ -266,5 +288,11 @@
     <classAccesses>
     <apexClass>UJJAYINIFeaturedWatchesController</apexClass>
     <enabled>true</enabled>
+
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINICollectionController</apexClass>
+    <enabled>true</enabled>
+    
 </classAccesses>
 </PermissionSet>

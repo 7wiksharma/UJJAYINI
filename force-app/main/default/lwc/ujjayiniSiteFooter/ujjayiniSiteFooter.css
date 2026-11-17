@@ -1,0 +1,847 @@
+/* =========================================================
+   UJJAYINI — LUXURY EDITORIAL FOOTER
+========================================================= */
+
+:host {
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    color: #eadfce !important;
+
+    background: #05060a !important;
+
+    --uj-gold: #c9a24d;
+    --uj-gold-light: #e5c77c;
+    --uj-ivory: #f4e5d2;
+    --uj-muted: rgba(244, 229, 210, 0.58);
+}
+
+
+/* =========================================================
+   MAIN FOOTER
+========================================================= */
+
+.site-footer {
+    position: relative !important;
+
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+
+    background:
+        radial-gradient(
+            ellipse at 78% 18%,
+            rgba(201, 162, 77, 0.075) 0%,
+            rgba(201, 162, 77, 0.025) 28%,
+            transparent 58%
+        ),
+        radial-gradient(
+            ellipse at 15% 75%,
+            rgba(54, 75, 63, 0.18) 0%,
+            transparent 48%
+        ),
+        linear-gradient(
+            180deg,
+            #07100e 0%,
+            #05070a 48%,
+            #030406 100%
+        ) !important;
+}
+
+
+/* =========================================================
+   ATMOSPHERE
+========================================================= */
+
+.footer-atmosphere {
+    position: absolute !important;
+
+    top: -220px !important;
+    right: -100px !important;
+
+    width: 650px !important;
+    height: 500px !important;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(201, 162, 77, 0.11) 0%,
+            rgba(201, 162, 77, 0.035) 35%,
+            transparent 70%
+        ) !important;
+
+    pointer-events: none !important;
+}
+
+
+/* =========================================================
+   TOP GOLD DETAIL
+========================================================= */
+
+.gold-rule {
+    width: 100% !important;
+
+    height: 1px !important;
+
+    margin: 0 !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(201, 162, 77, 0.16) 12%,
+            rgba(201, 162, 77, 0.68) 50%,
+            rgba(201, 162, 77, 0.16) 88%,
+            transparent 100%
+        ) !important;
+
+    box-shadow:
+        0 0 12px rgba(201, 162, 77, 0.22) !important;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.footer-inner {
+    position: relative !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        1.65fr
+        0.8fr
+        0.9fr
+        1fr
+        1.45fr !important;
+
+    gap: 48px !important;
+
+    width: 100% !important;
+
+    max-width: 1500px !important;
+
+    margin: 0 auto !important;
+
+    padding:
+        76px 55px 62px !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand-column {
+    max-width: 340px !important;
+}
+
+
+.footer-brand {
+    display: inline-block !important;
+
+    text-decoration: none !important;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif !important;
+
+    font-size: 39px !important;
+
+    font-weight: 600 !important;
+
+    letter-spacing: 9px !important;
+
+    line-height: 1 !important;
+
+    color: #f3dfc5 !important;
+
+    text-shadow:
+        0 0 14px rgba(201, 162, 77, 0.12),
+        0 0 32px rgba(201, 162, 77, 0.06) !important;
+
+    transition:
+        color 0.35s ease,
+        text-shadow 0.35s ease !important;
+}
+
+
+/* Override Salesforce link states */
+
+.footer-brand:visited,
+.footer-brand:active {
+    color: #f3dfc5 !important;
+
+    text-decoration: none !important;
+}
+
+
+.footer-brand:hover {
+    color: #fff1da !important;
+
+    text-shadow:
+        0 0 10px rgba(201, 162, 77, 0.65),
+        0 0 30px rgba(201, 162, 77, 0.28) !important;
+}
+
+
+/* =========================================================
+   BRAND SUBTITLE
+========================================================= */
+
+.brand-subtitle {
+    margin-top: 9px !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 7px !important;
+
+    font-weight: 700 !important;
+
+    letter-spacing: 3.2px !important;
+
+    color: #c9a24d !important;
+}
+
+
+/* =========================================================
+   BRAND STORY
+========================================================= */
+
+.brand-story {
+    margin:
+        27px 0 0 !important;
+
+    max-width: 315px !important;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif !important;
+
+    font-size: 14px !important;
+
+    font-weight: 400 !important;
+
+    line-height: 1.85 !important;
+
+    color:
+        rgba(244, 229, 210, 0.62) !important;
+}
+
+
+/* =========================================================
+   FOOTER MARK
+========================================================= */
+
+.footer-mark {
+    margin-top: 29px !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 8px !important;
+
+    font-weight: 700 !important;
+
+    letter-spacing: 3px !important;
+
+    color:
+        rgba(201, 162, 77, 0.62) !important;
+}
+
+
+/* =========================================================
+   FOOTER COLUMNS
+========================================================= */
+
+.footer-column {
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: flex-start !important;
+
+    min-width: 0 !important;
+}
+
+
+/* =========================================================
+   COLUMN HEADINGS
+========================================================= */
+
+.column-label {
+    position: relative !important;
+
+    margin:
+        0 0 24px !important;
+
+    padding-left: 18px !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 9px !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: 3.2px !important;
+
+    color: #d2ad5d !important;
+}
+
+
+/* Small gold marker */
+
+.column-label::before {
+    content: "" !important;
+
+    position: absolute !important;
+
+    left: 0 !important;
+
+    top: 50% !important;
+
+    width: 8px !important;
+
+    height: 1px !important;
+
+    transform: translateY(-50%) !important;
+
+    background: #c9a24d !important;
+
+    box-shadow:
+        0 0 8px rgba(201, 162, 77, 0.75) !important;
+}
+
+
+/* =========================================================
+   FOOTER LINKS
+========================================================= */
+
+.footer-link {
+    position: relative !important;
+
+    display: inline-block !important;
+
+    margin:
+        0 0 15px !important;
+
+    padding: 0 !important;
+
+    text-decoration: none !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 10px !important;
+
+    font-weight: 700 !important;
+
+    letter-spacing: 1.8px !important;
+
+    line-height: 1.4 !important;
+
+    white-space: nowrap !important;
+
+    color: #e7dbc9 !important;
+
+    transition:
+        color 0.3s ease,
+        text-shadow 0.3s ease,
+        transform 0.3s ease !important;
+}
+
+
+/*
+   IMPORTANT:
+   Force all Salesforce link states to remain UJJAYINI ivory.
+*/
+
+.footer-link:visited,
+.footer-link:active,
+.footer-link:focus {
+    color: #e7dbc9 !important;
+
+    text-decoration: none !important;
+}
+
+
+.footer-link:hover {
+    color: #fff1d7 !important;
+
+    text-decoration: none !important;
+
+    transform: translateX(4px) !important;
+
+    text-shadow:
+        0 0 8px rgba(201, 162, 77, 0.55),
+        0 0 18px rgba(201, 162, 77, 0.22) !important;
+}
+
+
+/* Gold hover line */
+
+.footer-link::before {
+    content: "" !important;
+
+    position: absolute !important;
+
+    left: -15px !important;
+
+    top: 50% !important;
+
+    width: 0 !important;
+
+    height: 1px !important;
+
+    transform: translateY(-50%) !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #c9a24d
+        ) !important;
+
+    box-shadow:
+        0 0 8px rgba(201, 162, 77, 0.8) !important;
+
+    transition:
+        width 0.3s ease !important;
+}
+
+
+.footer-link:hover::before {
+    width: 9px !important;
+}
+
+
+/* =========================================================
+   GOLD LINKS
+========================================================= */
+
+.gold-link,
+.gold-link:visited,
+.gold-link:active {
+    color: #d4b469 !important;
+}
+
+
+.gold-link:hover {
+    color: #fff0cb !important;
+}
+
+
+/* =========================================================
+   JOURNAL
+========================================================= */
+
+.newsletter-column {
+    max-width: 330px !important;
+}
+
+
+.newsletter-copy {
+    margin:
+        0 0 25px !important;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif !important;
+
+    font-size: 14px !important;
+
+    line-height: 1.75 !important;
+
+    color:
+        rgba(244, 229, 210, 0.63) !important;
+}
+
+
+/* =========================================================
+   NEWSLETTER FORM
+========================================================= */
+
+.newsletter-form {
+    display: flex !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    border-bottom:
+        1px solid rgba(201, 162, 77, 0.58) !important;
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease !important;
+}
+
+
+.newsletter-form:focus-within {
+    border-bottom-color: #e0bd66 !important;
+
+    box-shadow:
+        0 3px 12px rgba(201, 162, 77, 0.12) !important;
+}
+
+
+.newsletter-form input {
+    flex: 1 !important;
+
+    min-width: 0 !important;
+
+    border: none !important;
+
+    outline: none !important;
+
+    padding:
+        13px 0 !important;
+
+    margin: 0 !important;
+
+    background: transparent !important;
+
+    color: #f4e5d2 !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 9px !important;
+
+    font-weight: 700 !important;
+
+    letter-spacing: 1.6px !important;
+}
+
+
+.newsletter-form input::placeholder {
+    color:
+        rgba(244, 229, 210, 0.38) !important;
+}
+
+
+.newsletter-form button {
+    border: none !important;
+
+    outline: none !important;
+
+    background: transparent !important;
+
+    color: #c9a24d !important;
+
+    cursor: pointer !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 9px !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: 2px !important;
+
+    padding:
+        0 0 0 16px !important;
+
+    transition:
+        color 0.3s ease,
+        text-shadow 0.3s ease !important;
+}
+
+
+.newsletter-form button:hover {
+    color: #fff0d4 !important;
+
+    text-shadow:
+        0 0 9px rgba(201, 162, 77, 0.7) !important;
+}
+
+
+.newsletter-form button span {
+    margin-left: 5px !important;
+
+    font-size: 13px !important;
+}
+
+
+/* =========================================================
+   PRIVACY
+========================================================= */
+
+.privacy-note {
+    margin-top: 11px !important;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 7px !important;
+
+    line-height: 1.6 !important;
+
+    letter-spacing: 0.6px !important;
+
+    color:
+        rgba(244, 229, 210, 0.27) !important;
+}
+
+
+/* =========================================================
+   LOWER FOOTER
+========================================================= */
+
+.footer-lower {
+    position: relative !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: space-between !important;
+
+    width: 100% !important;
+
+    max-width: 1500px !important;
+
+    margin: 0 auto !important;
+
+    padding:
+        20px 55px !important;
+
+    box-sizing: border-box !important;
+
+    border-top:
+        1px solid rgba(201, 162, 77, 0.12) !important;
+}
+
+
+.copyright,
+.footer-center,
+.legal-links {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: 7px !important;
+
+    font-weight: 700 !important;
+
+    letter-spacing: 1.8px !important;
+
+    color:
+        rgba(244, 229, 210, 0.34) !important;
+}
+
+
+.footer-center {
+    color:
+        rgba(201, 162, 77, 0.55) !important;
+}
+
+
+/* =========================================================
+   LEGAL LINKS
+========================================================= */
+
+.legal-links {
+    display: flex !important;
+
+    gap: 20px !important;
+}
+
+
+.legal-links a,
+.legal-links a:visited,
+.legal-links a:active {
+    text-decoration: none !important;
+
+    color:
+        rgba(244, 229, 210, 0.36) !important;
+
+    transition:
+        color 0.3s ease,
+        text-shadow 0.3s ease !important;
+}
+
+
+.legal-links a:hover {
+    color: #e7c878 !important;
+
+    text-shadow:
+        0 0 8px rgba(201, 162, 77, 0.45) !important;
+}
+
+
+/* =========================================================
+   FINAL BRAND LINE
+========================================================= */
+
+.footer-ending {
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    gap: 12px !important;
+
+    margin: 0 !important;
+
+    padding:
+        27px 20px 38px !important;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif !important;
+
+    font-size: 9px !important;
+
+    font-style: italic !important;
+
+    font-weight: 500 !important;
+
+    letter-spacing: 3px !important;
+
+    color:
+        rgba(201, 162, 77, 0.38) !important;
+}
+
+
+.ending-dot {
+    color: #c9a24d !important;
+
+    text-shadow:
+        0 0 8px rgba(201, 162, 77, 0.5) !important;
+}
+
+
+/* =========================================================
+   REMOVE DEFAULT SPACING
+========================================================= */
+
+.site-footer > *:first-child {
+    margin-top: 0 !important;
+}
+
+.site-footer p {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .footer-inner {
+        grid-template-columns:
+            1.4fr
+            1fr
+            1fr !important;
+
+        gap: 42px !important;
+
+        padding:
+            65px 35px 55px !important;
+    }
+
+    .newsletter-column {
+        grid-column: span 2 !important;
+
+        max-width: 520px !important;
+    }
+
+    .footer-lower {
+        padding:
+            20px 35px !important;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .footer-inner {
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        gap: 40px !important;
+
+        padding:
+            58px 25px 45px !important;
+    }
+
+
+    .brand-column,
+    .newsletter-column {
+        max-width: 100% !important;
+    }
+
+
+    .footer-brand {
+        font-size: 32px !important;
+
+        letter-spacing: 7px !important;
+    }
+
+
+    .footer-lower {
+        flex-direction: column !important;
+
+        gap: 15px !important;
+
+        text-align: center !important;
+
+        padding:
+            21px 20px !important;
+    }
+
+
+    .legal-links {
+        gap: 16px !important;
+    }
+
+
+    .footer-ending {
+        font-size: 8px !important;
+
+        letter-spacing: 2px !important;
+    }
+}

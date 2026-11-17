@@ -1,245 +1,331 @@
 <template>
+
     <section class="collection-section">
 
-        <!-- ==================================================
-             ATMOSPHERE
-        =================================================== -->
+        <!-- =====================================================
+             ATMOSPHERIC BACKGROUND
+        ====================================================== -->
 
-        <div class="background-glow glow-left"></div>
-        <div class="background-glow glow-right"></div>
+        <div
+            class="hero-photo"
+            style={heroPhotoStyle}
+        ></div>
 
-        <div class="ambient-bloom bloom-one"></div>
-        <div class="ambient-bloom bloom-two"></div>
+        <div class="hero-vignette"></div>
 
-        <div class="star-field">
-            <span class="star star-01"></span>
-            <span class="star star-02"></span>
-            <span class="star star-03"></span>
-            <span class="star star-04"></span>
-            <span class="star star-05"></span>
-            <span class="star star-06"></span>
-            <span class="star star-07"></span>
-            <span class="star star-08"></span>
-            <span class="star star-09"></span>
-            <span class="star star-10"></span>
-        </div>
+        <div class="violet-atmosphere"></div>
 
-        <!-- ==================================================
-             CELESTIAL GEOMETRY
-        =================================================== -->
+        <div class="gold-orbit orbit-one"></div>
+        <div class="gold-orbit orbit-two"></div>
 
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="orbit orbit-three"></div>
 
-        <div class="vertical-axis"></div>
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
 
-        <!-- ==================================================
-             SECTION METADATA
-        =================================================== -->
+        <header class="collection-hero">
 
-        <div class="section-meta meta-left">
-            UJJAYINI · HOROLOGY
-        </div>
+            <div class="hero-meta">
 
-        <div class="section-meta meta-right">
-            IV · THE COLLECTION
-        </div>
+                <span>
+                    UJJAYINI · HOROLOGY
+                </span>
 
-        <!-- ==================================================
-             MAIN CONTENT
-        =================================================== -->
-
-        <div class="collection-container">
-
-            <!-- ==================================================
-                 INTRO
-            =================================================== -->
-
-            <header class="collection-intro reveal">
-
-                <div class="eyebrow">
-                    THE COLLECTION
-                </div>
-
-                <h2>
-                    Three expressions
-                    <br />
-                    <em>of time.</em>
-                </h2>
-
-                <div class="intro-divider">
-                    <span></span>
-                </div>
-
-                <p class="intro-copy">
-                    Every UJJAYINI timepiece begins with the same
-                    question — not what time is, but what it means
-                    to remember it.
-                </p>
-
-            </header>
-
-            <!-- ==================================================
-                 COLLECTION GRID
-            =================================================== -->
-
-            <div class="collection-grid">
-
-                <template
-                    for:each={collections}
-                    for:item="c"
-                >
-
-                    <article
-                        key={c.key}
-                        class={c.cardClass}
-                    >
-
-                        <!-- CARD HEADER -->
-
-                        <div class="card-top">
-
-                            <span class="collection-number">
-                                {c.number}
-                            </span>
-
-                            <span class="collection-category">
-                                {c.category}
-                            </span>
-
-                        </div>
-
-                        <!-- ==================================================
-                             WATCH VISUAL
-                        =================================================== -->
-
-                        <div class="watch-stage">
-
-                            <div class="watch-aura"></div>
-
-                            <div class="orbit-ring ring-one"></div>
-                            <div class="orbit-ring ring-two"></div>
-                            <div class="orbit-ring ring-three"></div>
-
-                            <div class="watch-shadow"></div>
-
-                            <div class="watch-watch">
-
-                                <div class="watch-strap strap-top"></div>
-
-                                <span class="watch-lug lug-tl"></span>
-                                <span class="watch-lug lug-tr"></span>
-                                <span class="watch-lug lug-bl"></span>
-                                <span class="watch-lug lug-br"></span>
-
-                                <span class="watch-crown"></span>
-
-                                <div class="watch-case">
-
-                                    <div class="case-highlight"></div>
-
-                                    <div class="watch-dial">
-
-                                        <div class="dial-sheen"></div>
-
-                                        <span class="dial-brand">
-                                            UJJAYINI
-                                        </span>
-
-                                        <span class="dial-coord">
-                                            23°N
-                                        </span>
-
-                                        <span class="hour hour-12">
-                                            12
-                                        </span>
-
-                                        <span class="hour hour-03">
-                                            3
-                                        </span>
-
-                                        <span class="hour hour-06">
-                                            6
-                                        </span>
-
-                                        <span class="hour hour-09">
-                                            9
-                                        </span>
-
-                                        <span class="minute-mark mark-01"></span>
-                                        <span class="minute-mark mark-02"></span>
-                                        <span class="minute-mark mark-03"></span>
-                                        <span class="minute-mark mark-04"></span>
-                                        <span class="minute-mark mark-05"></span>
-                                        <span class="minute-mark mark-06"></span>
-                                        <span class="minute-mark mark-07"></span>
-                                        <span class="minute-mark mark-08"></span>
-
-                                        <span class="watch-hand hand-hour"></span>
-                                        <span class="watch-hand hand-minute"></span>
-                                        <span class="watch-hand hand-second"></span>
-
-                                        <span class="watch-center"></span>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="watch-strap strap-bottom"></div>
-
-                            </div>
-
-                        </div>
-
-                        <!-- ==================================================
-                             CARD CONTENT
-                        =================================================== -->
-
-                        <div class="card-content">
-
-                            <div class="collection-name">
-                                {c.name}
-                            </div>
-
-                            <div class="collection-line"></div>
-
-                            <p class="collection-description">
-                                {c.description}
-                            </p>
-
-                            <div class="collection-footer">
-
-                                <span>
-                                    {c.footer}
-                                </span>
-
-                                <span class="collection-arrow">
-                                    ↗
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </template>
+                <span>
+                    II · THE COLLECTION
+                </span>
 
             </div>
 
-            <!-- ==================================================
-                 CLOSING STATEMENT
-            =================================================== -->
 
-            <div class="collection-closing reveal">
+            <div class="hero-content">
+
+                <p class="eyebrow">
+                    THE HOUSE OF UJJAYINI
+                </p>
+
+
+                <h1>
+                    Three expressions
+                    <br />
+                    <em>of time.</em>
+                </h1>
+
+
+                <div class="hero-rule">
+                    <span></span>
+                </div>
+
+
+                <p class="hero-description">
+
+                    Every UJJAYINI timepiece begins with
+                    the same question — not what time is,
+                    but what it means to remember it.
+
+                </p>
+
+
+                <a
+                    class="hero-cta"
+                    href="#collections"
+                >
+
+                    <span>
+                        EXPLORE THE COLLECTION
+                    </span>
+
+                    <span class="cta-arrow">
+                        ↓
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <div class="hero-bottom-marker">
+
+                <span>
+                    SCROLL TO DISCOVER
+                </span>
+
+                <span class="marker-line"></span>
+
+                <span>
+                    UJJAYINI
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             COLLECTIONS
+        ====================================================== -->
+
+        <div
+            id="collections"
+            class="collections-area"
+        >
+
+            <div class="section-heading">
+
+                <p class="section-eyebrow">
+                    THE COLLECTION
+                </p>
+
+                <h2>
+                    Expressions of
+                    <em>time.</em>
+                </h2>
+
+                <p class="section-copy">
+
+                    Three distinct interpretations of
+                    horology, united by one philosophy.
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 ERROR
+            ================================================== -->
+
+            <template if:true={errorMessage}>
+
+                <div class="collection-state error-state">
+
+                    <span>
+                        COLLECTION UNAVAILABLE
+                    </span>
+
+                    <p>
+                        {errorMessage}
+                    </p>
+
+                </div>
+
+            </template>
+
+
+            <!-- =================================================
+                 EMPTY
+            ================================================== -->
+
+            <template if:true={showEmpty}>
+
+                <div class="collection-state">
+
+                    <span>
+                        NO COLLECTIONS
+                    </span>
+
+                    <p>
+                        UJJAYINI collections will appear here.
+                    </p>
+
+                </div>
+
+            </template>
+
+
+            <!-- =================================================
+                 COLLECTION GRID
+            ================================================== -->
+
+            <template if:true={collections.length}>
+
+                <div class="collection-grid">
+
+                    <template
+                        for:each={collections}
+                        for:item="collection"
+                    >
+
+                        <article
+                            key={collection.collectionId}
+                            class="collection-card"
+                            data-collection={collection.name}
+                            onclick={handleCollectionClick}
+                        >
+
+                            <!-- =================================================
+                                 IMAGE
+                            ================================================== -->
+
+                            <div class="collection-image">
+
+                                <template
+                                    if:true={collection.heroImageUrl}
+                                >
+
+                                    <img
+                                        src={collection.heroImageUrl}
+                                        alt={collection.name}
+                                    />
+
+                                </template>
+
+
+                                <template
+                                    if:false={collection.heroImageUrl}
+                                >
+
+                                    <div class="image-placeholder">
+                                        UJJAYINI
+                                    </div>
+
+                                </template>
+
+
+                                <div class="image-overlay"></div>
+
+
+                                <div class="image-number">
+                                    {collection.displayIndex}
+                                </div>
+
+
+                                <div class="image-category">
+                                    UJJAYINI COLLECTION
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 CONTENT
+                            ================================================== -->
+
+                            <div class="collection-content">
+
+                                <div class="collection-topline">
+
+                                    <span>
+                                        {collection.displayIndex}
+                                    </span>
+
+                                    <span>
+                                        THE HOUSE
+                                    </span>
+
+                                </div>
+
+
+                                <h3>
+                                    {collection.name}
+                                </h3>
+
+
+                                <div class="gold-line"></div>
+
+
+                                <template
+                                    if:true={collection.shortDescription}
+                                >
+
+                                    <p class="short-description">
+                                        {collection.shortDescription}
+                                    </p>
+
+                                </template>
+
+
+                                <template
+                                    if:false={collection.shortDescription}
+                                >
+
+                                    <p class="short-description">
+                                        A distinctive expression of
+                                        UJJAYINI horology.
+                                    </p>
+
+                                </template>
+
+
+                                <div class="collection-bottom">
+
+                                    <span class="discover">
+                                        EXPLORE WATCHES
+                                    </span>
+
+                                    <span class="arrow">
+                                        ↗
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- =================================================
+                 CLOSING STATEMENT
+            ================================================== -->
+
+            <div class="collection-closing">
 
                 <div class="closing-rule"></div>
 
                 <p>
-                    THREE MATERIALS.
-                    <span>THREE WORLDS.</span>
-                    ONE MEASURE OF TIME.
+
+                    TIME IS NOT SIMPLY MEASURED.
+
+                    <em>
+                        IT IS REMEMBERED.
+                    </em>
+
                 </p>
 
                 <div class="closing-rule"></div>
@@ -248,23 +334,25 @@
 
         </div>
 
-        <!-- ==================================================
+
+        <!-- =====================================================
              SECTION MARKER
-        =================================================== -->
+        ====================================================== -->
 
         <div class="section-marker">
 
-            <span class="marker-number">
-                IV
+            <span>
+                II
             </span>
 
             <span class="marker-line"></span>
 
-            <span class="marker-text">
+            <span>
                 THE COLLECTION
             </span>
 
         </div>
 
     </section>
+
 </template>

@@ -1,401 +1,832 @@
-/* ============================================================
-   UJJAYINI — THE COLLECTION
-   Luxury Horology / Editorial / Realistic Watch Treatment
-============================================================ */
-
 :host {
     display: block;
     width: 100%;
     margin: 0;
     padding: 0;
-    color: #f5dabf;
-        margin-bottom: -32px;
+
+    background: #07050d;
+    color: #f4e5d2;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
+
+
+/* =========================================================
+   MAIN
+========================================================= */
 
 .collection-section {
-    --cream: #f5dabf;
-    --cream-bright: #fff1df;
-    --cream-soft: rgba(245, 218, 191, 0.72);
-
-    --gold: #c9a24d;
-    --gold-bright: #e7c56d;
-    --gold-soft: rgba(201, 162, 77, 0.32);
-
-    --burgundy: #6c151e;
-    --burgundy-soft: rgba(108, 21, 30, 0.42);
-
-    --green: #0f3d3a;
-    --green-deep: #061312;
-
-    --black: #050709;
-    --black-soft: #0b0d0e;
-
     position: relative;
     width: 100%;
-    min-height: 100vh;
-
-    margin: 0;
-    padding: 0;
-
     overflow: hidden;
-    isolation: isolate;
 
     background:
-        radial-gradient(
-            circle at 17% 46%,
-            rgba(108, 21, 30, 0.30) 0%,
-            rgba(108, 21, 30, 0.12) 20%,
-            transparent 44%
-        ),
-        radial-gradient(
-            circle at 83% 47%,
-            rgba(15, 61, 58, 0.38) 0%,
-            rgba(15, 61, 58, 0.13) 25%,
-            transparent 48%
-        ),
         linear-gradient(
-            110deg,
-            #090b0c 0%,
-            #120b0e 26%,
-            #070f0f 54%,
-            #061312 100%
+            180deg,
+            #08050e 0%,
+            #100916 35%,
+            #09060e 70%,
+            #04050a 100%
         );
-
-    color: var(--cream);
 }
 
 
-/* ============================================================
-   ATMOSPHERE
-============================================================ */
+/* =========================================================
+   HERO PHOTOGRAPHY
+========================================================= */
 
-.background-glow {
+.hero-photo {
     position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 900px;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 28%;
+
+    opacity: 0.48;
+
+    filter:
+        saturate(0.82)
+        contrast(1.08);
+
+    transform: scale(1.03);
+
+    z-index: 0;
+
     pointer-events: none;
-    z-index: -2;
-
-    border-radius: 50%;
-    filter: blur(70px);
 }
 
-.glow-left {
-    width: 42vw;
-    height: 42vw;
+/* =========================================================
+   DARK CINEMATIC TREATMENT
+========================================================= */
 
-    left: -22vw;
-    top: 24%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(108, 21, 30, 0.34) 0%,
-            rgba(108, 21, 30, 0.12) 42%,
-            transparent 72%
-        );
-}
-
-.glow-right {
-    width: 46vw;
-    height: 46vw;
-
-    right: -24vw;
-    top: 20%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(15, 61, 58, 0.38) 0%,
-            rgba(15, 61, 58, 0.14) 44%,
-            transparent 74%
-        );
-}
-
-
-/* ============================================================
-   STAR FIELD
-============================================================ */
-
-.star-field {
+.hero-vignette {
     position: absolute;
+
     inset: 0;
 
+    height: 950px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(8, 4, 13, 0.96) 0%,
+            rgba(10, 5, 15, 0.78) 30%,
+            rgba(10, 5, 15, 0.48) 55%,
+            rgba(5, 4, 9, 0.76) 100%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(3, 3, 7, 0.22) 0%,
+            rgba(8, 4, 13, 0.35) 55%,
+            #08050e 100%
+        );
+
+    z-index: 1;
+
     pointer-events: none;
-    z-index: -1;
 }
 
-.star {
+
+/* =========================================================
+   VIOLET ATMOSPHERE
+========================================================= */
+
+.violet-atmosphere {
     position: absolute;
 
-    width: 2px;
-    height: 2px;
+    width: 850px;
+    height: 850px;
+
+    left: -320px;
+    top: 260px;
 
     border-radius: 50%;
 
-    background: rgba(245, 218, 191, 0.72);
+    background:
+        radial-gradient(
+            circle,
+            rgba(91, 48, 105, 0.30) 0%,
+            rgba(67, 31, 78, 0.12) 38%,
+            transparent 70%
+        );
 
-    box-shadow:
-        0 0 5px rgba(245, 218, 191, 0.28);
-}
+    filter: blur(30px);
 
-.star-01 {
-    left: 11%;
-    top: 17%;
-}
+    z-index: 1;
 
-.star-02 {
-    left: 27%;
-    top: 31%;
-}
-
-.star-03 {
-    left: 44%;
-    top: 14%;
-}
-
-.star-04 {
-    left: 58%;
-    top: 23%;
-}
-
-.star-05 {
-    left: 73%;
-    top: 12%;
-}
-
-.star-06 {
-    left: 86%;
-    top: 34%;
-}
-
-.star-07 {
-    left: 18%;
-    top: 68%;
-}
-
-.star-08 {
-    left: 38%;
-    top: 77%;
-}
-
-.star-09 {
-    left: 67%;
-    top: 72%;
-}
-
-.star-10 {
-    left: 91%;
-    top: 61%;
+    pointer-events: none;
 }
 
 
-/* ============================================================
-   ORBITAL GEOMETRY
-============================================================ */
+/* =========================================================
+   GOLD ORBITS
+========================================================= */
 
-.orbit {
+.gold-orbit {
     position: absolute;
-
-    border: 1px solid rgba(201, 162, 77, 0.16);
 
     border-radius: 50%;
 
+    border:
+        1px solid rgba(201, 162, 77, 0.18);
+
     pointer-events: none;
-    z-index: -1;
+
+    z-index: 2;
 }
+
 
 .orbit-one {
-    width: 75vw;
-    height: 30vw;
+    width: 1100px;
+    height: 440px;
 
-    left: -8vw;
-    top: 39%;
+    right: -500px;
+    top: 310px;
+
+    transform: rotate(17deg);
+}
+
+
+.orbit-two {
+    width: 850px;
+    height: 340px;
+
+    left: -400px;
+    top: 580px;
 
     transform: rotate(-13deg);
 }
 
-.orbit-two {
-    width: 62vw;
-    height: 26vw;
 
-    right: -11vw;
-    top: 52%;
+/* =========================================================
+   HERO
+========================================================= */
 
-    transform: rotate(12deg);
+.collection-hero {
+    position: relative;
 
-    border-color:
-        rgba(15, 61, 58, 0.34);
+    min-height: 900px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 100%;
+
+    z-index: 3;
 }
 
 
-/* ============================================================
-   SECTION METADATA
-============================================================ */
+/* =========================================================
+   HERO META
+========================================================= */
 
-.section-meta {
+.hero-meta {
     position: absolute;
 
     top: 38px;
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    left: 6vw;
+    right: 6vw;
+
+    display: flex;
+    justify-content: space-between;
 
     font-size: 8px;
-
     font-weight: 700;
 
-    letter-spacing: 4px;
-
-    text-transform: uppercase;
+    letter-spacing: 0.34em;
 
     color:
-        rgba(201, 162, 77, 0.58);
-
-    z-index: 5;
-}
-
-.meta-left {
-    left: 8%;
-}
-
-.meta-right {
-    right: 8%;
+        rgba(244, 229, 210, 0.48);
 }
 
 
-/* ============================================================
-   MAIN CONTAINER
-============================================================ */
+/* =========================================================
+   HERO CONTENT
+========================================================= */
 
-.collection-container {
-    position: relative;
+.hero-content {
+    width: min(850px, 82vw);
 
-    width: min(1180px, 86vw);
-
-    margin: 0 auto;
-
-    padding-top: 105px;
-    padding-bottom: 90px;
+    margin-left: 8vw;
+    margin-top: 60px;
 }
 
-
-/* ============================================================
-   INTRO
-============================================================ */
-
-.collection-intro {
-    position: relative;
-
-    max-width: 720px;
-
-    margin:
-        0 auto 70px;
-
-    text-align: center;
-}
 
 .eyebrow {
-    margin: 0 0 24px;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    margin: 0 0 25px;
 
     font-size: 9px;
+    font-weight: 800;
 
-    font-weight: 700;
+    letter-spacing: 0.42em;
 
-    letter-spacing: 5px;
-
-    color:
-        rgba(201, 162, 77, 0.78);
-
-    text-transform: uppercase;
+    color: #c9a24d;
 }
 
-.collection-intro h2 {
-    margin: 0;
 
-    color: var(--cream-bright);
+/* =========================================================
+   HERO TITLE
+========================================================= */
+
+.hero-content h1 {
+    margin: 0;
 
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-    font-size: clamp(
-        52px,
-        7vw,
-        92px
-    );
+    font-size:
+        clamp(
+            72px,
+            9.5vw,
+            150px
+        );
 
-    line-height: 0.88;
+    line-height: 0.82;
 
-    font-weight: 400;
+    font-weight: 500;
 
-    letter-spacing: -4px;
+    letter-spacing: -0.025em;
+
+    color: #f4e5d2;
+
+    text-shadow:
+        0 0 35px rgba(201, 162, 77, 0.08);
 }
 
-.collection-intro h2 em {
-    display: block;
 
-    color:
-        rgba(245, 218, 191, 0.58);
-
-    font-style: italic;
-
+.hero-content h1 em {
+    color: #cdbba8;
     font-weight: 400;
-
-    transform: translateX(12px);
 }
 
-.intro-divider {
-    position: relative;
 
-    width: 76px;
+/* =========================================================
+   HERO RULE
+========================================================= */
+
+.hero-rule {
+    width: 130px;
     height: 1px;
 
-    margin: 32px auto 28px;
+    margin:
+        34px 0 27px;
 
     background:
         linear-gradient(
             90deg,
-            transparent,
-            var(--gold),
+            #c9a24d,
+            rgba(201, 162, 77, 0.08)
+        );
+
+    box-shadow:
+        0 0 10px rgba(201, 162, 77, 0.22);
+}
+
+
+.hero-rule span {
+    display: block;
+
+    width: 5px;
+    height: 5px;
+
+    margin-top: -2px;
+
+    border-radius: 50%;
+
+    background: #d9b968;
+
+    box-shadow:
+        0 0 12px rgba(201, 162, 77, 0.7);
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+========================================================= */
+
+.hero-description {
+    width: min(490px, 80vw);
+
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+
+    line-height: 1.65;
+
+    color:
+        rgba(244, 229, 210, 0.72);
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.hero-cta {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    margin-top: 38px;
+
+    padding:
+        15px 20px;
+
+    border:
+        1px solid rgba(201, 162, 77, 0.55);
+
+    background:
+        rgba(10, 7, 14, 0.32);
+
+    text-decoration: none;
+
+    color: #f4e5d2;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.28em;
+
+    transition:
+        border-color 0.35s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+.hero-cta:visited {
+    color: #f4e5d2;
+}
+
+
+.hero-cta:hover {
+    color: #fff0d5;
+
+    border-color: #d9b968;
+
+    background:
+        rgba(201, 162, 77, 0.08);
+
+    box-shadow:
+        0 0 20px rgba(201, 162, 77, 0.16),
+        inset 0 0 18px rgba(201, 162, 77, 0.04);
+
+    transform: translateY(-2px);
+}
+
+
+.cta-arrow {
+    color: #c9a24d;
+
+    font-size: 16px;
+
+    transition:
+        transform 0.35s ease;
+}
+
+
+.hero-cta:hover .cta-arrow {
+    transform: translateY(4px);
+}
+
+
+/* =========================================================
+   HERO BOTTOM
+========================================================= */
+
+.hero-bottom-marker {
+    position: absolute;
+
+    bottom: 35px;
+
+    left: 6vw;
+    right: 6vw;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.32em;
+
+    color:
+        rgba(244, 229, 210, 0.32);
+}
+
+
+.marker-line {
+    width: 65px;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(201, 162, 77, 0.65),
             transparent
         );
 }
 
-.intro-divider::after {
-    content: "";
 
-    position: absolute;
+/* =========================================================
+   COLLECTION AREA
+========================================================= */
 
-    width: 4px;
-    height: 4px;
+.collections-area {
+    position: relative;
 
-    left: 50%;
-    top: 50%;
+    z-index: 5;
 
-    transform: translate(-50%, -50%);
+    width: 100%;
 
-    border-radius: 50%;
+    padding:
+        120px 7vw 110px;
 
-    background: var(--gold);
-
-    box-shadow:
-        0 0 10px rgba(201, 162, 77, 0.65);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8, 5, 14, 0.94) 0%,
+            rgba(10, 6, 16, 0.98) 100%
+        );
 }
 
-.intro-copy {
-    max-width: 510px;
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.section-heading {
+    max-width: 760px;
+
+    margin:
+        0 auto 80px;
+
+    text-align: center;
+}
+
+
+.section-eyebrow {
+    margin: 0 0 20px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.42em;
+
+    color: #c9a24d;
+}
+
+
+.section-heading h2 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            48px,
+            6vw,
+            88px
+        );
+
+    line-height: 0.9;
+
+    font-weight: 500;
+
+    color: #f4e5d2;
+}
+
+
+.section-heading h2 em {
+    color: #bba99a;
+    font-weight: 400;
+}
+
+
+.section-copy {
+    width: min(500px, 80vw);
+
+    margin:
+        28px auto 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    color:
+        rgba(244, 229, 210, 0.55);
+}
+
+
+/* =========================================================
+   COLLECTION GRID
+========================================================= */
+
+.collection-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    max-width: 1450px;
 
     margin: 0 auto;
 
+    border:
+        1px solid rgba(201, 162, 77, 0.28);
+}
+
+
+/* =========================================================
+   COLLECTION CARD
+========================================================= */
+
+.collection-card {
+    position: relative;
+
+    min-width: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(15, 11, 22, 0.92),
+            rgba(7, 5, 11, 0.98)
+        );
+
+    border-right:
+        1px solid rgba(201, 162, 77, 0.22);
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+        background 0.55s ease,
+        box-shadow 0.55s ease;
+}
+
+
+.collection-card:last-child {
+    border-right: none;
+}
+
+
+.collection-card:hover {
+    z-index: 4;
+
+    transform:
+        translateY(-8px);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(28, 17, 34, 0.98),
+            rgba(7, 5, 11, 1)
+        );
+
+    box-shadow:
+        0 20px 55px rgba(0, 0, 0, 0.45),
+        0 0 28px rgba(201, 162, 77, 0.08);
+}
+
+
+/* =========================================================
+   COLLECTION IMAGE
+========================================================= */
+
+.collection-image {
+    position: relative;
+
+    height: 440px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #20162a 0%,
+            #0b0910 72%
+        );
+}
+
+
+.collection-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 1s cubic-bezier(0.2, 0.7, 0.2, 1),
+        filter 0.7s ease;
+}
+
+
+.collection-card:hover .collection-image img {
+    transform:
+        scale(1.07);
+
+    filter:
+        brightness(1.08)
+        saturate(1.05);
+}
+
+
+/* =========================================================
+   IMAGE OVERLAY
+========================================================= */
+
+.image-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(7, 5, 11, 0.08) 0%,
+            rgba(7, 5, 11, 0.08) 45%,
+            rgba(7, 5, 11, 0.88) 100%
+        );
+}
+
+
+/* =========================================================
+   IMAGE META
+========================================================= */
+
+.image-number {
+    position: absolute;
+
+    top: 22px;
+    left: 24px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.25em;
+
+    color: #d4b469;
+}
+
+
+.image-category {
+    position: absolute;
+
+    top: 24px;
+    right: 24px;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.26em;
+
     color:
-        rgba(245, 218, 191, 0.66);
+        rgba(244, 229, 210, 0.54);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.collection-content {
+    padding:
+        30px 30px 34px;
+}
+
+
+.collection-topline {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 17px;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.3em;
+
+    color:
+        rgba(244, 229, 210, 0.35);
+}
+
+
+.collection-content h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            30px,
+            3vw,
+            44px
+        );
+
+    line-height: 1;
+
+    font-weight: 500;
+
+    letter-spacing: 0.04em;
+
+    color: #f3dfc3;
+
+    transition:
+        color 0.35s ease,
+        text-shadow 0.35s ease;
+}
+
+
+.collection-card:hover .collection-content h3 {
+    color: #fff0d6;
+
+    text-shadow:
+        0 0 16px rgba(201, 162, 77, 0.22);
+}
+
+
+/* =========================================================
+   GOLD LINE
+========================================================= */
+
+.gold-line {
+    width: 42px;
+    height: 1px;
+
+    margin:
+        18px 0 17px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #c9a24d,
+            transparent
+        );
+
+    transition:
+        width 0.55s ease;
+}
+
+
+.collection-card:hover .gold-line {
+    width: 105px;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.short-description {
+    min-height: 54px;
+
+    margin: 0;
 
     font-family:
         Georgia,
@@ -404,1228 +835,355 @@
 
     font-size: 14px;
 
-    line-height: 1.75;
+    line-height: 1.65;
+
+    color:
+        rgba(244, 229, 210, 0.54);
 }
 
 
-/* ============================================================
-   COLLECTION GRID
-============================================================ */
+/* =========================================================
+   BOTTOM
+========================================================= */
 
-.collection-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    border-top:
-        1px solid rgba(201, 162, 77, 0.32);
-
-    border-left:
-        1px solid rgba(201, 162, 77, 0.32);
-
-    background:
-        rgba(2, 4, 5, 0.40);
-}
-
-
-/* ============================================================
-   CARD
-============================================================ */
-
-.collection-card {
-    position: relative;
-
-    min-height: 620px;
-
-    overflow: hidden;
-
-    border-right:
-        1px solid rgba(201, 162, 77, 0.28);
-
-    border-bottom:
-        1px solid rgba(201, 162, 77, 0.28);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(8, 12, 13, 0.95),
-            rgba(4, 7, 8, 0.92)
-        );
-
-    transition:
-        transform 700ms cubic-bezier(.2,.65,.2,1),
-        background 700ms ease,
-        box-shadow 700ms ease;
-}
-
-.collection-card:hover {
-    transform: translateY(-8px);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(14, 18, 19, 0.98),
-            rgba(5, 8, 9, 0.98)
-        );
-
-    box-shadow:
-        0 28px 70px rgba(0, 0, 0, 0.38);
-}
-
-
-/* Individual atmospheric tones */
-
-.collection-card.indranila {
-    background:
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(20, 30, 62, 0.30),
-            transparent 44%
-        ),
-        linear-gradient(
-            145deg,
-            #080b12,
-            #050709
-        );
-}
-
-.collection-card.hiranya {
-    background:
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(91, 65, 18, 0.25),
-            transparent 46%
-        ),
-        linear-gradient(
-            145deg,
-            #0d0b07,
-            #050706
-        );
-}
-
-.collection-card.ayas {
-    background:
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(72, 82, 84, 0.20),
-            transparent 46%
-        ),
-        linear-gradient(
-            145deg,
-            #090b0c,
-            #050607
-        );
-}
-
-
-/* ============================================================
-   CARD TOP
-============================================================ */
-
-.card-top {
-    position: relative;
-
+.collection-bottom {
     display: flex;
+
+    align-items: center;
 
     justify-content: space-between;
-    align-items: center;
 
-    padding: 23px 24px 0;
-
-    z-index: 5;
+    margin-top: 28px;
 }
 
-.collection-number {
-    font-family:
-        Georgia,
-        serif;
 
-    font-size: 10px;
+.discover {
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.28em;
 
     color:
-        rgba(245, 218, 191, 0.78);
+        rgba(244, 229, 210, 0.62);
 
-    letter-spacing: 2px;
-}
-
-.collection-category {
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    font-size: 7px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
-
-    color:
-        rgba(201, 162, 77, 0.64);
-
-    text-transform: uppercase;
+    transition:
+        color 0.35s ease;
 }
 
 
-/* ============================================================
-   WATCH STAGE
-============================================================ */
+.collection-card:hover .discover {
+    color: #e6c875;
+}
 
-.watch-stage {
-    position: relative;
 
-    height: 330px;
-
+.arrow {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
-    margin-top: 0;
-
-    perspective: 1200px;
-}
-
-
-/* ============================================================
-   ORBIT RINGS AROUND WATCH
-============================================================ */
-
-.orbit-ring {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 205px;
-    height: 82px;
+    width: 31px;
+    height: 31px;
 
     border:
-        1px solid rgba(201, 162, 77, 0.22);
+        1px solid rgba(201, 162, 77, 0.45);
 
     border-radius: 50%;
 
+    color: #c9a24d;
+
+    font-size: 15px;
+
+    transition:
+        transform 0.45s ease,
+        background 0.45s ease,
+        box-shadow 0.45s ease;
+}
+
+
+.collection-card:hover .arrow {
     transform:
-        translate(-50%, -50%)
-        rotate(-12deg);
-
-    pointer-events: none;
-}
-
-.ring-two {
-    width: 245px;
-    height: 100px;
-
-    transform:
-        translate(-50%, -50%)
-        rotate(17deg);
-
-    border-color:
-        rgba(201, 162, 77, 0.13);
-}
-
-
-/* ============================================================
-   WATCH BODY
-============================================================ */
-
-.watch-watch {
-    position: relative;
-
-    width: 146px;
-    height: 228px;
-
-    z-index: 3;
-
-    transform:
-        rotateX(2deg);
-
-    filter:
-        drop-shadow(
-            0 25px 30px rgba(0, 0, 0, 0.65)
-        );
-}
-
-
-/* ============================================================
-   STRAP
-============================================================ */
-
-.watch-strap {
-    position: absolute;
-
-    left: 50%;
-
-    width: 72px;
-
-    transform: translateX(-50%);
-
-    border-radius: 8px;
-
-    z-index: 0;
+        translate(3px, -3px);
 
     background:
-        linear-gradient(
-            90deg,
-            #050606 0%,
-            #151718 24%,
-            #252728 48%,
-            #101213 73%,
-            #030404 100%
-        );
+        rgba(201, 162, 77, 0.08);
 
     box-shadow:
-        inset 1px 0 rgba(255,255,255,0.05),
-        inset -1px 0 rgba(0,0,0,0.8);
-}
-
-.strap-top {
-    top: 0;
-
-    height: 72px;
-
-    border-radius:
-        8px 8px 3px 3px;
-}
-
-.strap-bottom {
-    bottom: 0;
-
-    height: 74px;
-
-    border-radius:
-        3px 3px 8px 8px;
+        0 0 16px rgba(201, 162, 77, 0.18);
 }
 
 
-/* Strap subtle stitching */
+/* =========================================================
+   EMPTY / ERROR
+========================================================= */
 
-.watch-strap::before,
-.watch-strap::after {
-    content: "";
+.collection-state {
+    padding: 100px 20px;
 
-    position: absolute;
-
-    top: 0;
-    bottom: 0;
-
-    width: 1px;
-
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            rgba(201, 162, 77, 0.14) 0 4px,
-            transparent 4px 8px
-        );
-}
-
-.watch-strap::before {
-    left: 9px;
-}
-
-.watch-strap::after {
-    right: 9px;
+    text-align: center;
 }
 
 
-/* ============================================================
-   LUGS
-============================================================ */
-
-.watch-lug {
-    position: absolute;
-
-    width: 18px;
-    height: 48px;
-
-    top: 40px;
-
-    z-index: 2;
-
-    border-radius: 5px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #1d1e1f,
-            #5a5b5c 45%,
-            #171819
-        );
-
-    box-shadow:
-        inset 1px 0 rgba(255,255,255,0.12),
-        inset -1px 0 rgba(0,0,0,0.7);
-}
-
-.lug-tl {
-    left: 16px;
-}
-
-.lug-tr {
-    right: 16px;
-}
-
-.lug-bl {
-    left: 16px;
-    top: auto;
-    bottom: 40px;
-}
-
-.lug-br {
-    right: 16px;
-    top: auto;
-    bottom: 40px;
-}
-
-
-/* ============================================================
-   CROWN
-============================================================ */
-
-.watch-crown {
-    position: absolute;
-
-    right: -1px;
-    top: 95px;
-
-    width: 17px;
-    height: 34px;
-
-    z-index: 4;
-
-    border-radius: 4px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #6b4a12,
-            #d3a63f 40%,
-            #7a5716 75%,
-            #3c2a0b
-        );
-
-    box-shadow:
-        0 0 10px rgba(201, 162, 77, 0.16);
-}
-
-.watch-crown::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 5px 3px;
-
-    border-left:
-        1px solid rgba(255,255,255,0.24);
-
-    border-right:
-        1px solid rgba(0,0,0,0.35);
-
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            transparent 0 3px,
-            rgba(255,255,255,0.20) 3px 4px
-        );
-}
-
-
-/* ============================================================
-   WATCH CASE
-============================================================ */
-
-.watch-case {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 128px;
-    height: 128px;
-
-    transform:
-        translate(-50%, -50%);
-
-    border-radius: 50%;
-
-    z-index: 3;
-
-    background:
-        linear-gradient(
-            145deg,
-            #0b0c0d 0%,
-            #4b4d4e 18%,
-            #151617 32%,
-            #080909 52%,
-            #5a5c5d 78%,
-            #111213 100%
-        );
-
-    box-shadow:
-        0 0 0 2px #111,
-        0 0 0 4px rgba(201, 162, 77, 0.48),
-        0 0 0 7px #090a0a,
-        0 0 0 9px rgba(201, 162, 77, 0.70),
-
-        inset 0 2px 3px rgba(255,255,255,0.16),
-        inset 0 -5px 8px rgba(0,0,0,0.75),
-
-        0 18px 32px rgba(0,0,0,0.6);
-}
-
-
-/* ============================================================
-   GOLD VARIATION
-============================================================ */
-
-.hiranya .watch-case {
-    background:
-        linear-gradient(
-            145deg,
-            #3c2c0e 0%,
-            #d4ad54 20%,
-            #6f5018 34%,
-            #241a08 52%,
-            #d0a945 76%,
-            #3a290b 100%
-        );
-
-    box-shadow:
-        0 0 0 2px #171006,
-        0 0 0 4px #9c772c,
-        0 0 0 7px #080706,
-        0 0 0 9px #d2ab4e,
-
-        inset 0 2px 4px rgba(255,255,255,0.22),
-        inset 0 -5px 8px rgba(0,0,0,0.62),
-
-        0 18px 32px rgba(0,0,0,0.65);
-}
-
-
-/* ============================================================
-   STEEL VARIATION
-============================================================ */
-
-.ayas .watch-case {
-    background:
-        linear-gradient(
-            145deg,
-            #151718 0%,
-            #a7aaab 18%,
-            #414445 34%,
-            #101112 54%,
-            #929596 77%,
-            #252728 100%
-        );
-
-    box-shadow:
-        0 0 0 2px #0d0e0e,
-        0 0 0 4px #737778,
-        0 0 0 7px #080909,
-        0 0 0 9px #b4b6b7,
-
-        inset 0 2px 4px rgba(255,255,255,0.18),
-        inset 0 -5px 8px rgba(0,0,0,0.70),
-
-        0 18px 32px rgba(0,0,0,0.65);
-}
-
-
-/* ============================================================
-   DIAL
-============================================================ */
-
-.watch-dial {
-    position: absolute;
-
-    inset: 7px;
-
-    border-radius: 50%;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 38% 28%,
-            rgba(255,255,255,0.10),
-            transparent 18%
-        ),
-        radial-gradient(
-            circle at 50% 50%,
-            #222525 0%,
-            #111415 45%,
-            #070909 78%,
-            #020303 100%
-        );
-
-    box-shadow:
-        inset 0 0 14px rgba(0,0,0,0.9),
-        inset 0 1px 3px rgba(255,255,255,0.13);
-}
-
-
-/* Brushed dial texture */
-
-.watch-dial::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    border-radius: 50%;
-
-    opacity: 0.22;
-
-    background:
-        repeating-conic-gradient(
-            from 0deg,
-            rgba(255,255,255,0.06) 0deg 1deg,
-            transparent 1deg 7deg
-        );
-
-    mix-blend-mode: screen;
-}
-
-
-/* Dial outer ring */
-
-.watch-dial::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 6px;
-
-    border:
-        1px solid rgba(201, 162, 77, 0.52);
-
-    border-radius: 50%;
-
-    box-shadow:
-        0 0 0 1px rgba(255,255,255,0.04);
-}
-
-
-/* ============================================================
-   DIAL BRAND
-============================================================ */
-
-.dial-brand {
-    position: absolute;
-
-    left: 50%;
-    top: 30px;
-
-    transform: translateX(-50%);
-
-    z-index: 4;
-
-    white-space: nowrap;
-
-    font-family:
-        Georgia,
-        serif;
-
-    font-size: 6px;
-
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    color:
-        rgba(245, 218, 191, 0.88);
-}
-
-.dial-coord {
-    position: absolute;
-
-    left: 50%;
-    top: 41px;
-
-    transform: translateX(-50%);
-
-    z-index: 4;
-
-    white-space: nowrap;
-
-    font-family:
-        Arial,
-        sans-serif;
-
-    font-size: 3px;
-
-    letter-spacing: 1.5px;
-
-    color:
-        rgba(201, 162, 77, 0.72);
-}
-
-
-/* ============================================================
-   HOUR MARKERS
-============================================================ */
-
-.hour {
-    position: absolute;
-
-    z-index: 4;
-
-    color:
-        rgba(245, 218, 191, 0.84);
-
-    font-family:
-        Georgia,
-        serif;
-
-    font-size: 5px;
-
-    line-height: 1;
-
-    text-shadow:
-        0 0 4px rgba(255,255,255,0.15);
-}
-
-.hour-12 {
-    top: 13px;
-    left: 50%;
-
-    transform: translateX(-50%);
-}
-
-.hour-03 {
-    right: 14px;
-    top: 50%;
-
-    transform: translateY(-50%);
-}
-
-.hour-06 {
-    bottom: 13px;
-    left: 50%;
-
-    transform: translateX(-50%);
-}
-
-.hour-09 {
-    left: 14px;
-    top: 50%;
-
-    transform: translateY(-50%);
-}
-
-
-/* ============================================================
-   HANDS
-============================================================ */
-
-.watch-hand {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform-origin:
-        50% 90%;
-
-    z-index: 8;
-
-    border-radius: 999px;
-}
-
-
-/* Hour */
-
-.hand-hour {
-    width: 3px;
-    height: 34px;
-
-    margin-left: -1.5px;
-    margin-top: -30px;
-
-    transform:
-        rotate(305deg);
-
-    background:
-        linear-gradient(
-            to bottom,
-            #f2dfbd,
-            #b38b38
-        );
-
-    box-shadow:
-        0 0 4px rgba(201,162,77,0.25);
-}
-
-
-/* Minute */
-
-.hand-minute {
-    width: 2px;
-    height: 43px;
-
-    margin-left: -1px;
-    margin-top: -39px;
-
-    transform:
-        rotate(35deg);
-
-    background:
-        linear-gradient(
-            to bottom,
-            #fff0d9,
-            #b68e3d
-        );
-
-    box-shadow:
-        0 0 4px rgba(255,239,214,0.18);
-}
-
-
-/* Seconds */
-
-.hand-second {
-    width: 1px;
-    height: 48px;
-
-    margin-left: -0.5px;
-    margin-top: -43px;
-
-    transform:
-        rotate(215deg);
-
-    background:
-        #c9a24d;
-
-    box-shadow:
-        0 0 5px rgba(201,162,77,0.45);
-}
-
-
-/* ============================================================
-   CENTER PIN
-============================================================ */
-
-.watch-center {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 8px;
-    height: 8px;
-
-    transform:
-        translate(-50%, -50%);
-
-    z-index: 12;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle at 35% 30%,
-            #fff1c9 0%,
-            #d2a946 30%,
-            #8d661c 68%,
-            #332407 100%
-        );
-
-    box-shadow:
-        0 0 0 1px #090909,
-        0 0 8px rgba(201,162,77,0.42);
-}
-
-
-/* ============================================================
-   WATCH GLASS REFLECTION
-============================================================ */
-
-.watch-dial .dial-brand::after {
-    content: "";
-}
-
-
-/* ============================================================
-   CARD CONTENT
-============================================================ */
-
-.card-content {
-    position: relative;
-
-    padding:
-        0 24px 24px;
-
-    z-index: 5;
-}
-
-.collection-name {
-    color:
-        var(--cream-bright);
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size: 28px;
-
-    line-height: 1;
-
-    font-weight: 400;
-
-    letter-spacing: -0.8px;
-
-    margin-bottom: 18px;
-}
-
-.collection-line {
-    width: 100%;
-    height: 1px;
+.collection-state span {
+    display: block;
 
     margin-bottom: 15px;
 
-    background:
-        linear-gradient(
-            90deg,
-            rgba(201,162,77,0.48),
-            rgba(201,162,77,0.08),
-            transparent
-        );
-}
-
-.collection-description {
-    margin: 0;
-
-    max-width: 300px;
-
-    color:
-        rgba(245,218,191,0.53);
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
     font-size: 9px;
 
-    line-height: 1.75;
+    font-weight: 800;
+
+    letter-spacing: 0.35em;
+
+    color: #c9a24d;
 }
 
 
-/* ============================================================
-   CARD FOOTER
-============================================================ */
-
-.collection-footer {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-top: 22px;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    font-size: 7px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
+.collection-state p {
+    margin: 0;
 
     color:
-        rgba(201,162,77,0.64);
-
-    text-transform: uppercase;
-}
-
-.collection-arrow {
-    width: 22px;
-    height: 22px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border:
-        1px solid rgba(201,162,77,0.38);
-
-    border-radius: 50%;
-
-    color:
-        var(--gold);
-
-    font-size: 11px;
-
-    transition:
-        transform 400ms ease,
-        background 400ms ease;
-}
-
-.collection-card:hover .collection-arrow {
-    transform:
-        translate(2px, -2px);
-
-    background:
-        rgba(201,162,77,0.10);
+        rgba(244, 229, 210, 0.5);
 }
 
 
-/* ============================================================
-   CLOSING STATEMENT
-============================================================ */
+/* =========================================================
+   CLOSING
+========================================================= */
 
 .collection-closing {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
-    gap: 20px;
+    gap: 24px;
 
-    margin-top: 42px;
+    margin-top: 95px;
 }
 
+
 .closing-rule {
-    width: 90px;
+    width: 85px;
     height: 1px;
 
     background:
         linear-gradient(
             90deg,
             transparent,
-            rgba(201,162,77,0.38)
+            rgba(201, 162, 77, 0.55)
         );
 }
+
 
 .closing-rule:last-child {
     background:
         linear-gradient(
             90deg,
-            rgba(201,162,77,0.38),
+            rgba(201, 162, 77, 0.55),
             transparent
         );
 }
 
+
 .collection-closing p {
+    max-width: 420px;
+
     margin: 0;
 
-    white-space: nowrap;
+    text-align: center;
 
     font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    font-size: 7px;
+    font-size: 13px;
 
-    font-weight: 700;
+    line-height: 1.7;
 
-    letter-spacing: 3px;
+    letter-spacing: 0.08em;
 
     color:
-        rgba(245,218,191,0.42);
-}
-
-.collection-closing span {
-    color:
-        rgba(201,162,77,0.75);
+        rgba(244, 229, 210, 0.42);
 }
 
 
-/* ============================================================
+.collection-closing em {
+    color: #c9a24d;
+}
+
+
+/* =========================================================
    SECTION MARKER
-============================================================ */
+========================================================= */
 
 .section-marker {
-    position: absolute;
-
-    left: 8%;
-    bottom: 28px;
-
     display: flex;
 
     align-items: center;
 
-    gap: 13px;
+    gap: 14px;
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    padding:
+        25px 7vw 32px;
 
-    text-transform: uppercase;
-}
+    background: #05040a;
 
-.marker-number {
-    font-size: 8px;
+    font-size: 7px;
 
-    color:
-        rgba(201,162,77,0.62);
+    font-weight: 800;
 
-    letter-spacing: 2px;
-}
-
-.marker-line {
-    width: 48px;
-    height: 1px;
-
-    background:
-        rgba(201,162,77,0.42);
-}
-
-.marker-text {
-    font-size: 6px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
+    letter-spacing: 0.32em;
 
     color:
-        rgba(245,218,191,0.34);
+        rgba(244, 229, 210, 0.28);
 }
 
 
-/* ============================================================
-   REVEAL ANIMATION
-============================================================ */
-
-.reveal {
-    opacity: 1;
-    transform: none;
-}
-
-.collection-section[data-ready="true"]
-.reveal {
-    opacity: 0;
-
-    transform:
-        translateY(26px);
-
-    transition:
-        opacity 900ms ease,
-        transform 1100ms cubic-bezier(.2,.65,.2,1);
-}
-
-.collection-section[data-ready="true"]
-.reveal[data-in="true"] {
-    opacity: 1;
-
-    transform:
-        translateY(0);
+.section-marker span:first-child {
+    color: #c9a24d;
 }
 
 
-/* ============================================================
+/* =========================================================
    RESPONSIVE
-============================================================ */
+========================================================= */
 
-@media (max-width: 900px) {
-
-    .collection-container {
-        width: 90vw;
-    }
+@media (max-width: 1000px) {
 
     .collection-grid {
         grid-template-columns: 1fr;
+
+        max-width: 720px;
     }
+
 
     .collection-card {
-        min-height: 600px;
+        border-right: none;
+
+        border-bottom:
+            1px solid rgba(201, 162, 77, 0.22);
     }
 
-    .watch-stage {
-        height: 320px;
+
+    .collection-card:last-child {
+        border-bottom: none;
     }
 
-    .collection-intro h2 {
-        font-size: clamp(
-            46px,
-            10vw,
-            76px
-        );
+
+    .collection-image {
+        height: 500px;
     }
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 
-    .collection-container {
-        width: 92vw;
-
-        padding-top: 80px;
-        padding-bottom: 70px;
+    .collection-hero {
+        min-height: 760px;
     }
 
-    .section-meta {
-        top: 24px;
+
+    .hero-meta {
+        top: 25px;
+
+        left: 6vw;
+        right: 6vw;
 
         font-size: 6px;
 
-        letter-spacing: 3px;
+        letter-spacing: 0.25em;
     }
 
-    .meta-left {
-        left: 5%;
+
+    .hero-meta span:last-child {
+        display: none;
     }
 
-    .meta-right {
-        right: 5%;
+
+    .hero-content {
+        width: 86vw;
+
+        margin-left: 7vw;
     }
 
-    .collection-intro {
-        margin-bottom: 48px;
+
+    .hero-content h1 {
+        font-size:
+            clamp(
+                58px,
+                15vw,
+                95px
+            );
     }
 
-    .collection-intro h2 {
-        font-size: 48px;
 
-        letter-spacing: -2px;
+    .hero-description {
+        font-size: 16px;
     }
 
-    .intro-copy {
-        font-size: 12px;
+
+    .hero-bottom-marker {
+        left: 7vw;
+        right: 7vw;
     }
 
-    .collection-card {
-        min-height: 580px;
+
+    .collections-area {
+        padding:
+            85px 6vw 80px;
     }
 
-    .card-top {
-        padding-left: 20px;
-        padding-right: 20px;
+
+    .section-heading {
+        margin-bottom: 55px;
     }
 
-    .card-content {
-        padding-left: 20px;
-        padding-right: 20px;
+
+    .collection-image {
+        height: 420px;
     }
 
-    .collection-name {
-        font-size: 25px;
+
+    .collection-content {
+        padding:
+            26px 23px 30px;
     }
+
 
     .collection-closing {
         gap: 10px;
     }
 
+
     .closing-rule {
-        width: 30px;
+        width: 35px;
     }
+
 
     .collection-closing p {
-        font-size: 5px;
-        letter-spacing: 2px;
+        font-size: 10px;
     }
+}
 
-    .section-marker {
-        left: 5%;
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .collection-card,
+    .collection-image img,
+    .collection-content h3,
+    .gold-line,
+    .arrow,
+    .hero-cta,
+    .cta-arrow {
+        transition: none !important;
     }
 }
