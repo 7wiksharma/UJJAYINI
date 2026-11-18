@@ -37,7 +37,6 @@ const COLLECTIONS = [
         signature: 'SAPPHIRE · MIDNIGHT',
         className: 'collection-block indranila-section'
     },
-
     {
         key: 'hiranya',
         filter: 'HIRANYA',
@@ -48,7 +47,6 @@ const COLLECTIONS = [
         signature: 'GOLD · DAWN',
         className: 'collection-block hiranya-section'
     },
-
     {
         key: 'ayas',
         filter: 'AYAS',
@@ -63,25 +61,10 @@ const COLLECTIONS = [
 
 
 const FILTERS = [
-    {
-        value: 'ALL',
-        label: 'ALL'
-    },
-
-    {
-        value: 'INDRANĪLA',
-        label: 'INDRANĪLA'
-    },
-
-    {
-        value: 'HIRANYA',
-        label: 'HIRANYA'
-    },
-
-    {
-        value: 'AYAS',
-        label: 'AYAS'
-    }
+    { value: 'ALL', label: 'ALL' },
+    { value: 'INDRANĪLA', label: 'INDRANĪLA' },
+    { value: 'HIRANYA', label: 'HIRANYA' },
+    { value: 'AYAS', label: 'AYAS' }
 ];
 
 
@@ -220,6 +203,9 @@ export default class UjjayiniProductCatalog
 
     // =========================================================
     // LOAD PRODUCTS
+    // Products load first and independently.
+    // Wishlist is loaded only for logged-in users and can never
+    // block the catalog if it fails.
     // =========================================================
 
     async loadProducts() {
@@ -230,26 +216,32 @@ export default class UjjayiniProductCatalog
 
         try {
 
-            const [
-                productData,
-                wishlistData
-            ] = await Promise.all([
-
-                getProducts(),
-
-                getWishlistItems()
-
-            ]);
+            const productData = await getProducts();
 
 
-            const wishlistedProductIds =
-                new Set(
-                    (wishlistData || [])
-                        .map(
-                            item =>
-                                item.productId
-                        )
-                );
+            let wishlistedProductIds = new Set();
+
+            if (!isGuestUser) {
+
+                try {
+
+                    const wishlistData =
+                        await getWishlistItems();
+
+                    wishlistedProductIds =
+                        new Set(
+                            (wishlistData || [])
+                                .map(item => item.productId)
+                        );
+
+                } catch (wishlistError) {
+
+                    // Wishlist failure must not hide the watches.
+                    wishlistedProductIds = new Set();
+
+                }
+
+            }
 
 
             this.products =
@@ -348,9 +340,7 @@ export default class UjjayiniProductCatalog
         let result = [...this.products];
 
 
-        if (
-            this.activeCollection !== 'ALL'
-        ) {
+        if (this.activeCollection !== 'ALL') {
 
             result =
                 result.filter(
@@ -366,43 +356,18 @@ export default class UjjayiniProductCatalog
 
         result.sort((a, b) => {
 
-            if (
-                this.sortBy === 'price-low'
-            ) {
-
-                return (
-                    (a.price || 0) -
-                    (b.price || 0)
-                );
-
+            if (this.sortBy === 'price-low') {
+                return (a.price || 0) - (b.price || 0);
             }
 
-
-            if (
-                this.sortBy === 'price-high'
-            ) {
-
-                return (
-                    (b.price || 0) -
-                    (a.price || 0)
-                );
-
+            if (this.sortBy === 'price-high') {
+                return (b.price || 0) - (a.price || 0);
             }
 
-
-            if (
-                this.sortBy === 'name'
-            ) {
-
-                return (
-                    (a.productName || '')
-                        .localeCompare(
-                            b.productName || ''
-                        )
-                );
-
+            if (this.sortBy === 'name') {
+                return (a.productName || '')
+                    .localeCompare(b.productName || '');
             }
-
 
             return 0;
 
@@ -527,11 +492,8 @@ export default class UjjayiniProductCatalog
             ...filter,
 
             className:
-                this.activeCollection ===
-                filter.value
-
+                this.activeCollection === filter.value
                     ? 'filter-button active'
-
                     : 'filter-button'
 
         }));
@@ -661,10 +623,7 @@ export default class UjjayiniProductCatalog
         }
 
 
-        // =====================================================
         // GUEST USER
-        // =====================================================
-
         if (isGuestUser) {
 
             this.showGuestCartModal = true;
@@ -674,18 +633,10 @@ export default class UjjayiniProductCatalog
         }
 
 
-        // =====================================================
         // AUTHENTICATED USER
-        // =====================================================
-
         this.updateProduct(
-
             productId,
-
-            {
-                isAddingToCart: true
-            }
-
+            { isAddingToCart: true }
         );
 
 
@@ -700,10 +651,6 @@ export default class UjjayiniProductCatalog
             });
 
 
-            // -----------------------------------------------
-            // SUCCESS POPUP
-            // -----------------------------------------------
-
             this.showNotificationPopup(
 
                 'success',
@@ -716,10 +663,6 @@ export default class UjjayiniProductCatalog
 
 
         } catch (error) {
-
-            // -----------------------------------------------
-            // ERROR POPUP
-            // -----------------------------------------------
 
             this.showNotificationPopup(
 
@@ -734,13 +677,8 @@ export default class UjjayiniProductCatalog
         } finally {
 
             this.updateProduct(
-
                 productId,
-
-                {
-                    isAddingToCart: false
-                }
-
+                { isAddingToCart: false }
             );
 
         }
@@ -866,6 +804,16 @@ export default class UjjayiniProductCatalog
         event.stopPropagation();
 
 
+        // Guests cannot use the wishlist: show sign-in modal.
+        if (isGuestUser) {
+
+            this.showGuestCartModal = true;
+
+            return;
+
+        }
+
+
         const productId =
             event.currentTarget.dataset.productId;
 
@@ -873,8 +821,7 @@ export default class UjjayiniProductCatalog
         const product =
             this.products.find(
                 item =>
-                    item.productId ===
-                    productId
+                    item.productId === productId
             );
 
 
@@ -884,13 +831,8 @@ export default class UjjayiniProductCatalog
 
 
         this.updateProduct(
-
             productId,
-
-            {
-                isAddingToWishlist: true
-            }
-
+            { isAddingToWishlist: true }
         );
 
 
@@ -899,23 +841,16 @@ export default class UjjayiniProductCatalog
             if (product.isWishlisted) {
 
                 await removeFromWishlist({
-
                     productId
-
                 });
 
 
                 this.updateProduct(
-
                     productId,
-
                     {
                         isWishlisted: false,
-
-                        isAddingToWishlist:
-                            false
+                        isAddingToWishlist: false
                     }
-
                 );
 
 
@@ -932,23 +867,16 @@ export default class UjjayiniProductCatalog
             } else {
 
                 await addToWishlist({
-
                     productId
-
                 });
 
 
                 this.updateProduct(
-
                     productId,
-
                     {
                         isWishlisted: true,
-
-                        isAddingToWishlist:
-                            false
+                        isAddingToWishlist: false
                     }
-
                 );
 
 
@@ -967,14 +895,8 @@ export default class UjjayiniProductCatalog
         } catch (error) {
 
             this.updateProduct(
-
                 productId,
-
-                {
-                    isAddingToWishlist:
-                        false
-                }
-
+                { isAddingToWishlist: false }
             );
 
 
@@ -1066,23 +988,13 @@ export default class UjjayiniProductCatalog
 
     getErrorMessage(error) {
 
-        if (
-            error?.body?.message
-        ) {
-
+        if (error?.body?.message) {
             return error.body.message;
-
         }
 
-
-        if (
-            error?.message
-        ) {
-
+        if (error?.message) {
             return error.message;
-
         }
-
 
         return 'Something went wrong.';
 

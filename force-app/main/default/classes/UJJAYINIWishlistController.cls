@@ -10,12 +10,27 @@ public with sharing class UJJAYINIWishlistController {
 
         @AuraEnabled
         public String productName;
+
+        @AuraEnabled
+        public String productImageUrl;
+
+        @AuraEnabled
+        public Decimal price;
+
+        @AuraEnabled
+        public String collectionName;
     }
+
+
+    // =========================================================
+    // ADD TO WISHLIST
+    // =========================================================
 
     @AuraEnabled
     public static Id addToWishlist(Id productId) {
 
         if (productId == null) {
+
             throw new AuraHandledException(
                 'Product Id is required.'
             );
@@ -35,10 +50,16 @@ public with sharing class UJJAYINIWishlistController {
         }
     }
 
+
+    // =========================================================
+    // REMOVE FROM WISHLIST
+    // =========================================================
+
     @AuraEnabled
     public static void removeFromWishlist(Id productId) {
 
         if (productId == null) {
+
             throw new AuraHandledException(
                 'Product Id is required.'
             );
@@ -58,6 +79,11 @@ public with sharing class UJJAYINIWishlistController {
         }
     }
 
+
+    // =========================================================
+    // GET WISHLIST ITEMS
+    // =========================================================
+
     @AuraEnabled(cacheable=true)
     public static List<WishlistItemResponse> getWishlistItems() {
 
@@ -69,6 +95,7 @@ public with sharing class UJJAYINIWishlistController {
             List<WishlistItemResponse> responses =
                 new List<WishlistItemResponse>();
 
+
             for (
                 WishlistService.WishlistItemResult item :
                 items
@@ -76,6 +103,7 @@ public with sharing class UJJAYINIWishlistController {
 
                 WishlistItemResponse response =
                     new WishlistItemResponse();
+
 
                 response.wishlistItemId =
                     item.wishlistItemId;
@@ -86,8 +114,19 @@ public with sharing class UJJAYINIWishlistController {
                 response.productName =
                     item.productName;
 
+                response.productImageUrl =
+                    item.productImageUrl;
+
+                response.price =
+                    item.price;
+
+                response.collectionName =
+                    item.collectionName;
+
+
                 responses.add(response);
             }
+
 
             return responses;
 
@@ -99,10 +138,16 @@ public with sharing class UJJAYINIWishlistController {
         }
     }
 
+
+    // =========================================================
+    // CHECK WHETHER PRODUCT IS WISHLISTED
+    // =========================================================
+
     @AuraEnabled(cacheable=true)
     public static Boolean isWishlisted(Id productId) {
 
         if (productId == null) {
+
             return false;
         }
 

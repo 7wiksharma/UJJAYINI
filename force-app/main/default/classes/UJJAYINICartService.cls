@@ -23,6 +23,15 @@ public with sharing class UJJAYINICartService {
         public String productName;
 
         @AuraEnabled
+        public String productCode;
+
+        @AuraEnabled
+        public String productImageUrl;
+
+        @AuraEnabled
+        public String collectionName;
+
+        @AuraEnabled
         public Decimal quantity;
 
         @AuraEnabled
@@ -468,6 +477,9 @@ public with sharing class UJJAYINICartService {
             SELECT Id,
                    Product2Id,
                    Product2.Name,
+                   Product2.ProductCode,
+                   Product2.Product_Image_URL__c,
+                   Product2.Collection__r.Name,
                    Quantity,
                    UnitPrice,
                    TotalPrice
@@ -507,6 +519,17 @@ public with sharing class UJJAYINICartService {
             itemResult.productName =
                 item.Product2.Name;
 
+            itemResult.productCode =
+                item.Product2.ProductCode;
+
+            itemResult.productImageUrl =
+                item.Product2.Product_Image_URL__c;
+
+            itemResult.collectionName =
+                item.Product2.Collection__r != null
+                    ? item.Product2.Collection__r.Name
+                    : null;
+
             itemResult.quantity =
                 item.Quantity;
 
@@ -532,79 +555,78 @@ public with sharing class UJJAYINICartService {
 
 
     // =========================================================
-   // =========================================================
-// DECREASE QUANTITY
-// =========================================================
+    // DECREASE QUANTITY
+    // =========================================================
 
-public static CartResult decreaseQuantity(
-    Id productId
-) {
+    public static CartResult decreaseQuantity(
+        Id productId
+    ) {
 
-    if (productId == null) {
+        if (productId == null) {
 
-        throw new IllegalArgumentException(
-            'Product Id is required.'
-        );
-    }
-
-
-    Order cartOrder =
-        getCart();
-
-
-    if (cartOrder == null) {
-
-        throw new IllegalArgumentException(
-            'Cart does not exist.'
-        );
-    }
-
-
-    List<OrderItem> items = [
-        SELECT Id,
-               Product2Id,
-               Quantity
-        FROM OrderItem
-        WHERE OrderId = :cartOrder.Id
-        AND Product2Id = :productId
-        LIMIT 1
-    ];
-
-
-    if (items.isEmpty()) {
-
-        throw new IllegalArgumentException(
-            'Product is not present in the cart.'
-        );
-    }
-
-
-    OrderItem existingItem =
-        items[0];
-
-
-    if (existingItem.Quantity <= 1) {
-
-        delete existingItem;
-
-    } else {
-
-        // Create a fresh sparse sObject for DML.
-        // This avoids carrying calculated/read-only
-        // OrderItem fields into the update operation.
-
-        OrderItem itemToUpdate =
-            new OrderItem(
-                Id = existingItem.Id,
-                Quantity = existingItem.Quantity - 1
+            throw new IllegalArgumentException(
+                'Product Id is required.'
             );
+        }
 
-        update itemToUpdate;
+
+        Order cartOrder =
+            getCart();
+
+
+        if (cartOrder == null) {
+
+            throw new IllegalArgumentException(
+                'Cart does not exist.'
+            );
+        }
+
+
+        List<OrderItem> items = [
+            SELECT Id,
+                   Product2Id,
+                   Quantity
+            FROM OrderItem
+            WHERE OrderId = :cartOrder.Id
+            AND Product2Id = :productId
+            LIMIT 1
+        ];
+
+
+        if (items.isEmpty()) {
+
+            throw new IllegalArgumentException(
+                'Product is not present in the cart.'
+            );
+        }
+
+
+        OrderItem existingItem =
+            items[0];
+
+
+        if (existingItem.Quantity <= 1) {
+
+            delete existingItem;
+
+        } else {
+
+            // Create a fresh sparse sObject for DML.
+            // This avoids carrying calculated/read-only
+            // OrderItem fields into the update operation.
+
+            OrderItem itemToUpdate =
+                new OrderItem(
+                    Id = existingItem.Id,
+                    Quantity = existingItem.Quantity - 1
+                );
+
+            update itemToUpdate;
+        }
+
+
+        return getCurrentCart();
     }
-
-
-    return getCurrentCart();
-}
 
 
     // =========================================================

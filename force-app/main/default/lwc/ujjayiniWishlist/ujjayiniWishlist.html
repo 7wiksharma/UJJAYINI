@@ -1,108 +1,346 @@
 <template>
 
-    <section class="wishlist">
+    <section
+        class="wishlist-page"
+        style={backgroundStyle}
+    >
 
-        <div class="wishlist-header">
+        <!-- ============================================= -->
+        <!-- ATMOSPHERE -->
+        <!-- ============================================= -->
 
-            <p class="eyebrow">
-                UJJAYINI
-            </p>
+        <div class="atmosphere"></div>
 
-            <h1>
-                My Wishlist
-            </h1>
+        <div class="gold-orbit orbit-one"></div>
+        <div class="gold-orbit orbit-two"></div>
 
-            <p class="subtitle">
-                Watches you've saved for later.
-            </p>
 
-        </div>
+        <!-- ============================================= -->
+        <!-- MAIN CONTENT -->
+        <!-- ============================================= -->
 
-        <template if:true={isLoading}>
+        <div class="wishlist-shell">
 
-            <div class="state">
-                <p>Loading your wishlist...</p>
+
+            <!-- ========================================= -->
+            <!-- HEADER -->
+            <!-- ========================================= -->
+
+            <header class="wishlist-header">
+
+                <div class="header-left">
+
+                    <p class="eyebrow">
+                        UJJAYINI · THE PRIVATE COLLECTION
+                    </p>
+
+                    <h1>
+                        My Wishlist
+                    </h1>
+
+                    <p class="subtitle">
+                        Timepieces worth remembering.
+                    </p>
+
+                </div>
+
+
+                <div class="header-right">
+
+                    <span class="item-count">
+                        {itemCountLabel}
+                    </span>
+
+                </div>
+
+            </header>
+
+
+            <!-- ========================================= -->
+            <!-- GOLD DIVIDER -->
+            <!-- ========================================= -->
+
+            <div class="gold-divider">
+                <span></span>
             </div>
 
-        </template>
 
-        <template if:true={errorMessage}>
+            <!-- ========================================= -->
+            <!-- LOADING -->
+            <!-- ========================================= -->
 
-            <div class="state error">
-                <p>{errorMessage}</p>
-            </div>
+            <template if:true={isLoading}>
 
-        </template>
+                <div class="state loading-state">
 
-        <template if:true={hasItems}>
+                    <div class="loader-ring"></div>
 
-            <div class="wishlist-grid">
+                    <p>
+                        CURATING YOUR SAVED TIMEPIECES
+                    </p>
 
-                <template
-                    for:each={wishlistItems}
-                    for:item="item">
+                </div>
 
-                    <article
-                        key={item.wishlistItemId}
-                        class="wishlist-card">
+            </template>
 
-                        <div class="watch-image">
-                            <span>U</span>
-                        </div>
 
-                        <div class="watch-content">
+            <!-- ========================================= -->
+            <!-- ERROR -->
+            <!-- ========================================= -->
 
-                            <p class="watch-label">
-                                SAVED WATCH
-                            </p>
+            <template if:true={errorMessage}>
 
-                            <h2>
-                                {item.productName}
-                            </h2>
+                <div class="state error-state">
 
-                            <div class="actions">
+                    <p class="state-code">
+                        UJJAYINI · 04
+                    </p>
 
-                                <button
-                                    class="remove-button"
-                                    data-product-id={item.productId}
-                                    onclick={handleRemove}>
+                    <h2>
+                        Unable to access your collection.
+                    </h2>
 
-                                    Remove from Wishlist
+                    <p>
+                        {errorMessage}
+                    </p>
 
-                                </button>
+                    <button
+                        class="secondary-button"
+                        onclick={handleBrowseCollection}
+                    >
+                        RETURN TO COLLECTION
+                    </button>
+
+                </div>
+
+            </template>
+
+
+            <!-- ========================================= -->
+            <!-- WISHLIST ITEMS -->
+            <!-- ========================================= -->
+
+            <template if:true={hasItems}>
+
+                <div class="wishlist-grid">
+
+                    <template
+                        for:each={wishlistItems}
+                        for:item="item"
+                    >
+
+                        <article
+                            key={item.wishlistItemId}
+                            class="wishlist-card"
+                        >
+
+
+                            <!-- ================================= -->
+                            <!-- IMAGE -->
+                            <!-- ================================= -->
+
+                            <div
+                                class="watch-visual"
+                                data-product-id={item.productId}
+                                onclick={handleViewProduct}
+                            >
+
+                                <template if:true={item.hasImage}>
+
+                                    <img
+                                        src={item.productImageUrl}
+                                        alt={item.productName}
+                                        class="watch-image"
+                                    />
+
+                                </template>
+
+                                <template if:false={item.hasImage}>
+
+                                    <div class="image-fallback">
+                                        UJJAYINI
+                                    </div>
+
+                                </template>
+
+
+                                <div class="image-overlay"></div>
+
+
+                                <span class="view-label">
+                                    VIEW TIMEPIECE
+                                </span>
 
                             </div>
 
-                        </div>
 
-                    </article>
+                            <!-- ================================= -->
+                            <!-- CONTENT -->
+                            <!-- ================================= -->
 
-                </template>
+                            <div class="watch-content">
 
-            </div>
 
-        </template>
+                                <div class="watch-meta">
 
-        <template if:true={isEmpty}>
+                                    <template
+                                        if:true={item.hasCollection}
+                                    >
 
-            <div class="empty-state">
+                                        <span>
+                                            {item.collectionName}
+                                        </span>
 
-                <div class="empty-icon">
-                    ♡
+                                    </template>
+
+                                    <span>
+                                        SAVED
+                                    </span>
+
+                                </div>
+
+
+                                <h2>
+                                    {item.productName}
+                                </h2>
+
+
+                                <div class="watch-footer">
+
+
+                                    <template
+                                        if:true={item.hasPrice}
+                                    >
+
+                                        <span class="price">
+                                            {item.formattedPrice}
+                                        </span>
+
+                                    </template>
+
+
+                                    <template
+                                        if:false={item.hasPrice}
+                                    >
+
+                                        <span class="price unavailable">
+                                            PRICE UNAVAILABLE
+                                        </span>
+
+                                    </template>
+
+
+                                    <span class="saved-mark">
+                                        ✦
+                                    </span>
+
+                                </div>
+
+
+                                <!-- ================================= -->
+                                <!-- ACTIONS -->
+                                <!-- ================================= -->
+
+                                <div class="actions">
+
+
+                                    <button
+                                        class="cart-button"
+                                        data-product-id={item.productId}
+                                        onclick={handleAddToCart}
+                                        disabled={processingProductId}
+                                    >
+                                        ADD TO CART
+                                    </button>
+
+
+                                    <button
+                                        class="remove-button"
+                                        data-product-id={item.productId}
+                                        onclick={handleRemove}
+                                        disabled={processingProductId}
+                                    >
+                                        REMOVE
+                                    </button>
+
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </template>
+
                 </div>
 
-                <h2>
-                    Your Wishlist is Empty
-                </h2>
+            </template>
 
-                <p>
-                    Save your favorite UJJAYINI watches
-                    and they'll appear here.
-                </p>
 
-            </div>
+            <!-- ========================================= -->
+            <!-- EMPTY WISHLIST -->
+            <!-- ========================================= -->
 
-        </template>
+            <template if:true={isEmpty}>
+
+                <div class="empty-state">
+
+
+                    <div class="empty-symbol">
+                        ♡
+                    </div>
+
+
+                    <p class="empty-eyebrow">
+                        YOUR PRIVATE COLLECTION
+                    </p>
+
+
+                    <h2>
+                        Nothing saved yet.
+                    </h2>
+
+
+                    <p class="empty-copy">
+                        The watches you choose to remember
+                        will appear here.
+                    </p>
+
+
+                    <button
+                        class="primary-button"
+                        onclick={handleBrowseCollection}
+                    >
+                        EXPLORE THE COLLECTION
+                    </button>
+
+                </div>
+
+            </template>
+
+
+            <!-- ========================================= -->
+            <!-- FOOT NOTE -->
+            <!-- ========================================= -->
+
+            <template if:true={hasItems}>
+
+                <div class="wishlist-note">
+
+                    <span class="note-line"></span>
+
+                    <p>
+                        UJJAYINI · THE BEGINNING OF YOUR TIME
+                    </p>
+
+                    <span class="note-line"></span>
+
+                </div>
+
+            </template>
+
+
+        </div>
 
     </section>
 

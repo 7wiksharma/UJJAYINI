@@ -1,5 +1,17 @@
 public with sharing class RazorpayPaymentLinkService {
 
+    /*
+     * After a successful payment Razorpay sends the customer here.
+     * Razorpay appends razorpay_payment_id,
+     * razorpay_payment_link_id,
+     * razorpay_payment_link_reference_id,
+     * razorpay_payment_link_status and razorpay_signature.
+     *
+     * NOTE: change this when a custom domain is configured.
+     */
+    private static final String CALLBACK_URL =
+        'https://orgfarm-70c23216f9-dev-ed.develop.my.site.com/ujjayini/collector-vault';
+
     public class PaymentLinkRequest {
         public Id orderId;
     }
@@ -168,16 +180,29 @@ public with sharing class RazorpayPaymentLinkService {
             false
         );
 
-      payload.put(
-    'reference_id',
-    String.valueOf(orderRecord.Id) +
-    '-' +
-    String.valueOf(DateTime.now().getTime())
-);
+        payload.put(
+            'reference_id',
+            String.valueOf(orderRecord.Id) +
+            '-' +
+            String.valueOf(DateTime.now().getTime())
+        );
 
         payload.put(
             'description',
             'UJJAYINI Order Payment'
+        );
+
+        /*
+         * Send the customer back to UJJAYINI after payment.
+         */
+        payload.put(
+            'callback_url',
+            CALLBACK_URL
+        );
+
+        payload.put(
+            'callback_method',
+            'get'
         );
 
         /*

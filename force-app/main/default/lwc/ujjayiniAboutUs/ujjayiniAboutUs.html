@@ -1,0 +1,318 @@
+<template>
+    <main class="about-page">
+
+        <!-- =================================================
+             3D SCENE LAYER (sticky, behind all sections)
+        ================================================== -->
+        <div class="scene-layer" aria-hidden="true">
+
+            <!-- CSS fallback (hidden once WebGL scene is live) -->
+            <div class="scene-fallback">
+                <div class="hero-glow glow-violet"></div>
+                <div class="hero-glow glow-burgundy"></div>
+                <div class="hero-stars"></div>
+                <div class="orbit orbit-one"></div>
+                <div class="orbit orbit-two"></div>
+                <div class="orbit orbit-three"></div>
+            </div>
+
+            <canvas class="scene-canvas"></canvas>
+
+            <div class="scene-shade"></div>
+
+        </div>
+
+
+        <div class="page-content">
+
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+            <section class="about-hero">
+
+                <div class="hero-content">
+
+                    <p class="eyebrow reveal">
+                        ABOUT UJJAYINI
+                    </p>
+
+                    <h1 class="hero-title reveal">
+                        The beginning<br />
+                        <em>of your time.</em>
+                    </h1>
+
+                    <div class="gold-rule reveal"></div>
+
+                    <p class="hero-lede reveal">
+                        A house of horology, shaped by an idea
+                        older than the hour itself.
+                    </p>
+
+                </div>
+
+                <div class="hero-coordinates reveal">
+                    <span class="coord-label">UJJAYINI</span>
+                    <span class="coord-value">23.18° N · 75.78° E</span>
+                </div>
+
+                <button
+                    class="scroll-cue"
+                    type="button"
+                    onclick={handleScrollDown}
+                    aria-label="Scroll to the origin"
+                >
+                    <span class="scroll-cue-label">THE ORIGIN</span>
+                    <span class="scroll-cue-line"></span>
+                </button>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THE ORIGIN
+            ================================================== -->
+            <section class="origin-section">
+
+                <div class="origin-grid">
+
+                    <div class="origin-index reveal">
+
+                        <span class="roman">I</span>
+
+                        <p class="eyebrow">
+                            THE ORIGIN
+                        </p>
+
+                    </div>
+
+
+                    <div class="origin-body">
+
+                        <h2 class="section-title reveal">
+                            Ujjayini.<br />
+                            <em>The name before the city we know.</em>
+                        </h2>
+
+                        <p class="body-copy reveal">
+                            Ujjayini is the ancient name associated with Ujjain,
+                            a city that astronomers returned to for centuries
+                            when they set about reckoning the sky.
+                            Long before time was kept on a wrist,
+                            it was watched, calculated and named here.
+                        </p>
+
+                        <p class="body-copy reveal">
+                            We took that name because a watch is more than
+                            an instrument. It is an inheritance.
+                        </p>
+
+                        <blockquote class="origin-statement reveal">
+                            Time in India began its count here.
+                        </blockquote>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 OUR PHILOSOPHY
+            ================================================== -->
+            <section class="philosophy-section">
+
+                <div class="philosophy-atmosphere" aria-hidden="true"></div>
+
+                <div class="philosophy-content">
+
+                    <p class="eyebrow reveal">
+                        <span class="roman-inline">II</span>
+                        OUR PHILOSOPHY
+                    </p>
+
+                    <h2 class="philosophy-title reveal">
+                        Time is not simply measured.
+                    </h2>
+
+                    <h2 class="philosophy-title philosophy-echo reveal">
+                        <em>It is remembered.</em>
+                    </h2>
+
+                    <div class="gold-rule reveal"></div>
+
+                    <p class="body-copy centered reveal">
+                        Any device can count the seconds.
+                        A timepiece should hold the ones that mattered,
+                        the day it was first worn, the hour that changed
+                        everything, the moment it was handed on.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THE UJJAYINI CODE
+            ================================================== -->
+            <section class="code-section">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow reveal">
+                        <span class="roman-inline">III</span>
+                        THE UJJAYINI CODE
+                    </p>
+
+                    <h2 class="section-title reveal">
+                        Four principles.<br />
+                        <em>No exceptions.</em>
+                    </h2>
+
+                </div>
+
+
+                <div class="code-grid">
+
+                    <template
+                        for:each={codePillars}
+                        for:item="pillar"
+                    >
+
+                        <article
+                            key={pillar.id}
+                            class="pillar reveal"
+                        >
+
+                            <span class="pillar-number">
+                                {pillar.number}
+                            </span>
+
+                            <h3 class="pillar-title">
+                                {pillar.title}
+                            </h3>
+
+                            <p class="pillar-copy">
+                                {pillar.copy}
+                            </p>
+
+                        </article>
+
+                    </template>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 THE HOUSE
+            ================================================== -->
+            <section class="house-section">
+
+                <div class="house-grid">
+
+                    <div class="house-intro">
+
+                        <p class="eyebrow reveal">
+                            <span class="roman-inline">IV</span>
+                            THE HOUSE
+                        </p>
+
+                        <h2 class="section-title reveal">
+                            A modern Indian<br />
+                            <em>expression of horology.</em>
+                        </h2>
+
+                        <p class="body-copy reveal">
+                            The House of UJJAYINI brings three distinct
+                            expressions of time under one name.
+                            Each collection carries its own material,
+                            its own mood and its own way of keeping the hour.
+                        </p>
+
+                    </div>
+
+
+                    <div class="house-collections">
+
+                        <template
+                            for:each={houseCollections}
+                            for:item="collection"
+                        >
+
+                            <div
+                                key={collection.id}
+                                class="house-row reveal"
+                            >
+
+                                <span class="house-number">
+                                    {collection.number}
+                                </span>
+
+                                <div class="house-row-text">
+
+                                    <h3 class="house-name">
+                                        {collection.name}
+                                    </h3>
+
+                                    <p class="house-tagline">
+                                        {collection.tagline}
+                                    </p>
+
+                                </div>
+
+                                <span class="house-signature">
+                                    {collection.signature}
+                                </span>
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CLOSING
+            ================================================== -->
+            <section class="closing-section">
+
+                <div class="closing-atmosphere" aria-hidden="true"></div>
+
+                <div class="closing-content">
+
+                    <div class="gold-rule reveal"></div>
+
+                    <p class="closing-line reveal">
+                        Precision. Permanence.
+                        <em>Memory.</em>
+                    </p>
+
+                    <button
+                        class="closing-cta"
+                        type="button"
+                        onclick={handleExplore}
+                    >
+                        <span>EXPLORE THE TIMEPIECES</span>
+                        <span class="closing-cta-arrow">→</span>
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+</template>
