@@ -12,6 +12,14 @@ public with sharing class RazorpayPaymentLinkService {
     private static final String CALLBACK_URL =
         'https://orgfarm-70c23216f9-dev-ed.develop.my.site.com/ujjayini/collector-vault';
 
+    /*
+     * The payment link stays payable for LINK_VALID_MINUTES.
+     * The stock hold lasts 2 minutes longer, so a payment made
+     * right before the link expires is still covered.
+     */
+    private static final Integer LINK_VALID_MINUTES = 30;
+    private static final Integer HOLD_MINUTES = LINK_VALID_MINUTES + 2;
+
     public class PaymentLinkRequest {
         public Id orderId;
     }
@@ -119,6 +127,15 @@ public with sharing class RazorpayPaymentLinkService {
         }
 
         /*
+         * Make sure every timepiece is still in stock BEFORE a
+         * Razorpay payment link is created. This is read-only,
+         * so it is allowed ahead of the callout.
+         */
+        InventoryReservationService.assertOrderAvailability(
+            orderRecord.Id
+        );
+
+        /*
          * Get Contact from the Order's Account.
          *
          * We intentionally do NOT use UserInfo.getUserId().
@@ -160,6 +177,13 @@ public with sharing class RazorpayPaymentLinkService {
             (totalAmount * 100).longValue();
 
         /*
+         * Link expiry (Unix seconds).
+         */
+        Long expireBy =
+            (DateTime.now().getTime() / 1000) +
+            (LINK_VALID_MINUTES * 60);
+
+        /*
          * Build Payment Link payload.
          */
         Map<String, Object> payload =
@@ -190,6 +214,11 @@ public with sharing class RazorpayPaymentLinkService {
         payload.put(
             'description',
             'UJJAYINI Order Payment'
+        );
+
+        payload.put(
+            'expire_by',
+            expireBy
         );
 
         /*
@@ -338,6 +367,19 @@ public with sharing class RazorpayPaymentLinkService {
                 'Razorpay did not return a Payment Link URL.'
             );
         }
+
+        /*
+         * Hold the stock for this order. Any earlier Pending hold
+         * of the same order is released first, so pressing
+         * "Proceed to Payment" twice never holds the stock twice.
+         *
+         * If this fails the whole transaction is rolled back and
+         * the customer never receives the payment URL.
+         */
+        InventoryReservationService.holdInventoryForOrder(
+            orderRecord.Id,
+            HOLD_MINUTES
+        );
 
         /*
          * Create Payment__c.

@@ -5,7 +5,8 @@ import getMyAssets
 
 import getMyWarranties
     from '@salesforce/apex/UJJAYINIWarrantyController.getMyWarranties';
-
+import vaultBackground
+    from '@salesforce/resourceUrl/UJJAYINI_Vault_Teaser_Visual';
 
 export default class UjjayiniCollectorVault extends LightningElement {
 
@@ -83,7 +84,9 @@ export default class UjjayiniCollectorVault extends LightningElement {
             });
 
     }
-
+get vaultBackgroundStyle() {
+    return `background-image: url("${vaultBackground}");`;
+}
 
     get hasAssets() {
 

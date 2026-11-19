@@ -1135,6 +1135,16 @@ public without sharing class RazorpayWebhookService {
             AssetFulfillmentService.createAssetsForOrder(
                 orderId
             );
+
+
+        /*
+         * Paid stock leaves the shelf: the hold becomes Confirmed
+         * and On_Hand goes down. Idempotent, so duplicate or
+         * retried webhooks never deduct twice.
+         */
+        InventoryReservationService.confirmReservationsForOrder(
+            orderId
+        );
     }
 
 
