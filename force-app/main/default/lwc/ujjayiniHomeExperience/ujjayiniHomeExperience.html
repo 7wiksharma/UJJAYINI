@@ -1,0 +1,412 @@
+<template>
+
+    <main class="home-experience">
+
+        <!-- =====================================================
+             CONTINUOUS CINEMATIC BACKGROUND
+        ====================================================== -->
+
+        <video
+            class="page-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            aria-hidden="true">
+
+            <source
+                src={videoUrl}
+                type="video/mp4" />
+
+        </video>
+
+        <div class="page-video-overlay"></div>
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section
+            class="hero"
+            aria-labelledby="home-title">
+
+            <div class="hero-orbit hero-orbit-one"></div>
+            <div class="hero-orbit hero-orbit-two"></div>
+
+            <div class="hero-copy">
+
+                <p class="eyebrow">
+                    <span></span>
+                    MAISON OF VEDIC HOROLOGY
+                </p>
+
+                <h1 id="home-title">
+                    UJJAYINI
+                </h1>
+
+                <p class="hero-tagline">
+                    The beginning of your time.
+                </p>
+
+                <p class="hero-description">
+                    A modern expression of Indian horology,
+                    shaped by the skies that first taught us
+                    to measure time.
+                </p>
+
+                <a
+                    class="cta"
+                    href="/ujjayini/collections">
+
+                    EXPLORE THE COLLECTION
+
+                    <span aria-hidden="true">
+                        ↗
+                    </span>
+
+                </a>
+
+            </div>
+
+            <p class="hero-caption">
+                TIME · OBSERVED
+                &nbsp;&nbsp;/&nbsp;&nbsp;
+                UJJAYINI, INDIA
+            </p>
+
+        </section>
+
+
+        <!-- =====================================================
+             ORIGIN / SKY
+        ====================================================== -->
+
+        <section
+            class="origin section-wrap"
+            aria-labelledby="origin-title">
+
+            <div
+                class="origin-orbit"
+                aria-hidden="true">
+
+                <span></span>
+
+            </div>
+
+            <div class="origin-label">
+
+                <span class="eyebrow">
+                    01 — THE ORIGIN
+                </span>
+
+                <span class="origin-rule"></span>
+
+            </div>
+
+            <div class="origin-copy">
+
+                <h2 id="origin-title">
+
+                    Before the clock,
+                    <br />
+
+                    there was
+                    <em>the sky.</em>
+
+                </h2>
+
+                <p>
+                    Long before hours were divided into minutes,
+                    time was observed through the movement of
+                    celestial bodies. At UJJAYINI, we return to
+                    that beginning — where astronomy, ritual and
+                    horology meet.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             FEATURED WATCHES
+        ====================================================== -->
+
+        <section
+            class="featured section-wrap"
+            aria-labelledby="featured-title">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        02 — THE COLLECTION
+                    </p>
+
+                    <h2 id="featured-title">
+                        Timepieces
+                        <em>of Ujjayini</em>
+                    </h2>
+
+                </div>
+
+                <a
+                    class="text-link"
+                    href="/ujjayini/collections">
+
+                    DISCOVER ALL COLLECTIONS
+
+                    <span aria-hidden="true">
+                        ↗
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <template lwc:if={watches.length}>
+
+                <div class="watch-grid">
+
+                    <template
+                        for:each={watches}
+                        for:item="watch">
+
+                        <article
+                            class="watch-card"
+                            key={watch.productId}>
+
+                            <!-- WATCH IMAGE -->
+
+                            <button
+                                class="watch-image"
+                                data-product-id={watch.productId}
+                                onclick={handleProductClick}
+                                aria-label={watch.name}>
+
+                                <template lwc:if={watch.imageUrl}>
+
+                                    <img
+                                        src={watch.imageUrl}
+                                        alt={watch.name}
+                                        loading="lazy" />
+
+                                </template>
+
+                                <template lwc:else>
+
+                                    <span
+                                        class="image-mark"
+                                        aria-hidden="true">
+
+                                        U
+
+                                    </span>
+
+                                </template>
+
+                                <span
+                                    class="image-index"
+                                    aria-hidden="true">
+
+                                    {watch.displayIndex}
+
+                                </span>
+
+                                <span
+                                    class="image-glow"
+                                    aria-hidden="true">
+                                </span>
+
+                            </button>
+
+
+                            <!-- WATCH INFORMATION -->
+
+                            <div class="watch-details">
+
+                                <!--
+                                    IMPORTANT:
+                                    Product Code / Product ID intentionally
+                                    NOT displayed here.
+                                -->
+
+                                <template lwc:if={watch.collection}>
+
+                                    <p class="watch-collection">
+                                        {watch.collection}
+                                    </p>
+
+                                </template>
+
+                                <h3>
+                                    {watch.name}
+                                </h3>
+
+                                <p class="watch-meta">
+                                    {watch.metadata}
+                                </p>
+
+                                <button
+                                    class="watch-link"
+                                    data-product-id={watch.productId}
+                                    onclick={handleProductClick}>
+
+                                    VIEW WATCH
+
+                                    <span aria-hidden="true">
+                                        ↗
+                                    </span>
+
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <template lwc:elseif={errorMessage}>
+
+                <p class="state-message">
+                    Featured timepieces are temporarily unavailable.
+                </p>
+
+            </template>
+
+
+            <template lwc:elseif={showEmpty}>
+
+                <p class="state-message">
+                    The collection is being prepared.
+                </p>
+
+            </template>
+
+        </section>
+
+
+        <!-- =====================================================
+             CRAFT
+        ====================================================== -->
+
+        <section
+            class="craft section-wrap"
+            aria-labelledby="craft-title">
+
+            <div class="craft-heading">
+
+                <p class="eyebrow">
+                    03 — THE MAKING
+                </p>
+
+                <h2 id="craft-title">
+
+                    Crafted for
+                    <br />
+
+                    <em>the moment.</em>
+
+                </h2>
+
+            </div>
+
+
+            <div class="craft-copy">
+
+                <p class="craft-lead">
+                    Precision. Material. Movement.
+                </p>
+
+                <p>
+                    Every surface, every edge and every movement
+                    is considered before it becomes part of the
+                    whole. A quiet balance of enduring materials
+                    and measured mechanics gives each timepiece
+                    its character.
+                </p>
+
+                <div class="craft-details">
+
+                    <span>
+                        FORM
+                        <i></i>
+                    </span>
+
+                    <span>
+                        DEPTH
+                        <i></i>
+                    </span>
+
+                    <span>
+                        PRECISION
+                        <i></i>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             COLLECTOR VAULT
+        ====================================================== -->
+
+        <section
+            class="vault"
+            aria-labelledby="vault-title">
+
+            <div
+                class="vault-ornament"
+                aria-hidden="true">
+            </div>
+
+            <div class="vault-copy">
+
+                <p class="eyebrow">
+                    PRIVATE COLLECTION
+                </p>
+
+                <h2 id="vault-title">
+
+                    The Collector’s
+                    <em>Vault</em>
+
+                </h2>
+
+                <p>
+                    Your UJJAYINI timepieces, ownership,
+                    warranty and service — in one private space.
+                </p>
+
+            </div>
+
+
+            <button
+                class="cta vault-cta"
+                type="button"
+                onclick={handleEnterVault}>
+
+                ENTER VAULT
+
+                <span aria-hidden="true">
+                    ↗
+                </span>
+
+            </button>
+
+        </section>
+
+    </main>
+
+</template>

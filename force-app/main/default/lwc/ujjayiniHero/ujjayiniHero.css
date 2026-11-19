@@ -1,27 +1,11 @@
-/* =========================================================
-   UJJAYINI HERO
-   Luxury Horology Visual System
-   Burgundy · Deep Green · Cream
-========================================================= */
-
 :host {
     display: block;
 
-    width: 100%;
-    min-height: 100vh;
-       margin: 0;
-    padding: 0;
-    width: 100%;
-  
-    color: #f5dabf;
-
-    font-family:
-        "Inter",
-        "Helvetica Neue",
-        Arial,
-        sans-serif;
-
-    overflow: hidden;
+    --uj-black: #050509;
+    --uj-cream: #f3e7d4;
+    --uj-soft-cream: #d8c5ae;
+    --uj-gold: #c9a24d;
+    --uj-line: rgba(201, 162, 77, 0.20);
 }
 
 
@@ -34,359 +18,289 @@
 
     width: 100%;
     min-height: 100vh;
-    min-height: 100svh;
-    margin: 0;
-    padding: 0;
-   
-    margin-bottom: -38px;
+
     overflow: hidden;
 
-    isolation: isolate;
-
     background:
-
-        /* Burgundy atmosphere */
         radial-gradient(
-            55% 75% at 8% 52%,
-            rgba(108, 21, 30, 0.34) 0%,
-            rgba(108, 21, 30, 0.14) 32%,
-            transparent 68%
+            circle at 72% 48%,
+            rgba(82, 65, 35, 0.18),
+            transparent 38%
         ),
-
-        /* Green atmosphere */
-        radial-gradient(
-            60% 85% at 82% 42%,
-            rgba(15, 61, 58, 0.82) 0%,
-            rgba(15, 61, 58, 0.38) 35%,
-            transparent 72%
-        ),
-
-        /* Cream light */
-        radial-gradient(
-            30% 40% at 68% 45%,
-            rgba(245, 218, 191, 0.045) 0%,
-            transparent 72%
-        ),
-
         linear-gradient(
             115deg,
-            #070b0a 0%,
-            #0a1513 45%,
-            #07100f 100%
+            #050509 0%,
+            #08070b 43%,
+            #09090b 100%
         );
 
+    isolation: isolate;
 }
 
 
 /* =========================================================
-   MAIN ATMOSPHERIC GLOW
+   VIDEO
 ========================================================= */
 
-.hero-glow {
+.video-frame {
     position: absolute;
 
-    width: min(75vw, 1100px);
-    height: min(75vw, 1100px);
+    top: 0;
+    right: 0;
 
-    top: 52%;
-    left: 68%;
+    width: 62%;
+    height: 100%;
 
-    transform:
-        translate(-50%, -50%);
+    overflow: hidden;
 
-    border-radius: 50%;
+    z-index: 1;
 
-    background:
-
-        radial-gradient(
-            circle,
-            rgba(245, 218, 191, 0.065) 0%,
-            rgba(15, 61, 58, 0.15) 22%,
-            rgba(15, 61, 58, 0.08) 42%,
-            transparent 72%
-        );
-
-    filter: blur(4px);
-
-    pointer-events: none;
-
-    z-index: 0;
-
-    animation:
-        breathe 12s ease-in-out infinite alternate;
+    background: #08080a;
 }
 
 
-/* =========================================================
-   SECONDARY BURGUNDY LIGHT
-========================================================= */
-
-.hero-glow-secondary {
-    position: absolute;
-
-    width: 520px;
-    height: 520px;
-
-    left: -260px;
-    top: 48%;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(108, 21, 30, 0.22) 0%,
-            rgba(108, 21, 30, 0.08) 38%,
-            transparent 70%
-        );
-
-    filter: blur(18px);
-
-    pointer-events: none;
-
-    z-index: 0;
-
-    animation:
-        burgundyBreath 15s ease-in-out infinite alternate;
-}
-
-
-/* =========================================================
-   VIGNETTE
-========================================================= */
-
-.hero-vignette {
+.hero-video {
     position: absolute;
 
     inset: 0;
 
-    z-index: 1;
+    width: 100%;
+    height: 100%;
 
-    pointer-events: none;
+    object-fit: cover;
 
-    background:
+    object-position: center center;
 
-        linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.32) 0%,
-            transparent 34%,
-            rgba(0, 0, 0, 0.08) 70%,
-            rgba(0, 0, 0, 0.24) 100%
-        ),
+    opacity: 0.76;
 
-        linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.18),
-            transparent 28%,
-            transparent 72%,
-            rgba(0, 0, 0, 0.25)
-        );
+    filter:
+        saturate(0.72)
+        contrast(1.02)
+        brightness(0.82);
+
+    transform: scale(1.04);
+
+    animation:
+        heroVideoReveal 1.8s ease-out both;
 }
 
 
 /* =========================================================
-   DECORATIVE ORBITS
+   VIDEO OVERLAY
 ========================================================= */
 
-.orbit {
+.video-overlay {
     position: absolute;
 
-    border-radius: 50%;
-
-    border: 1px solid
-        rgba(245, 218, 191, 0.055);
-
-    pointer-events: none;
-
-    z-index: 1;
-}
-
-.orbit-one {
-    width: 58vw;
-    height: 58vw;
-
-    max-width: 850px;
-    max-height: 850px;
-
-    top: 10%;
-    right: -24vw;
-
-    border-color:
-        rgba(15, 61, 58, 0.60);
-
-    animation:
-        orbitRotateOne 28s linear infinite;
-}
-
-.orbit-two {
-    width: 38vw;
-    height: 38vw;
-
-    max-width: 560px;
-    max-height: 560px;
-
-    top: 23%;
-    right: -12vw;
-
-    border-color:
-        rgba(245, 218, 191, 0.075);
-
-    animation:
-        orbitRotateTwo 34s linear infinite reverse;
-}
-
-.orbit-three {
-    width: 26vw;
-    height: 26vw;
-
-    max-width: 390px;
-    max-height: 390px;
-
-    top: 34%;
-    right: -5vw;
-
-    border-color:
-        rgba(108, 21, 30, 0.26);
-
-    animation:
-        orbitRotateOne 42s linear infinite;
-}
-
-
-/* =========================================================
-   CENTRAL MERIDIAN
-========================================================= */
-
-.meridian-line {
-    position: absolute;
-
-    top: 0;
-    bottom: 0;
-
-    left: 50%;
-
-    width: 1px;
-
-    background:
-
-        linear-gradient(
-            to bottom,
-            transparent 0%,
-            rgba(245, 218, 191, 0.12) 18%,
-            rgba(245, 218, 191, 0.06) 50%,
-            rgba(245, 218, 191, 0.12) 82%,
-            transparent 100%
-        );
-
-    opacity: 0.55;
+    inset: 0;
 
     z-index: 2;
 
     pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            #050509 0%,
+            rgba(5, 5, 9, 0.98) 20%,
+            rgba(5, 5, 9, 0.78) 38%,
+            rgba(5, 5, 9, 0.28) 58%,
+            rgba(5, 5, 9, 0.08) 100%
+        );
+}
+
+
+.video-overlay::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 22%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(3, 3, 6, 0.72),
+            transparent
+        );
 }
 
 
 /* =========================================================
-   LATITUDE
+   BOTTOM FADE
 ========================================================= */
 
-.latitude-mark {
+.bottom-fade {
     position: absolute;
 
-    top: 50%;
-    left: calc(50% + 18px);
-
-    transform: translateY(-50%);
-
-    writing-mode: vertical-rl;
-
-    text-transform: uppercase;
-
-    font-size: 8px;
-
-    letter-spacing: 0.34em;
-
-    color:
-        rgba(245, 218, 191, 0.22);
-
-    z-index: 4;
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   WATCH STAGE
-========================================================= */
-
-.watch-stage {
-    position: absolute;
-
-    top: 3%;
-    right: -2%;
-
+    left: 0;
+    right: 0;
     bottom: 0;
 
-    width: 55%;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
+    height: 32%;
 
     z-index: 3;
 
     pointer-events: none;
 
-    overflow: visible;
-}
-
-
-/* =========================================================
-   WATCH CANVAS
-========================================================= */
-
-.watch-canvas {
-    display: block;
-
-    width: 92%;
-    height: 92%;
-
-    max-width: 100%;
-    max-height: 100%;
-
-    overflow: visible;
-
-    filter:
-        drop-shadow(
-            0 35px 75px
-            rgba(0, 0, 0, 0.52)
+    background:
+        linear-gradient(
+            to top,
+            #050509 0%,
+            rgba(5, 5, 9, 0.82) 28%,
+            transparent 100%
         );
 }
 
 
 /* =========================================================
-   HERO CONTENT
+   LEFT DEPTH
+========================================================= */
+
+.left-depth {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 58%;
+    height: 100%;
+
+    z-index: 3;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at 34% 45%,
+            rgba(65, 39, 32, 0.12),
+            transparent 56%
+        );
+}
+
+
+/* =========================================================
+   ATMOSPHERIC GLOW
+========================================================= */
+
+.atmosphere {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 4;
+
+    filter: blur(60px);
+}
+
+
+.atmosphere-one {
+    width: 420px;
+    height: 420px;
+
+    left: -180px;
+    bottom: -180px;
+
+    background:
+        rgba(83, 33, 38, 0.13);
+}
+
+
+.atmosphere-two {
+    width: 360px;
+    height: 360px;
+
+    right: 18%;
+    top: 20%;
+
+    background:
+        rgba(76, 64, 28, 0.08);
+}
+
+
+/* =========================================================
+   ORBITS
+========================================================= */
+
+.orbit {
+    position: absolute;
+
+    border: 1px solid var(--uj-line);
+
+    border-radius: 50%;
+
+    z-index: 5;
+
+    pointer-events: none;
+
+    opacity: 0.7;
+}
+
+
+.orbit-one {
+    width: 680px;
+    height: 680px;
+
+    right: -210px;
+    top: -80px;
+
+    transform: rotate(-19deg);
+}
+
+
+.orbit-two {
+    width: 520px;
+    height: 270px;
+
+    right: 2%;
+    top: 18%;
+
+    transform:
+        rotate(-27deg)
+        skewX(-7deg);
+
+    border-color:
+        rgba(201, 162, 77, 0.13);
+}
+
+
+.orbit-three {
+    width: 760px;
+    height: 310px;
+
+    right: -120px;
+    bottom: -50px;
+
+    transform: rotate(14deg);
+
+    border-color:
+        rgba(201, 162, 77, 0.10);
+}
+
+
+/* =========================================================
+   CONTENT
 ========================================================= */
 
 .hero-content {
-    position: absolute;
+    position: relative;
 
-    z-index: 7;
+    z-index: 10;
 
-    top: 50%;
-    left: 8vw;
+    width: min(720px, 52vw);
 
-    transform:
-        translateY(-50%);
+    padding-top: 23vh;
 
-    width:
-        min(
-            540px,
-            43vw
-        );
+    margin-left: 8%;
 
-    pointer-events: none;
+    animation:
+        contentReveal 1.2s ease-out both;
 }
 
 
@@ -394,44 +308,47 @@
    EYEBROW
 ========================================================= */
 
-.eyebrow {
-    margin: 0 0 24px;
+.eyebrow-row {
+    display: flex;
 
-    font-size: 10px;
+    align-items: center;
 
-    font-weight: 600;
+    gap: 14px;
 
-    letter-spacing: 0.42em;
-
-    color:
-        rgba(245, 218, 191, 0.72);
-
-    white-space: nowrap;
-
-    text-transform: uppercase;
+    margin-bottom: 24px;
 }
 
 
-/* Burgundy micro-line */
-
-.eyebrow::before {
-    content: "";
-
-    display: inline-block;
-
-    width: 38px;
+.eyebrow-line {
+    width: 34px;
     height: 1px;
 
-    margin-right: 14px;
-
-    vertical-align: middle;
+    flex: 0 0 34px;
 
     background:
-        linear-gradient(
-            to right,
-            #6c151e,
-            transparent
-        );
+        var(--uj-gold);
+}
+
+
+.eyebrow {
+    margin: 0;
+
+    color:
+        var(--uj-gold);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    line-height: 1;
+
+    white-space: nowrap;
 }
 
 
@@ -439,34 +356,30 @@
    BRAND
 ========================================================= */
 
-h1 {
+.brand-title {
     margin: 0;
 
+    color:
+        var(--uj-cream);
+
     font-family:
-        "Cormorant Garamond",
         Georgia,
+        "Times New Roman",
         serif;
 
     font-size:
-        clamp(
-            78px,
-            9.5vw,
-            158px
-        );
+        clamp(88px, 11vw, 178px);
 
-    line-height: 0.78;
+    font-weight: 500;
 
-    font-weight: 400;
+    line-height: 0.82;
 
-    letter-spacing: 0.055em;
+    letter-spacing:
+        -0.055em;
 
-    color: #f5dabf;
+    text-transform: uppercase;
 
     white-space: nowrap;
-
-    text-shadow:
-        0 12px 55px
-        rgba(0, 0, 0, 0.30);
 }
 
 
@@ -476,490 +389,371 @@ h1 {
 
 .tagline {
     margin:
-        30px 0 38px;
+        34px 0 0;
+
+    color:
+        #d9c4ad;
 
     font-family:
-        "Cormorant Garamond",
         Georgia,
+        "Times New Roman",
         serif;
 
     font-size:
-        clamp(
-            23px,
-            2.2vw,
-            32px
-        );
-
-    font-weight: 400;
+        clamp(28px, 3vw, 47px);
 
     font-style: italic;
 
-    line-height: 1.2;
+    font-weight: 400;
 
-    letter-spacing: 0.025em;
+    line-height: 1.05;
 
-    color:
-        rgba(245, 218, 191, 0.78);
+    letter-spacing:
+        -0.025em;
 }
 
 
 /* =========================================================
-   EXPLORE BUTTON
+   DESCRIPTION
+========================================================= */
+
+.hero-description {
+    width: min(470px, 100%);
+
+    margin:
+        25px 0 0;
+
+    color:
+        rgba(243, 231, 212, 0.58);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+
+    letter-spacing: 0.02em;
+}
+
+
+/* =========================================================
+   CTA
 ========================================================= */
 
 .explore-button {
-    position: relative;
-
     display: inline-flex;
 
     align-items: center;
-    justify-content: center;
 
-    gap: 28px;
+    justify-content: space-between;
 
-    min-width: 330px;
+    gap: 34px;
+
+    min-width: 310px;
+
+    margin-top: 38px;
 
     padding:
-        16px 25px;
+        16px 18px 16px 24px;
 
     border:
-        1px solid
-        rgba(245, 218, 191, 0.34);
+        1px solid rgba(201, 162, 77, 0.52);
 
     border-radius: 999px;
 
     background:
-        linear-gradient(
-            110deg,
-            rgba(108, 21, 30, 0.22),
-            rgba(15, 61, 58, 0.28)
-        );
+        rgba(10, 9, 11, 0.28);
 
-    color: #f5dabf;
-
-    font-family:
-        "Inter",
-        sans-serif;
-
-    font-size: 9px;
-
-    font-weight: 600;
-
-    letter-spacing: 0.30em;
+    color:
+        var(--uj-cream);
 
     cursor: pointer;
 
-    overflow: hidden;
+    font-family:
+        Arial,
+        sans-serif;
 
-    pointer-events: auto;
+    font-size: 10px;
 
-    backdrop-filter: blur(14px);
+    font-weight: 700;
 
-    box-shadow:
-        0 15px 50px
-        rgba(0, 0, 0, 0.18);
+    letter-spacing: 3px;
 
-    transition:
-        transform 420ms cubic-bezier(.2,.8,.2,1),
-        border-color 420ms ease,
-        box-shadow 420ms ease,
-        background 420ms ease,
-        color 420ms ease;
-}
+    text-align: left;
 
+    outline: none;
 
-/* Moving light */
+    box-shadow: none;
 
-.explore-button::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    bottom: 0;
-
-    left: -100%;
-
-    width: 70%;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(245, 218, 191, 0.12),
-            transparent
-        );
-
-    transform:
-        skewX(-20deg);
+    appearance: none;
 
     transition:
-        left 700ms ease;
-
-    pointer-events: none;
+        background 0.35s ease,
+        border-color 0.35s ease,
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
 }
 
 
-/* Hover */
+/*
+ * Absolutely NO decorative line.
+ */
 
-.explore-button:hover {
+.explore-button::before,
+.explore-button::after {
+    content: none !important;
 
-    transform:
-        translateY(-4px);
-
-    border-color:
-        rgba(245, 218, 191, 0.72);
-
-    background:
-        linear-gradient(
-            110deg,
-            rgba(108, 21, 30, 0.65),
-            rgba(15, 61, 58, 0.72)
-        );
-
-    box-shadow:
-        0 22px 70px
-        rgba(15, 61, 58, 0.24),
-
-        0 10px 45px
-        rgba(108, 21, 30, 0.16);
+    display: none !important;
 }
 
-.explore-button:hover::before {
-    left: 130%;
+
+.button-text {
+    display: block;
+
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+
+    line-height: 1;
+}
+
+
+.button-text::before,
+.button-text::after {
+    content: none !important;
+
+    display: none !important;
 }
 
 
 /* =========================================================
-   ARROW
+   CTA HOVER
 ========================================================= */
 
-.arrow {
-    display: inline-flex;
+.explore-button:hover {
+    background:
+        rgba(201, 162, 77, 0.10);
+
+    border-color:
+        rgba(201, 162, 77, 0.95);
+
+    box-shadow:
+        0 0 30px rgba(201, 162, 77, 0.10);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.explore-button:focus {
+    outline: none;
+
+    box-shadow:
+        0 0 0 1px rgba(201, 162, 77, 0.22);
+}
+
+
+.explore-button:active {
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   CTA ARROW
+========================================================= */
+
+.button-arrow {
+    display: flex;
 
     align-items: center;
+
     justify-content: center;
 
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 32px;
 
     border:
-        1px solid
-        rgba(245, 218, 191, 0.25);
+        1px solid rgba(201, 162, 77, 0.35);
 
     border-radius: 50%;
 
-    font-size: 14px;
+    color:
+        var(--uj-gold);
+
+    font-size: 15px;
 
     line-height: 1;
 
-    letter-spacing: 0;
-
     transition:
-        transform 420ms ease,
-        border-color 420ms ease;
+        transform 0.35s ease,
+        background 0.35s ease,
+        border-color 0.35s ease;
 }
 
-.explore-button:hover .arrow {
+
+.explore-button:hover .button-arrow {
     transform:
         translateY(3px);
 
+    background:
+        rgba(201, 162, 77, 0.10);
+
     border-color:
-        rgba(245, 218, 191, 0.65);
+        rgba(201, 162, 77, 0.70);
 }
 
 
 /* =========================================================
-   TIME HUD
+   GHAṬIKĀ
 ========================================================= */
 
-.time-hud {
+.ghatika {
     position: absolute;
 
-    z-index: 8;
+    left: 47%;
 
-    top: 34px;
-    right: 42px;
+    bottom: 14%;
+
+    z-index: 10;
 
     display: flex;
 
-    align-items: center;
+    align-items: baseline;
 
     gap: 9px;
 
-    font-size: 8px;
-
-    letter-spacing: 0.24em;
-
     color:
-        rgba(245, 218, 191, 0.32);
-
-    white-space: nowrap;
-}
-.hud-label {
-    color:
-        rgba(245, 218, 191, 0.28);
-}
-
-.time-hud .time-value {
-    min-width: 22px;
-
-    color: #f5dabf;
+        rgba(243, 231, 212, 0.55);
 
     font-family:
-        "Cormorant Garamond",
+        Arial,
+        sans-serif;
+}
+
+
+.ghatika-label {
+    color:
+        rgba(201, 162, 77, 0.62);
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
+}
+
+
+.ghatika-number {
+    color:
+        var(--uj-gold);
+
+    font-family:
         Georgia,
         serif;
 
-    font-size: 20px;
-
-    letter-spacing: 0.05em;
+    font-size: 18px;
 }
 
-.hud-divider {
+
+.ghatika-total {
     color:
-        rgba(245, 218, 191, 0.20);
+        rgba(243, 231, 212, 0.30);
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
 }
 
 
 /* =========================================================
-   SCROLL INDICATOR
+   VIDEO LABEL
 ========================================================= */
 
-.scroll-indicator {
+.video-label {
     position: absolute;
 
-    z-index: 8;
+    right: 6%;
 
-    left: 8vw;
-    bottom: 42px;
+    bottom: 7%;
+
+    z-index: 10;
 
     display: flex;
 
-    align-items: center;
+    flex-direction: column;
 
-    gap: 18px;
+    gap: 5px;
 
-    font-size: 8px;
-
-    font-weight: 500;
-
-    letter-spacing: 0.32em;
-
-    color:
-        rgba(245, 218, 191, 0.34);
-}
-
-.scroll-line {
-    position: relative;
-
-    width: 80px;
-    height: 1px;
-
-    overflow: hidden;
-
-    background:
-        rgba(245, 218, 191, 0.10);
-}
-
-.scroll-line::after {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-    top: 0;
-
-    width: 28px;
-    height: 1px;
-
-    background:
-        linear-gradient(
-            to right,
-            #6c151e,
-            #f5dabf
-        );
-
-    animation:
-        scrollPulse 2.4s ease-in-out infinite;
-}
-
-
-/* =========================================================
-   TECHNICAL MARKS
-========================================================= */
-
-.technical-mark {
-    position: absolute;
-
-    z-index: 5;
-
-    font-size: 7px;
-
-    font-weight: 500;
-
-    letter-spacing: 0.34em;
-
-    color:
-        rgba(245, 218, 191, 0.22);
+    text-align: right;
 
     pointer-events: none;
 }
 
-.technical-left {
-    left: 8vw;
-    top: 31px;
-}
 
-.technical-right {
-    right: 42px;
-    bottom: 34px;
-}
-
-
-/* =========================================================
-   HERO SECTION MARKER
-========================================================= */
-
-.hero-section-marker {
-    position: absolute;
-
-    left: 8vw;
-    bottom: 31px;
-
-    z-index: 8;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-    font-size: 7px;
-
-    letter-spacing: 0.32em;
-
+.video-label span:first-child {
     color:
-        rgba(245, 218, 191, 0.20);
-
-    text-transform: uppercase;
-
-    transform:
-        translateY(34px);
-}
-
-.hero-section-marker span:first-child {
-    color: #6c151e;
+        rgba(243, 231, 212, 0.42);
 
     font-family:
-        "Cormorant Garamond",
         Georgia,
         serif;
 
     font-size: 15px;
+
+    font-style: italic;
 }
 
-.hero-section-marker div {
-    width: 42px;
-    height: 1px;
 
-    background:
-        linear-gradient(
-            to right,
-            #6c151e,
-            transparent
-        );
+.video-label span:last-child {
+    color:
+        rgba(201, 162, 77, 0.48);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
 }
 
 
 /* =========================================================
-   ANIMATIONS
+   ANIMATION
 ========================================================= */
 
-@keyframes breathe {
+@keyframes heroVideoReveal {
 
     from {
-        transform:
-            translate(-50%, -50%)
-            scale(0.96);
-    }
-
-    to {
-        transform:
-            translate(-50%, -50%)
-            scale(1.045);
-    }
-}
-
-
-@keyframes burgundyBreath {
-
-    from {
-        transform:
-            scale(0.92);
-
-        opacity: 0.65;
-    }
-
-    to {
-        transform:
-            scale(1.08);
-
-        opacity: 1;
-    }
-}
-
-
-@keyframes orbitRotateOne {
-
-    from {
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            rotate(360deg);
-    }
-}
-
-
-@keyframes orbitRotateTwo {
-
-    from {
-        transform:
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            rotate(-360deg);
-    }
-}
-
-
-@keyframes scrollPulse {
-
-    0% {
-        transform:
-            translateX(-10px);
-
         opacity: 0;
+        transform: scale(1.08);
     }
 
-    30% {
-        opacity: 1;
+    to {
+        opacity: 0.76;
+        transform: scale(1.04);
     }
+}
 
-    70% {
-        opacity: 1;
-    }
 
-    100% {
-        transform:
-            translateX(70px);
+@keyframes contentReveal {
 
+    from {
         opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -971,30 +765,31 @@ h1 {
 @media (max-width: 1100px) {
 
     .hero-content {
-        width: 45vw;
+        width: 56vw;
+
+        margin-left: 7%;
     }
 
-    h1 {
+
+    .brand-title {
         font-size:
-            clamp(
-                68px,
-                9vw,
-                125px
-            );
+            clamp(72px, 10vw, 130px);
     }
 
-    .watch-stage {
-        width: 58%;
+
+    .video-frame {
+        width: 65%;
     }
 
-    .orbit-one {
-        right: -30vw;
+
+    .ghatika {
+        left: 50%;
     }
 }
 
 
 /* =========================================================
-   MOBILE / TABLET
+   MOBILE
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -1004,245 +799,102 @@ h1 {
     }
 
 
-    /* Watch becomes upper visual */
-
-    .watch-stage {
-        top: 0;
-
-        right: 0;
-
+    .video-frame {
         width: 100%;
+        height: 58%;
 
-        height: 60%;
+        top: auto;
+        bottom: 0;
 
-        align-items: center;
-        justify-content: center;
+        opacity: 0.68;
     }
 
 
-    .hero-glow {
-        width: 110vw;
-        height: 110vw;
-
-        top: 32%;
-        left: 50%;
+    .video-overlay {
+        background:
+            linear-gradient(
+                to bottom,
+                #050509 0%,
+                rgba(5, 5, 9, 0.94) 28%,
+                rgba(5, 5, 9, 0.42) 65%,
+                rgba(5, 5, 9, 0.82) 100%
+            );
     }
 
-
-    .hero-glow-secondary {
-        width: 80vw;
-        height: 80vw;
-
-        left: -35vw;
-        top: 35%;
-    }
-
-
-    .meridian-line {
-        left: 50%;
-
-        opacity: 0.30;
-    }
-
-
-    .latitude-mark {
-        top: 34%;
-
-        left:
-            calc(50% + 10px);
-
-        font-size: 8px;
-    }
-
-
-    .orbit-one {
-        width: 100vw;
-        height: 100vw;
-
-        right: -45vw;
-
-        top: 8%;
-    }
-
-    .orbit-two {
-        width: 70vw;
-        height: 70vw;
-
-        right: -30vw;
-
-        top: 15%;
-    }
-
-    .orbit-three {
-        width: 50vw;
-        height: 50vw;
-
-        right: -18vw;
-
-        top: 23%;
-    }
-
-
-    /* Content */
 
     .hero-content {
-        top: auto;
-
-        bottom: 9vh;
-
-        left: 8vw;
-        right: 8vw;
-
         width: auto;
 
-        transform: none;
+        margin-left: 7%;
+        margin-right: 7%;
+
+        padding-top: 22vh;
     }
 
 
-    .eyebrow {
-        font-size: 8px;
-
-        letter-spacing: 0.32em;
-
-        margin-bottom: 16px;
-    }
-
-
-    h1 {
+    .brand-title {
         font-size:
-            clamp(
-                58px,
-                18vw,
-                100px
-            );
+            clamp(62px, 18vw, 100px);
 
-        letter-spacing: 0.06em;
+        white-space: normal;
     }
 
 
     .tagline {
-        margin:
-            20px 0 27px;
+        font-size:
+            clamp(24px, 7vw, 34px);
+    }
 
-        font-size: 22px;
+
+    .hero-description {
+        width: 88%;
     }
 
 
     .explore-button {
         min-width: 0;
 
-        padding:
-            14px 20px;
-
-        font-size: 8px;
-
-        gap: 18px;
+        width: min(310px, 90%);
     }
 
 
-    .time-hud {
-        top: 24px;
+    .ghatika {
+        left: auto;
 
-        right: 24px;
+        right: 8%;
 
-        font-size: 7px;
+        bottom: 17%;
     }
 
 
-    .time-hud .time-value {
-        font-size: 18px;
+    .video-label {
+        right: 7%;
+
+        bottom: 8%;
     }
 
 
-    .technical-left {
-        top: 25px;
+    .orbit-one {
+        width: 480px;
+        height: 480px;
 
-        left: 24px;
+        right: -220px;
+        top: 5%;
     }
 
 
-    .technical-right {
-        display: none;
+    .orbit-two {
+        width: 420px;
+        height: 220px;
+
+        right: -100px;
     }
 
 
-    .scroll-indicator {
-        display: none;
-    }
+    .orbit-three {
+        width: 500px;
+        height: 220px;
 
-
-    .hero-section-marker {
-        display: none;
-    }
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 480px) {
-
-    .watch-stage {
-        height: 56%;
-    }
-
-
-    .hero-content {
-        bottom: 8vh;
-    }
-
-
-    h1 {
-        font-size: 18vw;
-    }
-
-
-    .tagline {
-        font-size: 19px;
-
-        margin-top: 18px;
-
-        margin-bottom: 22px;
-    }
-
-
-    .eyebrow {
-        font-size: 7px;
-    }
-
-
-    .explore-button {
-        width: auto;
-
-        max-width: 100%;
-
-        letter-spacing: 0.20em;
-    }
-
-
-    .technical-left {
-        display: none;
-    }
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .hero-glow,
-    .hero-glow-secondary,
-    .orbit-one,
-    .orbit-two,
-    .orbit-three,
-    .scroll-line::after {
-        animation: none;
-    }
-
-    .explore-button {
-        transition: none;
+        right: -160px;
     }
 }

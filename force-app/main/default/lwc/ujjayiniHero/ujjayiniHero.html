@@ -1,56 +1,79 @@
 <template>
+
     <section class="hero">
 
-        <!-- =================================================
-             ATMOSPHERIC BACKGROUND
-        ================================================== -->
+        <!-- =====================================================
+             CINEMATIC VIDEO
+        ====================================================== -->
 
-        <div class="hero-glow"></div>
+        <div class="video-frame">
 
-        <div class="hero-glow-secondary"></div>
+            <video
+                class="hero-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="auto">
 
-        <div class="hero-vignette"></div>
+                <source
+                    src={videoUrl}
+                    type="video/mp4" />
 
-        <!-- Fine atmospheric rings -->
+            </video>
+
+        </div>
+
+
+        <!-- =====================================================
+             ATMOSPHERE
+        ====================================================== -->
+
+        <div class="video-overlay"></div>
+
+        <div class="left-depth"></div>
+
+        <div class="bottom-fade"></div>
+
+
+        <!-- =====================================================
+             ATMOSPHERIC GLOW
+        ====================================================== -->
+
+        <div class="atmosphere atmosphere-one"></div>
+
+        <div class="atmosphere atmosphere-two"></div>
+
+
+        <!-- =====================================================
+             ORBITAL SYSTEM
+        ====================================================== -->
+
         <div class="orbit orbit-one"></div>
+
         <div class="orbit orbit-two"></div>
+
         <div class="orbit orbit-three"></div>
 
 
-        <!-- =================================================
-             CENTRAL MERIDIAN
-        ================================================== -->
-
-        <div class="meridian-line"></div>
-
-        <div class="latitude-mark">
-            23°N
-        </div>
-
-
-        <!-- =================================================
-             WATCH
-        ================================================== -->
-
-        <div class="watch-stage">
-
-            <canvas class="watch-canvas"></canvas>
-
-        </div>
-
-
-        <!-- =================================================
+        <!-- =====================================================
              BRAND CONTENT
-        ================================================== -->
+        ====================================================== -->
 
         <div class="hero-content">
 
-            <p class="eyebrow">
-                MAISON OF VEDIC HOROLOGY
-            </p>
+            <div class="eyebrow-row">
+
+                <span class="eyebrow-line"></span>
+
+                <p class="eyebrow">
+                    MAISON OF VEDIC HOROLOGY
+                </p>
+
+            </div>
 
 
-            <h1>
+            <h1 class="brand-title">
                 UJJAYINI
             </h1>
 
@@ -60,17 +83,27 @@
             </p>
 
 
+            <p class="hero-description">
+                A modern expression of Indian horology,
+                shaped by the place where time was first
+                observed through the heavens.
+            </p>
+
+
+            <!-- =================================================
+                 ONLY CTA
+            ================================================== -->
+
             <button
                 class="explore-button"
                 type="button"
-                onclick={handleExplore}
-            >
+                onclick={handleExplore}>
 
-                <span>
+                <span class="button-text">
                     EXPLORE THE COLLECTION
                 </span>
 
-                <span class="arrow">
+                <span class="button-arrow">
                     ↓
                 </span>
 
@@ -79,75 +112,43 @@
         </div>
 
 
-        <!-- =================================================
-             TIME HUD
-        ================================================== -->
+        <!-- =====================================================
+             GHAṬIKĀ
+        ====================================================== -->
 
-        <div class="time-hud">
+        <div class="ghatika">
 
-            <span class="hud-label">
+            <span class="ghatika-label">
                 CURRENT GHAṬIKĀ
             </span>
 
-            <span class="time-value">
+            <span class="ghatika-number">
                 {ghatika}
             </span>
 
-            <span class="hud-divider">
-                /
-            </span>
-
-            <span>
-                60
+            <span class="ghatika-total">
+                / 60
             </span>
 
         </div>
 
 
-        <!-- =================================================
-             SCROLL INDICATOR
-        ================================================== -->
+        <!-- =====================================================
+             VIDEO LABEL
+        ====================================================== -->
 
-        <div class="scroll-indicator">
+        <div class="video-label">
 
             <span>
-                SCROLL TO DISCOVER
+                UJJAYINI
             </span>
 
-            <div class="scroll-line"></div>
-
-        </div>
-
-
-        <!-- =================================================
-             TECHNICAL MARKERS
-        ================================================== -->
-
-        <div class="technical-mark technical-left">
-            UJJAYINI · 23°N
-        </div>
-
-
-        <div class="technical-mark technical-right">
-            HOROLOGY · I
-        </div>
-
-
-        <!-- Bottom section marker -->
-
-        <div class="hero-section-marker">
-
             <span>
-                I
-            </span>
-
-            <div></div>
-
-            <span>
-                THE BEGINNING OF YOUR TIME
+                TIME · OBSERVED
             </span>
 
         </div>
 
     </section>
+
 </template>

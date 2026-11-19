@@ -21,7 +21,12 @@ export default class UjjayiniFeaturedWatches extends LightningElement {
                     ...watch,
 
                     displayIndex:
-                        String(index + 1).padStart(2, '0')
+                        String(index + 1).padStart(2, '0'),
+
+                    metadata:
+                        [watch.movement, watch.caseMaterial]
+                            .filter(Boolean)
+                            .join(' · ')
                 }));
 
             this.errorMessage = undefined;

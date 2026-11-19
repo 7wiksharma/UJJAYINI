@@ -75,6 +75,79 @@
 
 
             <!-- =====================================================
+                 PAYMENT CONFIRMATION
+            ====================================================== -->
+
+            <template if:true={showPaymentBanner}>
+
+                <div
+                    class={paymentBannerClass}
+                    role="status"
+                    aria-live="polite"
+                >
+
+                    <div class="payment-mark">
+
+                        <template if:true={isVerifyingPayment}>
+                            <span class="payment-spinner"></span>
+                        </template>
+
+                        <template if:false={isVerifyingPayment}>
+                            <span class="payment-check">✓</span>
+                        </template>
+
+                    </div>
+
+
+                    <div class="payment-copy">
+
+                        <p class="micro-label">
+                            {paymentBannerEyebrow}
+                        </p>
+
+                        <h3>
+                            {paymentBannerTitle}
+                        </h3>
+
+                        <p class="payment-message">
+                            {paymentBannerMessage}
+                        </p>
+
+                    </div>
+
+
+                    <template if:true={showRefresh}>
+
+                        <button
+                            class="payment-action"
+                            type="button"
+                            onclick={handleRefreshVault}
+                        >
+                            REFRESH
+                        </button>
+
+                    </template>
+
+
+                    <template if:false={isVerifyingPayment}>
+
+                        <button
+                            class="payment-close"
+                            type="button"
+                            onclick={handleDismissPayment}
+                            aria-label="Dismiss"
+                        >
+                            ×
+                        </button>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <!-- =====================================================
                  LOADING
             ====================================================== -->
 

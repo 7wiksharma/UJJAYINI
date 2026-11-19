@@ -1,39 +1,103 @@
 <template>
 
-    <section class="requests-container">
+    <section class="history-section">
 
-        <div class="requests-header">
+        <div class="history-header">
 
-            <p class="eyebrow">
-                UJJAYINI
-            </p>
+            <div>
 
-            <h2>
-                My Service Requests
-            </h2>
+                <p class="eyebrow">
+                    YOUR SERVICE
+                </p>
 
-            <p class="subtitle">
-                Track your service and support requests.
+                <h2>
+                    Service history.
+                </h2>
+
+            </div>
+
+            <p class="history-intro">
+                A record of your requests and
+                their latest resolution.
             </p>
 
         </div>
 
+
+        <!-- GUEST -->
+        <template if:true={showGuestState}>
+
+            <div class="guest-state">
+
+                <div class="state-symbol">
+                    U
+                </div>
+
+                <div class="state-content">
+
+                    <p class="state-kicker">
+                        COLLECTOR ACCESS
+                    </p>
+
+                    <h3>
+                        Sign in to view your service history.
+                    </h3>
+
+                    <p>
+                        Your service requests are available
+                        to registered UJJAYINI collectors.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </template>
+
+
+        <!-- LOADING -->
         <template if:true={isLoading}>
 
-            <div class="state">
-                <p>Loading your service requests...</p>
+            <div class="loading-state">
+
+                <span class="loader"></span>
+
+                <p>
+                    Loading your service history...
+                </p>
+
             </div>
 
         </template>
 
+
+        <!-- ERROR -->
         <template if:true={errorMessage}>
 
-            <div class="state error">
-                <p>{errorMessage}</p>
+            <div class="error-state">
+
+                <div class="error-symbol">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        Unable to load history.
+                    </strong>
+
+                    <p>
+                        {errorMessage}
+                    </p>
+
+                </div>
+
             </div>
 
         </template>
 
+
+        <!-- REQUESTS -->
         <template if:true={hasRequests}>
 
             <div class="requests-list">
@@ -44,83 +108,107 @@
 
                     <article
                         key={request.serviceRequestId}
-                        class="request-card">
+                        class="request-row">
 
-                        <div class="request-top">
 
-                            <div>
+                        <!-- LEFT -->
+                        <div class="request-main">
 
-                                <p class="request-label">
-                                    SERVICE REQUEST
-                                </p>
+                            <div class="request-heading">
 
-                                <h3>
-                                    {request.serviceType}
-                                </h3>
+                                <span class="request-index">
+                                    SR
+                                </span>
+
+                                <div>
+
+                                    <p class="request-type">
+                                        {request.serviceType}
+                                    </p>
+
+                                    <p class="request-date">
+                                        {request.formattedDate}
+                                    </p>
+
+                                </div>
 
                             </div>
 
-                            <span class="priority">
-                                {request.priority}
-                            </span>
 
-                        </div>
-
-                        <div class="request-details">
-
-                            <div>
-                                <span>Request Date</span>
-
-                                <strong>
-                                    {request.requestDate}
-                                </strong>
-                            </div>
-
-                            <div>
-                                <span>Case</span>
-
-                                <strong>
-                                    {request.caseId}
-                                </strong>
-                            </div>
-
-                        </div>
-
-                        <div class="description">
-
-                            <span>Description</span>
-
-                            <p>
+                            <p class="request-description">
                                 {request.description}
                             </p>
 
                         </div>
 
-                        <template if:true={request.resolution}>
 
-                            <div class="resolution">
+                        <!-- MIDDLE -->
+                        <div class="request-meta">
 
-                                <span>Resolution</span>
+                            <div class="meta-item">
 
-                                <p>
+                                <span>
+                                    CASE
+                                </span>
+
+                                <strong>
+                                    <template if:true={request.caseNumber}>
+                                        {request.caseNumber}
+                                    </template>
+
+                                    <template if:false={request.caseNumber}>
+                                        —
+                                    </template>
+                                </strong>
+
+                            </div>
+
+
+                            <div class="meta-item">
+
+                                <span>
+                                    PRIORITY
+                                </span>
+
+                                <strong>
+                                    {request.priority}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- RIGHT -->
+                        <div class="request-status">
+
+                            <template if:true={request.resolution}>
+
+                                <span class="status resolved">
+                                    RESOLVED
+                                </span>
+
+                                <p class="resolution-preview">
                                     {request.resolution}
                                 </p>
 
-                            </div>
+                            </template>
 
-                        </template>
 
-                        <template if:false={request.resolution}>
+                            <template if:false={request.resolution}>
 
-                            <div class="pending">
-
-                                <span>
-                                    Resolution pending
+                                <span class="status pending">
+                                    IN REVIEW
                                 </span>
 
-                            </div>
+                                <p class="resolution-preview">
+                                    Our service team is reviewing
+                                    your request.
+                                </p>
 
-                        </template>
+                            </template>
+
+                        </div>
 
                     </article>
 
@@ -130,22 +218,32 @@
 
         </template>
 
+
+        <!-- EMPTY -->
         <template if:true={isEmpty}>
 
             <div class="empty-state">
 
-                <div class="empty-icon">
-                    U
+                <div class="empty-symbol">
+                    ∅
                 </div>
 
-                <h3>
-                    No Service Requests
-                </h3>
+                <div>
 
-                <p>
-                    Your submitted service requests
-                    will appear here.
-                </p>
+                    <p class="empty-kicker">
+                        NO SERVICE RECORDS
+                    </p>
+
+                    <h3>
+                        Nothing here yet.
+                    </h3>
+
+                    <p>
+                        Your submitted service requests
+                        will appear here once created.
+                    </p>
+
+                </div>
 
             </div>
 

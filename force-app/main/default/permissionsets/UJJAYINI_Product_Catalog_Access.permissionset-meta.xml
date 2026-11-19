@@ -279,7 +279,16 @@
 </classAccesses>
 <classAccesses>
     <apexClass>UJJAYINIOrderDetailController</apexClass>
-    <enabled>true</enabled>
+    <enabled>true</enabled> 
+</classAccesses>
+<classAccesses>
+    <apexClass>UJJAYINIServiceRequestController</apexClass>
+    <enabled>true</enabled> 
+</classAccesses>
+
+<classAccesses>
+    <apexClass>ServiceRequestService</apexClass>
+    <enabled>true</enabled> 
 </classAccesses>
  <classAccesses>
         <apexClass>OrderCancellationService</apexClass>

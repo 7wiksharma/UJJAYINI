@@ -4,7 +4,8 @@ public with sharing class UJJAYINIServiceRequestController {
     public static ServiceRequestService.ServiceRequestResult createRequest(
         String serviceType,
         String priority,
-        String description
+        String description,
+        Id assetId
     ) {
 
         try {
@@ -12,7 +13,8 @@ public with sharing class UJJAYINIServiceRequestController {
             return ServiceRequestService.createRequest(
                 serviceType,
                 priority,
-                description
+                description,
+                assetId
             );
 
         } catch (Exception e) {

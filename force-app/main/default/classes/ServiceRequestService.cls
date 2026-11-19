@@ -1,5 +1,13 @@
 public without sharing class ServiceRequestService {
 
+    /*
+     * Used only by tests: lets a test choose the customer Contact
+     * without creating a real Experience Cloud user.
+     */
+    @TestVisible
+    private static Id testContactId;
+
+
     public class ServiceRequestResult {
 
         @AuraEnabled
@@ -37,12 +45,56 @@ public without sharing class ServiceRequestService {
 
         @AuraEnabled
         public String resolution;
+
+        @AuraEnabled
+        public Id assetId;
+
+        @AuraEnabled
+        public String caseStatus;
+
+        @AuraEnabled
+        public Boolean isClosed;
+
+        @AuraEnabled
+        public Datetime closedDate;
     }
+
+    private class CurrentCustomer {
+
+        public Id contactId;
+
+        public Id accountId;
+    }
+
+
+    // =========================================================
+    // CREATE REQUEST (existing signature, no specific watch)
+    // =========================================================
 
     public static ServiceRequestResult createRequest(
         String serviceType,
         String priority,
         String description
+    ) {
+
+        return createRequest(
+            serviceType,
+            priority,
+            description,
+            null
+        );
+    }
+
+
+    // =========================================================
+    // CREATE REQUEST (optionally for one of the customer's watches)
+    // =========================================================
+
+    public static ServiceRequestResult createRequest(
+        String serviceType,
+        String priority,
+        String description,
+        Id assetId
     ) {
 
         if (String.isBlank(serviceType)) {
@@ -93,25 +145,48 @@ public without sharing class ServiceRequestService {
             );
         }
 
-        User currentUser = [
-            SELECT Id,
-                   ContactId
-            FROM User
-            WHERE Id = :UserInfo.getUserId()
-            WITH SYSTEM_MODE
-            LIMIT 1
-        ];
+        CurrentCustomer customer =
+            getCurrentCustomer();
 
-        if (currentUser.ContactId == null) {
+        if (customer.contactId == null) {
             throw new IllegalArgumentException(
                 'The current user is not associated with a Contact.'
             );
         }
 
+        /*
+         * The Asset id comes from the browser, so it is never
+         * trusted: it must belong to THIS customer's Account.
+         */
+        Asset ownedAsset = null;
+
+        if (assetId != null) {
+
+            ownedAsset =
+                findOwnedAsset(
+                    assetId,
+                    customer.accountId
+                );
+        }
+
+        String caseSubject =
+            'UJJAYINI Service Request';
+
+        if (ownedAsset != null) {
+
+            String watchName =
+                ownedAsset.Product2 != null
+                    ? ownedAsset.Product2.Name
+                    : ownedAsset.Name;
+
+            caseSubject =
+                caseSubject + ' - ' + watchName;
+        }
+
         Case serviceCase = new Case(
-            ContactId = currentUser.ContactId,
+            ContactId = customer.contactId,
             Origin = 'Web',
-            Subject = 'UJJAYINI Service Request',
+            Subject = caseSubject,
             Description = description,
             Priority = priority,
             Status = 'New'
@@ -129,7 +204,12 @@ public without sharing class ServiceRequestService {
             serviceCase.Id;
 
         request.Customer__c =
-            currentUser.ContactId;
+            customer.contactId;
+
+        request.Asset__c =
+            ownedAsset != null
+                ? ownedAsset.Id
+                : null;
 
         request.Priority__c =
             priority;
@@ -166,19 +246,18 @@ public without sharing class ServiceRequestService {
         return result;
     }
 
+
+    // =========================================================
+    // MY SERVICE REQUESTS
+    // =========================================================
+
     public static List<ServiceRequestListResult>
         getMyServiceRequests() {
 
-        User currentUser = [
-            SELECT Id,
-                   ContactId
-            FROM User
-            WHERE Id = :UserInfo.getUserId()
-            WITH SYSTEM_MODE
-            LIMIT 1
-        ];
+        CurrentCustomer customer =
+            getCurrentCustomer();
 
-        if (currentUser.ContactId == null) {
+        if (customer.contactId == null) {
             return new List<ServiceRequestListResult>();
         }
 
@@ -186,17 +265,42 @@ public without sharing class ServiceRequestService {
             SELECT Id,
                    Case__c,
                    Customer__c,
+                   Asset__c,
                    Priority__c,
                    Service_Description__c,
                    Service_Request_Date__c,
                    Service_Resolution__c,
                    Service_Type__c
             FROM Service_Request__c
-            WHERE Customer__c = :currentUser.ContactId
+            WHERE Customer__c = :customer.contactId
             WITH SYSTEM_MODE
             ORDER BY Service_Request_Date__c DESC,
                      CreatedDate DESC
         ];
+
+        Set<Id> caseIds = new Set<Id>();
+
+        for (Service_Request__c request : requests) {
+            if (request.Case__c != null) {
+                caseIds.add(request.Case__c);
+            }
+        }
+
+        Map<Id, Case> casesById =
+            new Map<Id, Case>();
+
+        if (!caseIds.isEmpty()) {
+
+            casesById = new Map<Id, Case>([
+                SELECT Id,
+                       Status,
+                       IsClosed,
+                       ClosedDate
+                FROM Case
+                WHERE Id IN :caseIds
+                WITH SYSTEM_MODE
+            ]);
+        }
 
         List<ServiceRequestListResult> results =
             new List<ServiceRequestListResult>();
@@ -227,9 +331,115 @@ public without sharing class ServiceRequestService {
             result.resolution =
                 request.Service_Resolution__c;
 
+            result.assetId =
+                request.Asset__c;
+
+            Case relatedCase =
+                casesById.get(request.Case__c);
+
+            if (relatedCase != null) {
+
+                result.caseStatus =
+                    relatedCase.Status;
+
+                result.isClosed =
+                    relatedCase.IsClosed;
+
+                result.closedDate =
+                    relatedCase.ClosedDate;
+            }
+
             results.add(result);
         }
 
         return results;
+    }
+
+
+    // =========================================================
+    // HELPERS
+    // =========================================================
+
+    private static CurrentCustomer getCurrentCustomer() {
+
+        CurrentCustomer customer =
+            new CurrentCustomer();
+
+        if (
+            Test.isRunningTest() &&
+            testContactId != null
+        ) {
+
+            customer.contactId =
+                testContactId;
+
+            List<Contact> contacts = [
+                SELECT Id,
+                       AccountId
+                FROM Contact
+                WHERE Id = :testContactId
+                WITH SYSTEM_MODE
+                LIMIT 1
+            ];
+
+            customer.accountId =
+                contacts.isEmpty()
+                    ? null
+                    : contacts[0].AccountId;
+
+            return customer;
+        }
+
+        User currentUser = [
+            SELECT Id,
+                   ContactId,
+                   Contact.AccountId
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            WITH SYSTEM_MODE
+            LIMIT 1
+        ];
+
+        customer.contactId =
+            currentUser.ContactId;
+
+        customer.accountId =
+            currentUser.ContactId == null
+                ? null
+                : currentUser.Contact.AccountId;
+
+        return customer;
+    }
+
+
+    private static Asset findOwnedAsset(
+        Id assetId,
+        Id accountId
+    ) {
+
+        if (accountId == null) {
+            throw new IllegalArgumentException(
+                'The selected timepiece was not found in your collection.'
+            );
+        }
+
+        List<Asset> assets = [
+            SELECT Id,
+                   Name,
+                   Product2.Name
+            FROM Asset
+            WHERE Id = :assetId
+            AND AccountId = :accountId
+            WITH SYSTEM_MODE
+            LIMIT 1
+        ];
+
+        if (assets.isEmpty()) {
+            throw new IllegalArgumentException(
+                'The selected timepiece was not found in your collection.'
+            );
+        }
+
+        return assets[0];
     }
 }

@@ -19,6 +19,17 @@
 
         </div>
 
+        <template if:true={showAssetSelector}>
+
+            <lightning-combobox
+                label="Timepiece"
+                value={assetId}
+                options={assetOptions}
+                onchange={handleAssetChange}>
+            </lightning-combobox>
+
+        </template>
+
         <lightning-combobox
             label="Service Type"
             value={serviceType}

@@ -1,172 +1,148 @@
-/* ============================================================
-   UJJAYINI SKY SECTION
-   Editorial Luxury / Celestial Horology
-============================================================ */
-
-
-/* ============================================================
-   ROOT SECTION
-============================================================ */
 :host {
     display: block;
-    width: 100%;
-    margin: 0;
-    padding: 0;
 
-    /* Remove Experience Builder's visual gap
-       between consecutive components */
-    
+    --uj-black: #050509;
+    --uj-cream: #f3e7d4;
+    --uj-soft-cream: #d8c5ae;
+    --uj-gold: #c9a24d;
+
+    --uj-gold-soft:
+        rgba(201, 162, 77, 0.28);
+
+    --uj-gold-faint:
+        rgba(201, 162, 77, 0.12);
+
+    --uj-burgundy:
+        rgba(76, 27, 36, 0.26);
+
+    --uj-green:
+        rgba(13, 55, 48, 0.24);
 }
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
 .sky-section {
-
-    --cream:
-        #f5dabf;
-
-    --cream-soft:
-        rgba(245, 218, 191, 0.72);
-
-    --cream-muted:
-        rgba(245, 218, 191, 0.42);
-
-    --gold:
-        #c9a24d;
-
-    --gold-soft:
-        rgba(201, 162, 77, 0.38);
-
-    --burgundy:
-        #6c151e;
-
-    --green:
-        #0f3d3a;
-
-    --green-deep:
-        #061312;
-
-    --black:
-        #050709;
-
 
     position: relative;
 
     width: 100%;
 
     min-height: 100vh;
-    margin: 0;
-    padding: 0;
+
     overflow: hidden;
-   
 
     isolation: isolate;
-
 
     background:
         linear-gradient(
             112deg,
-            #090b0b 0%,
-            #100b0d 28%,
-            #071211 57%,
-            #061413 100%
+            #09070b 0%,
+            #10090d 32%,
+            #071311 72%,
+            #05090a 100%
         );
 
+    color:
+        var(--uj-cream);
 
-    color: var(--cream);
+    --content-y: 0px;
+    --orbit-y: 0px;
+    --stars-y: 0px;
+    --axis-y: 0px;
+    --background-y: 0px;
+    --statement-y: 0px;
 
+    --atmosphere-scale: 1;
+    --atmosphere-opacity: 1;
+
+    --celestial-rotation: 0deg;
+
+    --point-one-y: 0px;
+    --point-two-y: 0px;
+    --point-three-y: 0px;
 }
 
 
-/* ============================================================
+/* =========================================================
    ATMOSPHERE
-============================================================ */
+========================================================= */
 
 .atmosphere {
 
     position: absolute;
 
-    inset: -15%;
+    width: 760px;
+    height: 760px;
 
-    z-index: -8;
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(var(--atmosphere-scale));
+
+    border-radius: 50%;
+
+    z-index: 0;
 
     pointer-events: none;
 
+    opacity:
+        var(--atmosphere-opacity);
 
     background:
-
         radial-gradient(
-            circle at 28% 46%,
-            rgba(108, 21, 30, 0.34)
-            0%,
-            rgba(108, 21, 30, 0.15)
-            23%,
-            transparent 48%
-        ),
-
-        radial-gradient(
-            circle at 76% 42%,
-            rgba(15, 61, 58, 0.42)
-            0%,
-            rgba(15, 61, 58, 0.17)
-            28%,
-            transparent 54%
-        ),
-
-        radial-gradient(
-            circle at 50% 52%,
-            rgba(201, 162, 77, 0.08)
-            0%,
-            transparent 30%
+            circle,
+            rgba(201, 162, 77, 0.055) 0%,
+            rgba(201, 162, 77, 0.025) 26%,
+            transparent 68%
         );
 
-
-    transform:
-        scale(var(--atmosphere-scale, 1));
-
-    opacity:
-        var(--atmosphere-opacity, 1);
+    filter: blur(8px);
 
     transition:
-        transform 0.8s ease-out,
-        opacity 0.8s ease-out;
-
+        transform 0.2s linear,
+        opacity 0.2s linear;
 }
 
 
-/* ============================================================
-   BURGUNDY / GREEN LIGHT FIELDS
-============================================================ */
+/* =========================================================
+   BURGUNDY / GREEN DEPTH
+========================================================= */
 
 .burgundy-glow {
 
     position: absolute;
 
-    width: 58vw;
-    height: 58vw;
+    left: -15%;
+    top: 15%;
 
-    max-width: 800px;
-    max-height: 800px;
-
-    left: -28vw;
-    top: 12%;
+    width: 620px;
+    height: 620px;
 
     border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(108, 21, 30, 0.22)
-            0%,
-            rgba(108, 21, 30, 0.08)
-            38%,
+            rgba(78, 25, 37, 0.30) 0%,
+            rgba(78, 25, 37, 0.12) 38%,
             transparent 72%
         );
 
-    filter:
-        blur(30px);
+    filter: blur(55px);
 
-    z-index: -7;
+    opacity: 0.8;
+
+    transform:
+        translateY(var(--background-y));
+
+    z-index: 0;
 
     pointer-events: none;
-
 }
 
 
@@ -174,252 +150,182 @@
 
     position: absolute;
 
-    width: 62vw;
-    height: 62vw;
+    right: -12%;
+    top: 12%;
 
-    max-width: 900px;
-    max-height: 900px;
-
-    right: -30vw;
-    top: 5%;
+    width: 680px;
+    height: 680px;
 
     border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(15, 61, 58, 0.25)
-            0%,
-            rgba(15, 61, 58, 0.09)
-            40%,
+            rgba(9, 61, 52, 0.28) 0%,
+            rgba(9, 61, 52, 0.11) 40%,
             transparent 72%
         );
 
-    filter:
-        blur(35px);
+    filter: blur(60px);
 
-    z-index: -7;
+    opacity: 0.85;
+
+    transform:
+        translateY(var(--background-y));
+
+    z-index: 0;
 
     pointer-events: none;
-
 }
 
 
-/* ============================================================
+/* =========================================================
    STAR FIELD
-============================================================ */
+========================================================= */
 
 .star-field {
 
     position: absolute;
 
-    inset: -10%;
+    inset: 0;
 
-    z-index: -5;
+    z-index: 1;
 
     pointer-events: none;
 
     transform:
-        translate3d(
-            0,
-            var(--stars-y, 0px),
-            0
-        );
+        translateY(var(--stars-y));
 
+    opacity: 0.58;
 
     background-image:
-
         radial-gradient(
-            circle at 8% 20%,
-            rgba(245, 218, 191, 0.62)
-            0 1px,
+            circle at 12% 22%,
+            rgba(201, 162, 77, 0.8) 0 1px,
             transparent 1.5px
         ),
-
         radial-gradient(
-            circle at 18% 72%,
-            rgba(201, 162, 77, 0.52)
-            0 1px,
+            circle at 73% 19%,
+            rgba(201, 162, 77, 0.7) 0 1px,
             transparent 1.5px
         ),
-
         radial-gradient(
-            circle at 31% 31%,
-            rgba(245, 218, 191, 0.42)
-            0 1px,
+            circle at 84% 62%,
+            rgba(243, 231, 212, 0.55) 0 1px,
             transparent 1.5px
         ),
-
         radial-gradient(
-            circle at 48% 16%,
-            rgba(201, 162, 77, 0.45)
-            0 1px,
+            circle at 39% 74%,
+            rgba(201, 162, 77, 0.55) 0 1px,
             transparent 1.5px
         ),
-
         radial-gradient(
-            circle at 66% 30%,
-            rgba(245, 218, 191, 0.5)
-            0 1px,
-            transparent 1.5px
-        ),
-
-        radial-gradient(
-            circle at 83% 18%,
-            rgba(201, 162, 77, 0.52)
-            0 1px,
-            transparent 1.5px
-        ),
-
-        radial-gradient(
-            circle at 92% 62%,
-            rgba(245, 218, 191, 0.4)
-            0 1px,
-            transparent 1.5px
-        ),
-
-        radial-gradient(
-            circle at 57% 78%,
-            rgba(201, 162, 77, 0.38)
-            0 1px,
+            circle at 62% 43%,
+            rgba(243, 231, 212, 0.42) 0 1px,
             transparent 1.5px
         );
 
-
-    opacity: 0.55;
-
+    background-size:
+        430px 430px,
+        620px 620px,
+        510px 510px,
+        730px 730px,
+        390px 390px;
 }
 
 
-/* ============================================================
-   BACKGROUND EDITORIAL WORDS
-============================================================ */
+/* =========================================================
+   BACKGROUND TYPOGRAPHY
+========================================================= */
 
 .background-word {
 
     position: absolute;
 
-    z-index: -3;
+    z-index: 1;
 
     pointer-events: none;
 
-    white-space: nowrap;
+    user-select: none;
 
+    color:
+        rgba(243, 231, 212, 0.028);
 
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
+    font-size:
+        clamp(180px, 25vw, 420px);
 
-    font-weight: 400;
+    font-weight: 600;
 
-    text-transform: uppercase;
+    line-height: 0.72;
 
-    letter-spacing: 0.08em;
+    letter-spacing:
+        -0.07em;
 
-    line-height: 0.8;
-
-
-    color:
-        rgba(245, 218, 191, 0.035);
-
+    white-space: nowrap;
 
     transform:
-        translate3d(
-            0,
-            var(--background-y, 0px),
-            0
-        );
+        translateY(var(--background-y));
 
+    transition:
+        transform 0.2s linear;
 }
 
 
 .background-word-one {
 
-    font-size:
-        clamp(
-            100px,
-            18vw,
-            300px
-        );
+    left: -3%;
 
     top: 7%;
-
-    left: -4%;
-
 }
 
 
 .background-word-two {
 
-    font-size:
-        clamp(
-            80px,
-            15vw,
-            250px
-        );
-
-    bottom: 2%;
-
     right: -8%;
 
-    color:
-        rgba(15, 61, 58, 0.11);
+    bottom: 3%;
 
+    font-style: italic;
 }
 
 
-/* ============================================================
+/* =========================================================
    CELESTIAL SYSTEM
-============================================================ */
+========================================================= */
 
 .celestial-system {
 
     position: absolute;
 
-    width:
-        clamp(
-            460px,
-            58vw,
-            900px
-        );
+    width: 700px;
+    height: 700px;
 
-    height:
-        clamp(
-            460px,
-            58vw,
-            900px
-        );
+    right: -30px;
+    top: 50%;
 
-
-    left: 50%;
-
-    top: 53%;
+    z-index: 3;
 
     transform:
-        translate(
-            -50%,
-            calc(
-                -50% +
-                var(--orbit-y, 0px)
-            )
+        translateY(
+            calc(-50% + var(--orbit-y))
         )
-        rotate(
-            var(--celestial-rotation, 0deg)
-        );
+        rotate(var(--celestial-rotation));
 
-
-    z-index: -2;
+    transition:
+        transform 0.2s linear;
 
     pointer-events: none;
-
 }
 
 
-/* ============================================================
+/* =========================================================
    ORBITS
-============================================================ */
+========================================================= */
 
 .orbit {
 
@@ -429,92 +335,90 @@
     top: 50%;
 
     border:
-
-        1px solid
-        rgba(201, 162, 77, 0.18);
-
+        1px solid var(--uj-gold-faint);
 
     border-radius: 50%;
 
     transform:
-        translate(-50%, -50%)
-        rotate(-18deg);
+        translate(-50%, -50%);
 
+    opacity: 0.9;
 }
 
 
-/* Large elliptical orbital structures */
-
 .orbit-one {
 
-    width: 92%;
-    height: 43%;
+    width: 620px;
+    height: 620px;
 
+    transform:
+        translate(-50%, -50%)
+        rotate(16deg);
 }
 
 
 .orbit-two {
 
-    width: 72%;
-    height: 32%;
-
-    border-color:
-        rgba(245, 218, 191, 0.12);
+    width: 500px;
+    height: 250px;
 
     transform:
         translate(-50%, -50%)
-        rotate(28deg);
+        rotate(-26deg);
 
+    border-color:
+        rgba(201, 162, 77, 0.18);
 }
 
 
 .orbit-three {
 
-    width: 55%;
-    height: 25%;
-
-    border-color:
-        rgba(201, 162, 77, 0.23);
+    width: 430px;
+    height: 680px;
 
     transform:
         translate(-50%, -50%)
-        rotate(-42deg);
+        rotate(42deg);
 
+    border-color:
+        rgba(201, 162, 77, 0.10);
 }
 
 
 .orbit-four {
 
-    width: 110%;
-    height: 51%;
+    width: 340px;
+    height: 340px;
 
     border-color:
-        rgba(15, 61, 58, 0.36);
-
-    transform:
-        translate(-50%, -50%)
-        rotate(12deg);
-
+        rgba(243, 231, 212, 0.10);
 }
 
 
-/* ============================================================
+/* =========================================================
    CELESTIAL CORE
-============================================================ */
+========================================================= */
 
 .celestial-core {
 
     position: absolute;
 
-    width: 230px;
-    height: 230px;
-
     left: 50%;
     top: 50%;
+
+    width: 120px;
+    height: 120px;
 
     transform:
         translate(-50%, -50%);
 
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 }
 
 
@@ -524,12 +428,11 @@
 
     inset: 0;
 
-    border-radius: 50%;
-
     border:
         1px solid
-        rgba(201, 162, 77, 0.18);
+        rgba(201, 162, 77, 0.35);
 
+    border-radius: 50%;
 }
 
 
@@ -537,48 +440,38 @@
 
     transform:
         scale(1);
-
 }
 
 
 .core-ring-two {
 
-    inset: 18px;
+    transform:
+        scale(0.72);
 
     border-color:
-        rgba(245, 218, 191, 0.12);
-
+        rgba(243, 231, 212, 0.16);
 }
 
 
 .core-point {
 
-    position: absolute;
-
-    width: 5px;
-    height: 5px;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
+    width: 7px;
+    height: 7px;
 
     border-radius: 50%;
 
     background:
-        var(--gold);
+        var(--uj-gold);
 
     box-shadow:
-        0 0 18px
+        0 0 20px
         rgba(201, 162, 77, 0.65);
-
 }
 
 
-/* ============================================================
+/* =========================================================
    ORBITING POINTS
-============================================================ */
+========================================================= */
 
 .orbiting-point {
 
@@ -590,57 +483,47 @@
     border-radius: 50%;
 
     background:
-        var(--gold);
+        var(--uj-gold);
 
     box-shadow:
         0 0 15px
-        rgba(201, 162, 77, 0.6);
-
+        rgba(201, 162, 77, 0.7);
 }
 
 
 .point-one {
 
-    left: 18%;
-    top: 40%;
+    left: 20%;
+    top: 32%;
 
     transform:
-        translateY(
-            var(--point-one-y, 0px)
-        );
-
+        translateY(var(--point-one-y));
 }
 
 
 .point-two {
 
-    right: 17%;
-    top: 55%;
+    right: 16%;
+    top: 62%;
 
     transform:
-        translateY(
-            var(--point-two-y, 0px)
-        );
-
+        translateY(var(--point-two-y));
 }
 
 
 .point-three {
 
     left: 58%;
-    top: 15%;
+    bottom: 10%;
 
     transform:
-        translateY(
-            var(--point-three-y, 0px)
-        );
-
+        translateY(var(--point-three-y));
 }
 
 
-/* ============================================================
-   TECHNICAL AXES
-============================================================ */
+/* =========================================================
+   AXES
+========================================================= */
 
 .vertical-axis {
 
@@ -653,21 +536,20 @@
 
     width: 1px;
 
+    z-index: 2;
+
     background:
         linear-gradient(
             to bottom,
-            transparent,
-            rgba(201, 162, 77, 0.12),
-            transparent
+            transparent 0%,
+            rgba(201, 162, 77, 0.10) 25%,
+            rgba(201, 162, 77, 0.14) 50%,
+            rgba(201, 162, 77, 0.08) 75%,
+            transparent 100%
         );
 
     transform:
-        translateY(
-            var(--axis-y, 0px)
-        );
-
-    z-index: -1;
-
+        translateY(var(--axis-y));
 }
 
 
@@ -682,22 +564,26 @@
 
     height: 1px;
 
+    z-index: 2;
+
     background:
         linear-gradient(
             to right,
-            transparent,
-            rgba(245, 218, 191, 0.06),
-            transparent
+            transparent 0%,
+            rgba(201, 162, 77, 0.07) 25%,
+            rgba(201, 162, 77, 0.12) 50%,
+            rgba(201, 162, 77, 0.06) 75%,
+            transparent 100%
         );
 
-    z-index: -1;
-
+    transform:
+        translateY(var(--axis-y));
 }
 
 
-/* ============================================================
+/* =========================================================
    CELESTIAL DOTS
-============================================================ */
+========================================================= */
 
 .celestial-dot {
 
@@ -709,56 +595,348 @@
     border-radius: 50%;
 
     background:
-        rgba(201, 162, 77, 0.72);
+        rgba(201, 162, 77, 0.78);
 
     box-shadow:
-        0 0 12px
-        rgba(201, 162, 77, 0.3);
+        0 0 10px
+        rgba(201, 162, 77, 0.40);
 
+    z-index: 4;
 }
 
 
 .dot-one {
-
-    left: 11%;
-    top: 27%;
-
+    left: 14%;
+    top: 25%;
 }
 
 
 .dot-two {
-
-    left: 73%;
-    top: 19%;
-
+    left: 68%;
+    top: 18%;
 }
 
 
 .dot-three {
-
-    right: 12%;
-    top: 67%;
-
+    right: 17%;
+    top: 70%;
 }
 
 
 .dot-four {
-
-    left: 37%;
-    bottom: 17%;
-
+    left: 44%;
+    bottom: 16%;
 }
 
 
-/* ============================================================
+/* =========================================================
    COORDINATES
-============================================================ */
+========================================================= */
 
 .coordinate {
 
     position: absolute;
 
-    z-index: 4;
+    z-index: 8;
+
+    color:
+        rgba(201, 162, 77, 0.48);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    pointer-events: none;
+
+    white-space: nowrap;
+}
+
+
+.coordinate-top {
+
+    top: 10%;
+
+    left: 8%;
+}
+
+
+.coordinate-right {
+
+    right: 5%;
+
+    top: 44%;
+
+    writing-mode:
+        vertical-rl;
+
+    transform:
+        rotate(180deg);
+}
+
+
+.coordinate-bottom {
+
+    right: 12%;
+
+    bottom: 8%;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.content {
+
+    position: relative;
+
+    z-index: 10;
+
+    width: min(720px, 58vw);
+
+    margin-left: 8%;
+
+    padding-top: 21vh;
+
+    transform:
+        translateY(var(--content-y));
+
+    transition:
+        transform 0.2s linear;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 22px;
+}
+
+
+.eyebrow-line {
+
+    width: 34px;
+    height: 1px;
+
+    background:
+        var(--uj-gold);
+
+    flex: 0 0 34px;
+}
+
+
+.eyebrow {
+
+    margin: 0;
+
+    color:
+        var(--uj-gold);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   MAIN TITLE
+========================================================= */
+
+.main-title {
+
+    margin: 0;
+
+    color:
+        var(--uj-cream);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(72px, 10vw, 154px);
+
+    font-weight: 500;
+
+    line-height: 0.79;
+
+    letter-spacing:
+        -0.065em;
+
+    text-transform: uppercase;
+}
+
+
+.title-line {
+
+    display: block;
+
+    white-space: nowrap;
+}
+
+
+.title-emphasis {
+
+    margin-left: 12%;
+
+    color:
+        #d9c4ad;
+
+    font-style: italic;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    width: 210px;
+
+    margin:
+        38px auto 30px;
+}
+
+
+.divider-line {
+
+    height: 1px;
+
+    flex: 1;
+
+    background:
+        rgba(201, 162, 77, 0.25);
+}
+
+
+.divider-point {
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        var(--uj-gold);
+
+    box-shadow:
+        0 0 12px
+        rgba(201, 162, 77, 0.5);
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.description {
+
+    width: min(620px, 100%);
+
+    margin:
+        0 auto;
+
+    color:
+        rgba(243, 231, 212, 0.74);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(18px, 1.8vw, 25px);
+
+    font-weight: 400;
+
+    line-height: 1.65;
+
+    text-align: center;
+
+    letter-spacing:
+        -0.015em;
+}
+
+
+.description.secondary {
+
+    width: min(520px, 100%);
+
+    margin-top: 22px;
+
+    color:
+        rgba(243, 231, 212, 0.46);
+
+    font-size:
+        clamp(14px, 1.35vw, 18px);
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   LOWER STATEMENT
+========================================================= */
+
+.lower-statement {
+
+    position: absolute;
+
+    left: 8%;
+
+    bottom: 8%;
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    transform:
+        translateY(var(--statement-y));
+
+    transition:
+        transform 0.2s linear;
+}
+
+
+.statement-number {
+
+    color:
+        var(--uj-gold);
 
     font-family:
         Arial,
@@ -766,890 +944,235 @@
 
     font-size: 8px;
 
-    font-weight: 500;
+    font-weight: 700;
 
-    letter-spacing:
-        0.34em;
-
-    text-transform: uppercase;
-
-    color:
-        rgba(245, 218, 191, 0.34);
-
-    white-space: nowrap;
-
-}
-
-
-.coordinate-top {
-
-    top: 52px;
-
-    left: 8.5%;
-
-}
-
-
-.coordinate-right {
-
-    right: 8.5%;
-
-    top: 48%;
-
-    writing-mode:
-        vertical-rl;
-
-    transform:
-        rotate(180deg);
-
-}
-
-
-.coordinate-bottom {
-
-    bottom: 48px;
-
-    right: 8.5%;
-
-}
-
-
-/* ============================================================
-   MAIN CONTENT
-============================================================ */
-
-.content {
-
-    position: relative;
-
-    z-index: 5;
-
-    width: min(900px, 82vw);
-
-    margin:
-        0 auto;
-
-    padding-top:
-        clamp(
-            100px,
-            12vh,
-            150px
-        );
-
-    text-align: center;
-
-    transform:
-        translate3d(
-            0,
-            var(--content-y, 0px),
-            0
-        );
-
-
-    will-change:
-        transform;
-
-}
-
-
-/* ============================================================
-   EYEBROW
-============================================================ */
-
-.eyebrow {
-
-    margin:
-        0 0 26px;
-
-    font-family:
-        Arial,
-        sans-serif;
-
-    font-size:
-        10px;
-
-    font-weight:
-        600;
-
-    letter-spacing:
-        0.48em;
-
-    text-transform:
-        uppercase;
-
-    color:
-        rgba(201, 162, 77, 0.9);
-
-
-}
-
-
-/* ============================================================
-   MAIN TITLE
-============================================================ */
-
-.main-title {
-
-    margin: 0;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-weight:
-        400;
-
-    font-size:
-        clamp(
-            74px,
-            11vw,
-            178px
-        );
-
-    line-height:
-        0.78;
-
-    letter-spacing:
-        -0.055em;
-
-    text-transform:
-        uppercase;
-
-    color:
-        var(--cream);
-
-
-    text-shadow:
-        0 8px 45px
-        rgba(0, 0, 0, 0.26);
-
-}
-
-
-/* Individual title lines */
-
-.title-line {
-
-    display:
-        block;
-
-}
-
-
-.title-emphasis {
-
-    font-style:
-        italic;
-
-    color:
-        rgba(245, 218, 191, 0.78);
-
-    transform:
-        translateX(3%);
-
-}
-
-
-/* ============================================================
-   DIVIDER
-============================================================ */
-
-.divider {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        12px;
-
-    margin:
-        34px auto 32px;
-
-}
-
-
-.divider-line {
-
-    width:
-        70px;
-
-    height:
-        1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(201, 162, 77, 0.7)
-        );
-
-}
-
-
-.divider-line:last-child {
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(201, 162, 77, 0.7),
-            transparent
-        );
-
-}
-
-
-.divider-point {
-
-    width:
-        4px;
-
-    height:
-        4px;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--gold);
-
-    box-shadow:
-        0 0 14px
-        rgba(201, 162, 77, 0.55);
-
-}
-
-
-/* ============================================================
-   DESCRIPTION
-============================================================ */
-
-.description {
-
-    max-width:
-        720px;
-
-    margin:
-        0 auto;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size:
-        clamp(
-            17px,
-            1.7vw,
-            23px
-        );
-
-    line-height:
-        1.65;
-
-    letter-spacing:
-        0.01em;
-
-    color:
-        rgba(245, 218, 191, 0.78);
-
-}
-
-
-.description.secondary {
-
-    max-width:
-        650px;
-
-    margin-top:
-        22px;
-
-    font-size:
-        clamp(
-            15px,
-            1.45vw,
-            20px
-        );
-
-    color:
-        rgba(245, 218, 191, 0.46);
-
-}
-
-
-/* ============================================================
-   LOWER STATEMENT
-============================================================ */
-
-.lower-statement {
-
-    position: absolute;
-
-    left: 8.5%;
-
-    bottom: 47px;
-
-    z-index: 6;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        14px;
-
-
-    transform:
-        translateY(
-            var(--statement-y, 0px)
-        );
-
-
-}
-
-
-.statement-number {
-
-    font-family:
-        Georgia,
-        serif;
-
-    font-size:
-        14px;
-
-    color:
-        rgba(245, 218, 191, 0.72);
-
+    letter-spacing: 2px;
 }
 
 
 .statement-rule {
 
-    width:
-        50px;
+    width: 50px;
 
-    height:
-        1px;
+    height: 1px;
 
     background:
-        rgba(201, 162, 77, 0.5);
-
+        rgba(201, 162, 77, 0.45);
 }
 
 
 .statement-text {
 
+    color:
+        rgba(243, 231, 212, 0.34);
+
     font-family:
         Arial,
         sans-serif;
 
-    font-size:
-        8px;
+    font-size: 7px;
 
-    letter-spacing:
-        0.34em;
+    font-weight: 700;
 
-    color:
-        rgba(245, 218, 191, 0.35);
-
+    letter-spacing: 3px;
 }
 
 
-/* ============================================================
+/* =========================================================
    CELESTIAL LABEL
-============================================================ */
+========================================================= */
 
 .celestial-label {
 
     position: absolute;
 
-    right: 8.5%;
+    right: 8%;
 
-    bottom: 45px;
+    bottom: 9%;
 
-    z-index: 6;
+    z-index: 10;
 
-    display:
-        flex;
+    display: flex;
 
-    flex-direction:
-        column;
+    flex-direction: column;
 
-    align-items:
-        flex-end;
+    align-items: flex-end;
 
+    gap: 6px;
+
+    text-align: right;
 }
 
 
 .label-small {
 
+    color:
+        rgba(201, 162, 77, 0.58);
+
     font-family:
         Arial,
         sans-serif;
 
-    font-size:
-        7px;
+    font-size: 7px;
 
-    letter-spacing:
-        0.38em;
+    font-weight: 700;
 
-    color:
-        rgba(201, 162, 77, 0.48);
-
+    letter-spacing: 3px;
 }
 
 
 .label-large {
 
-    margin-top:
-        4px;
+    color:
+        rgba(243, 231, 212, 0.30);
 
     font-family:
         Georgia,
+        "Times New Roman",
         serif;
 
-    font-size:
-        30px;
+    font-size: 30px;
 
-    font-style:
-        italic;
+    font-style: italic;
 
-    line-height:
-        1;
-
-    color:
-        rgba(245, 218, 191, 0.28);
-
+    line-height: 0.8;
 }
 
 
-/* ============================================================
-   SECTION MARKER
-============================================================ */
-
-.section-marker {
-
-    position: absolute;
-
-    left: 50%;
-
-    bottom: 47px;
-
-    transform:
-        translateX(-50%);
-
-    z-index: 7;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        12px;
-
-
-    font-family:
-        Arial,
-        sans-serif;
-
-    font-size:
-        7px;
-
-    font-weight:
-        600;
-
-    letter-spacing:
-        0.36em;
-
-    color:
-        rgba(245, 218, 191, 0.25);
-
-}
-
-
-.section-marker > span:first-child {
-
-    color:
-        rgba(201, 162, 77, 0.8);
-
-}
-
-
-.marker-line {
-
-    width:
-        36px;
-
-    height:
-        1px;
-
-    background:
-        rgba(201, 162, 77, 0.38);
-
-}
-
-
-/* ============================================================
+/* =========================================================
    RESPONSIVE
-============================================================ */
+========================================================= */
 
-@media screen and (max-width: 900px) {
-
-    .sky-section {
-
-        min-height:
-            900px;
-
-    }
-
+@media (max-width: 1100px) {
 
     .content {
 
-        width:
-            88vw;
+        width: 60vw;
 
-        padding-top:
-            130px;
-
+        margin-left: 7%;
     }
 
 
     .main-title {
 
         font-size:
-            clamp(
-                62px,
-                14vw,
-                120px
-            );
-
+            clamp(64px, 9vw, 120px);
     }
 
 
     .celestial-system {
 
-        width:
-            700px;
-
-        height:
-            700px;
-
-        top:
-            54%;
-
-        opacity:
-            0.78;
-
+        right: -180px;
     }
-
-
-    .description {
-
-        max-width:
-            600px;
-
-    }
-
-
-    .lower-statement {
-
-        left:
-            6%;
-
-    }
-
-
-    .celestial-label {
-
-        right:
-            6%;
-
-    }
-
-
-    .coordinate-top {
-
-        left:
-            6%;
-
-    }
-
-
-    .coordinate-right {
-
-        right:
-            5%;
-
-    }
-
-
-    .coordinate-bottom {
-
-        right:
-            6%;
-
-    }
-
 }
 
 
-/* ============================================================
-   MOBILE
-============================================================ */
-
-@media screen and (max-width: 600px) {
+@media (max-width: 768px) {
 
     .sky-section {
 
-        min-height:
-            850px;
-
+        min-height: 100svh;
     }
 
 
     .content {
 
-        width:
-            90vw;
+        width: auto;
 
-        padding-top:
-            115px;
+        margin-left: 7%;
+        margin-right: 7%;
 
-    }
-
-
-    .eyebrow {
-
-        font-size:
-            8px;
-
-        letter-spacing:
-            0.38em;
-
-        margin-bottom:
-            22px;
-
+        padding-top: 18vh;
     }
 
 
     .main-title {
 
         font-size:
-            clamp(
-                54px,
-                17vw,
-                92px
-            );
+            clamp(58px, 16vw, 100px);
+    }
 
-        line-height:
-            0.82;
 
+    .title-line {
+
+        white-space: normal;
     }
 
 
     .title-emphasis {
 
-        transform:
-            translateX(0);
-
-    }
-
-
-    .divider {
-
-        margin:
-            27px auto 25px;
-
-    }
-
-
-    .divider-line {
-
-        width:
-            40px;
-
+        margin-left: 8%;
     }
 
 
     .description {
 
-        font-size:
-            15px;
-
-        line-height:
-            1.6;
-
+        font-size: 17px;
     }
 
 
     .description.secondary {
 
-        font-size:
-            14px;
-
+        font-size: 14px;
     }
 
 
     .celestial-system {
 
-        width:
-            520px;
+        width: 520px;
+        height: 520px;
 
-        height:
-            520px;
+        right: -260px;
 
-        top:
-            54%;
-
-        opacity:
-            0.62;
-
+        top: 58%;
     }
 
 
-    .celestial-core {
+    .orbit-one {
 
-        width:
-            160px;
-
-        height:
-            160px;
-
+        width: 470px;
+        height: 470px;
     }
 
 
-    .coordinate {
+    .orbit-two {
 
-        font-size:
-            6px;
-
-        letter-spacing:
-            0.25em;
-
+        width: 390px;
+        height: 200px;
     }
 
 
-    .coordinate-top {
+    .orbit-three {
 
-        top:
-            35px;
-
-        left:
-            7%;
-
-    }
-
-
-    .coordinate-right {
-
-        display:
-            none;
-
-    }
-
-
-    .coordinate-bottom {
-
-        bottom:
-            32px;
-
-        right:
-            7%;
-
+        width: 340px;
+        height: 520px;
     }
 
 
     .lower-statement {
 
-        left:
-            7%;
+        left: 7%;
 
-        bottom:
-            32px;
-
-    }
-
-
-    .statement-text {
-
-        display:
-            none;
-
+        bottom: 6%;
     }
 
 
     .celestial-label {
 
-        right:
-            7%;
+        right: 7%;
 
-        bottom:
-            31px;
-
+        bottom: 6%;
     }
 
 
-    .label-large {
+    .background-word {
 
-        font-size:
-            24px;
-
+        font-size: 180px;
     }
 
 
-    .section-marker {
+    .coordinate-right {
 
-        bottom:
-            72px;
-
-        font-size:
-            6px;
-
+        display: none;
     }
-
-
-    .background-word-one {
-
-        top:
-            16%;
-
-    }
-
-
-    .background-word-two {
-
-        bottom:
-            12%;
-
-    }
-
-}
-
-
-/* ============================================================
-   ACCESSIBILITY
-============================================================ */
-
-@media (prefers-reduced-motion: reduce) {
-
-    .sky-section * {
-
-        transition:
-            none !important;
-
-        animation:
-            none !important;
-
-    }
-
 }

@@ -14,4 +14,24 @@ public with sharing class UJJAYINICollectorVaultController {
             );
         }
     }
+
+
+    @AuraEnabled
+    public static CollectorVaultService.PaymentVerificationResult verifyPayment(
+        String paymentLinkId
+    ) {
+
+        try {
+
+            return CollectorVaultService.verifyPayment(
+                paymentLinkId
+            );
+
+        } catch (Exception e) {
+
+            throw new AuraHandledException(
+                e.getMessage()
+            );
+        }
+    }
 }

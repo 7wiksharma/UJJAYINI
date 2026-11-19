@@ -1257,6 +1257,215 @@
 
 
 /* =========================================================
+   PAYMENT CONFIRMATION BANNER
+========================================================= */
+
+.payment-banner {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 24px;
+
+    max-width: 880px;
+
+    margin:
+        -55px auto
+        65px;
+
+    padding: 26px 30px;
+
+    border:
+        1px solid
+        rgba(201, 162, 77, 0.42);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(5, 6, 10, 0.84),
+            rgba(5, 6, 10, 0.64)
+        );
+
+    box-shadow:
+        0 25px 80px
+        rgba(0, 0, 0, 0.35),
+        0 0 45px
+        rgba(201, 162, 77, 0.07);
+
+    backdrop-filter: blur(9px);
+
+    animation:
+        paymentBannerIn 0.9s
+        cubic-bezier(0.22, 1, 0.36, 1)
+        both;
+}
+
+.payment-mark {
+    flex: 0 0 auto;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid
+        rgba(201, 162, 77, 0.6);
+
+    border-radius: 50%;
+}
+
+.payment-spinner {
+    width: 20px;
+    height: 20px;
+
+    border:
+        1px solid
+        rgba(201, 162, 77, 0.25);
+
+    border-top-color: #c9a24d;
+
+    border-radius: 50%;
+
+    animation: paymentSpin 1.4s linear infinite;
+}
+
+.payment-check {
+    color: #c9a24d;
+
+    font-size: 20px;
+
+    line-height: 1;
+}
+
+.payment-copy {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.payment-copy h3 {
+    margin:
+        8px 0 6px;
+
+    color: #f3ede0;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 28px;
+
+    font-weight: 300;
+
+    line-height: 1.1;
+}
+
+.payment-message {
+    margin: 0;
+
+    color:
+        rgba(243, 237, 224, 0.62);
+
+    font-family: Georgia, serif;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+.payment-action {
+    flex: 0 0 auto;
+
+    padding: 12px 22px;
+
+    border:
+        1px solid
+        #c9a24d;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    color: #f3ede0;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    transition:
+        background 0.5s ease,
+        color 0.5s ease;
+}
+
+.payment-action:hover {
+    background: #c9a24d;
+
+    color: #05060a;
+}
+
+.payment-close {
+    flex: 0 0 auto;
+
+    border: 0;
+
+    background: none;
+
+    cursor: pointer;
+
+    color:
+        rgba(243, 237, 224, 0.6);
+
+    font-size: 26px;
+
+    line-height: 1;
+}
+
+.payment-close:hover {
+    color: #c9a24d;
+}
+
+@keyframes paymentSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes paymentBannerIn {
+    from {
+        opacity: 0;
+
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .payment-banner {
+        animation: none;
+    }
+
+    .payment-spinner {
+        animation-duration: 3s;
+    }
+}
+
+
+/* =========================================================
    RESPONSIVE
 ========================================================= */
 
@@ -1361,5 +1570,19 @@
         align-items: flex-start;
 
         gap: 12px;
+    }
+
+    .payment-banner {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        margin-top: -30px;
+
+        padding: 22px 20px;
+    }
+
+    .payment-copy h3 {
+        font-size: 24px;
     }
 }
