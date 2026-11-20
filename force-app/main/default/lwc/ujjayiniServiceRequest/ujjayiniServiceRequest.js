@@ -7,6 +7,24 @@ import createRequest
 import getMyAssets
     from '@salesforce/apex/UJJAYINICollectorVaultController.getMyAssets';
 
+
+const SERVICE_TYPES = [
+    'Repair',
+    'Maintenance',
+    'Inspection',
+    'Warranty Claim',
+    'Replacement',
+    'Other'
+];
+
+const PRIORITIES = [
+    'Low',
+    'Medium',
+    'High',
+    'Urgent'
+];
+
+
 export default class UjjayiniServiceRequest extends LightningElement {
 
     serviceType = 'Repair';
@@ -115,8 +133,10 @@ export default class UjjayiniServiceRequest extends LightningElement {
 
         const options = [
             {
+                key: 'none',
                 label: 'No specific timepiece',
-                value: ''
+                value: '',
+                selected: !this.assetId
             }
         ];
 
@@ -128,8 +148,10 @@ export default class UjjayiniServiceRequest extends LightningElement {
                     : '';
 
             options.push({
+                key: asset.assetId,
                 label: asset.productName + purchased,
-                value: asset.assetId
+                value: asset.assetId,
+                selected: asset.assetId === this.assetId
             });
         });
 
@@ -137,23 +159,23 @@ export default class UjjayiniServiceRequest extends LightningElement {
     }
 
     get serviceTypeOptions() {
-        return [
-            { label: 'Repair', value: 'Repair' },
-            { label: 'Maintenance', value: 'Maintenance' },
-            { label: 'Inspection', value: 'Inspection' },
-            { label: 'Warranty Claim', value: 'Warranty Claim' },
-            { label: 'Replacement', value: 'Replacement' },
-            { label: 'Other', value: 'Other' }
-        ];
+
+        return SERVICE_TYPES.map(value => ({
+            key: value,
+            label: value,
+            value,
+            selected: value === this.serviceType
+        }));
     }
 
     get priorityOptions() {
-        return [
-            { label: 'Low', value: 'Low' },
-            { label: 'Medium', value: 'Medium' },
-            { label: 'High', value: 'High' },
-            { label: 'Urgent', value: 'Urgent' }
-        ];
+
+        return PRIORITIES.map(value => ({
+            key: value,
+            label: value,
+            value,
+            selected: value === this.priority
+        }));
     }
 
 
@@ -162,17 +184,17 @@ export default class UjjayiniServiceRequest extends LightningElement {
     // =========================================================
 
     handleAssetChange(event) {
-        this.assetId = event.detail.value;
+        this.assetId = event.target.value;
         this.clearMessages();
     }
 
     handleServiceTypeChange(event) {
-        this.serviceType = event.detail.value;
+        this.serviceType = event.target.value;
         this.clearMessages();
     }
 
     handlePriorityChange(event) {
-        this.priority = event.detail.value;
+        this.priority = event.target.value;
         this.clearMessages();
     }
 

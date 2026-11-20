@@ -415,7 +415,24 @@ export default class UjjayiniCart
         this.isProcessingPayment = true;
 
         try {
+ // Shipping address must be saved before payment.
+            const addressForm =
+                this.template.querySelector(
+                    'c-ujjayini-checkout-address'
+                );
 
+            if (addressForm) {
+
+                const addressSaved =
+                    await addressForm.save();
+
+                if (!addressSaved) {
+
+                    this.isProcessingPayment = false;
+
+                    return;
+                }
+            }
             const result =
                 await createPaymentLink({
                     orderId: this.cart.orderId

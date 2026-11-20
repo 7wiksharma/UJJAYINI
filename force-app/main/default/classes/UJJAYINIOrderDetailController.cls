@@ -18,4 +18,24 @@ public with sharing class UJJAYINIOrderDetailController {
             );
         }
     }
+
+
+    @AuraEnabled
+    public static CustomerOrderCancellationService.CancellationResult cancelOrder(
+        Id orderId
+    ) {
+
+        try {
+
+            return CustomerOrderCancellationService.cancelMyOrder(
+                orderId
+            );
+
+        } catch (Exception e) {
+
+            throw new AuraHandledException(
+                e.getMessage()
+            );
+        }
+    }
 }

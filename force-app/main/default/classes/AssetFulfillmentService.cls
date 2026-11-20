@@ -57,13 +57,23 @@ public without sharing class AssetFulfillmentService {
          * This makes fulfillment idempotent.
          */
         List<Asset> existingAssets = [
-            SELECT Id
+            SELECT Id,
+                   Name,
+                   PurchaseDate
             FROM Asset
             WHERE SerialNumber = :fulfillmentMarker
             WITH SYSTEM_MODE
         ];
 
         if (!existingAssets.isEmpty()) {
+
+            /*
+             * Heals a warranty that is missing from an earlier run.
+             * Assets that already have a warranty are skipped.
+             */
+            WarrantyService.createWarrantiesForAssets(
+                existingAssets
+            );
 
             FulfillmentResult existingResult =
                 new FulfillmentResult();
@@ -139,6 +149,13 @@ public without sharing class AssetFulfillmentService {
         Database.insert(
             assetsToCreate,
             AccessLevel.SYSTEM_MODE
+        );
+
+        /*
+         * Every new timepiece starts with its default warranty.
+         */
+        WarrantyService.createWarrantiesForAssets(
+            assetsToCreate
         );
 
         FulfillmentResult result =

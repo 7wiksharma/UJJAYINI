@@ -359,7 +359,7 @@
 
                                         <article
                                             key={product.productId}
-                                            class="watch-card"
+                                            class={product.cardClass}
                                             data-product-id={product.productId}
                                             onclick={handleProductClick}
                                         >
@@ -393,7 +393,17 @@
 
 
                                                 <div class="image-shade"></div>
+                                                                                                    <template if:true={product.isOutOfStock}>
+                                                    <span class="stock-badge stock-out">
+                                                        OUT OF STOCK
+                                                    </span>
+                                                </template>
 
+                                                <template if:true={product.isLowStock}>
+                                                    <span class="stock-badge stock-low">
+                                                        {product.lowStockLabel}
+                                                    </span>
+                                                </template>
 
                                                 <span class="watch-index">
                                                     {product.displayIndex}
@@ -486,7 +496,7 @@
                                                     class="cart-button"
                                                     data-product-id={product.productId}
                                                     onclick={handleAddToCart}
-                                                    disabled={product.isAddingToCart}
+                                                    disabled={product.cartDisabled}
                                                 >
                                                     {product.cartLabel}
                                                 </button>

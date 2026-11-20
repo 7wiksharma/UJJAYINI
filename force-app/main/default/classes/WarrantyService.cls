@@ -1,5 +1,16 @@
 public without sharing class WarrantyService {
 
+    /*
+     * Default warranty given to every new UJJAYINI timepiece.
+     * Change these two values to change the warranty policy.
+     */
+    @TestVisible
+    private static final String DEFAULT_COVERAGE_TYPE = 'Standard';
+
+    @TestVisible
+    private static final Integer DEFAULT_DURATION_MONTHS = 24;
+
+
     public class WarrantyResult {
 
         @AuraEnabled
@@ -127,5 +138,150 @@ public without sharing class WarrantyService {
 
 
         return results;
+    }
+
+
+    // =========================================================
+    // AUTOMATIC WARRANTY FOR NEW ASSETS
+    //
+    // Skips every Asset that already has a Warranty, so it is safe
+    // to call repeatedly (webhook retries, backfill, etc).
+    // Warranty__c.Name is an Auto Number, so it is never set here.
+    // Returns the number of warranties created.
+    // =========================================================
+
+    public static Integer createWarrantiesForAssets(
+        List<Asset> assets
+    ) {
+
+        if (assets == null || assets.isEmpty()) {
+            return 0;
+        }
+
+        Set<Id> assetIds = new Set<Id>();
+
+        for (Asset asset : assets) {
+            if (asset.Id != null) {
+                assetIds.add(asset.Id);
+            }
+        }
+
+        if (assetIds.isEmpty()) {
+            return 0;
+        }
+
+        Set<Id> alreadyCovered = new Set<Id>();
+
+        for (Warranty__c existing : [
+            SELECT Asset__c
+            FROM Warranty__c
+            WHERE Asset__c IN :assetIds
+            WITH SYSTEM_MODE
+        ]) {
+            alreadyCovered.add(existing.Asset__c);
+        }
+
+        List<Warranty__c> warranties =
+            new List<Warranty__c>();
+
+        for (Asset asset : assets) {
+
+            if (
+                asset.Id == null ||
+                alreadyCovered.contains(asset.Id)
+            ) {
+                continue;
+            }
+
+            Date startDate =
+                asset.PurchaseDate != null
+                    ? asset.PurchaseDate
+                    : Date.today();
+
+            Date endDate =
+                startDate.addMonths(
+                    DEFAULT_DURATION_MONTHS
+                );
+
+            warranties.add(
+                new Warranty__c(
+                    Asset__c = asset.Id,
+                    Warranty_Coverage_Type__c =
+                        DEFAULT_COVERAGE_TYPE,
+                    Warranty_Duration__c =
+                        DEFAULT_DURATION_MONTHS,
+                    Warranty_Start_Date__c = startDate,
+                    Warranty_End_Date__c = endDate,
+                    Warranty_Status__c =
+                        endDate >= Date.today()
+                            ? 'Active'
+                            : 'Expired'
+                )
+            );
+        }
+
+        if (warranties.isEmpty()) {
+            return 0;
+        }
+
+        /*
+         * allOrNone = false: a warranty problem must never block
+         * payment fulfillment. Failures are logged and can be
+         * repaired later with createMissingWarranties().
+         */
+        List<Database.SaveResult> saveResults =
+            Database.insert(
+                warranties,
+                false,
+                AccessLevel.SYSTEM_MODE
+            );
+
+        Integer created = 0;
+
+        for (Database.SaveResult saveResult : saveResults) {
+
+            if (saveResult.isSuccess()) {
+
+                created++;
+
+            } else {
+
+                System.debug(
+                    LoggingLevel.ERROR,
+                    'UJJAYINI warranty creation failed: ' +
+                    saveResult.getErrors()[0].getMessage()
+                );
+            }
+        }
+
+        return created;
+    }
+
+
+    // =========================================================
+    // BACKFILL
+    //
+    // Creates the default warranty for UJJAYINI Assets that do not
+    // have one yet (up to 200 per run).
+    // =========================================================
+
+    public static Integer createMissingWarranties() {
+
+        List<Asset> assets = [
+            SELECT Id,
+                   Name,
+                   PurchaseDate
+            FROM Asset
+            WHERE SerialNumber LIKE 'UJJAYINI-%'
+            AND Id NOT IN (
+                SELECT Asset__c
+                FROM Warranty__c
+                WHERE Asset__c != null
+            )
+            WITH SYSTEM_MODE
+            LIMIT 200
+        ];
+
+        return createWarrantiesForAssets(assets);
     }
 }

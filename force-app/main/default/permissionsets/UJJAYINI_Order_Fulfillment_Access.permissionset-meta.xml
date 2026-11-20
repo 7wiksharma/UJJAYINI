@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Lets UJJAYINI operations update fulfillment and see invoice email status.</description>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Order.Fulfillment_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Order.Invoice_Emailed_At__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>UJJAYINI Order Fulfillment Access</label>
+</PermissionSet>

@@ -46,14 +46,27 @@ public with sharing class RazorpayPaymentLinkService {
         /*
          * Get Order.
          */
-        Order orderRecord = [
+          Order orderRecord = [
             SELECT Id,
                    Status,
-                   AccountId
+                   AccountId,
+                   ShippingStreet,
+                   ShippingCity,
+                   ShippingPostalCode
             FROM Order
             WHERE Id = :request.orderId
             LIMIT 1
         ];
+
+        if (
+            String.isBlank(orderRecord.ShippingStreet) ||
+            String.isBlank(orderRecord.ShippingCity) ||
+            String.isBlank(orderRecord.ShippingPostalCode)
+        ) {
+            throw new IllegalArgumentException(
+                'Please add your shipping address before payment.'
+            );
+        }
 
         if (orderRecord.Status != 'Draft') {
             throw new IllegalArgumentException(

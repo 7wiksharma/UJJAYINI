@@ -1,0 +1,170 @@
+<template>
+
+    <section class="address-block">
+
+        <div class="address-head">
+
+            <p class="eyebrow">
+                SHIPPING DETAILS
+            </p>
+
+            <template if:true={isSaved}>
+                <span class="saved-mark">
+                    ✓ SAVED
+                </span>
+            </template>
+
+        </div>
+
+
+        <template if:true={showDeliveringTo}>
+
+            <p class="delivering-to">
+                Delivering to
+                <strong>{fullName}</strong>
+                <span>{email}</span>
+            </p>
+
+        </template>
+
+
+        <template if:true={isLoading}>
+
+            <p class="loading-copy">
+                Preparing your details...
+            </p>
+
+        </template>
+
+
+        <template if:false={isLoading}>
+
+            <div class="address-form">
+
+                <label class="field">
+                    <span class="field-label">PHONE</span>
+                    <input
+                        class="field-control"
+                        type="tel"
+                        data-field="phone"
+                        value={phone}
+                        oninput={handleInput}
+                        placeholder="10-digit mobile number"
+                        autocomplete="tel"
+                    />
+                </label>
+
+                <label class="field">
+                    <span class="field-label">ADDRESS</span>
+                    <input
+                        class="field-control"
+                        type="text"
+                        data-field="line1"
+                        value={line1}
+                        oninput={handleInput}
+                        placeholder="House, street, area"
+                        autocomplete="address-line1"
+                    />
+                </label>
+
+                <label class="field">
+                    <span class="field-label">LANDMARK (OPTIONAL)</span>
+                    <input
+                        class="field-control"
+                        type="text"
+                        data-field="line2"
+                        value={line2}
+                        oninput={handleInput}
+                        placeholder="Apartment, landmark"
+                        autocomplete="address-line2"
+                    />
+                </label>
+
+                <div class="field-row">
+
+                    <label class="field">
+                        <span class="field-label">CITY</span>
+                        <input
+                            class="field-control"
+                            type="text"
+                            data-field="city"
+                            value={city}
+                            oninput={handleInput}
+                            autocomplete="address-level2"
+                        />
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">STATE</span>
+                        <input
+                            class="field-control"
+                            type="text"
+                            data-field="state"
+                            value={state}
+                            oninput={handleInput}
+                            autocomplete="address-level1"
+                        />
+                    </label>
+
+                </div>
+
+                <div class="field-row">
+
+                    <label class="field">
+                        <span class="field-label">PIN CODE</span>
+                        <input
+                            class="field-control"
+                            type="text"
+                            inputmode="numeric"
+                            maxlength="10"
+                            data-field="postalCode"
+                            value={postalCode}
+                            oninput={handleInput}
+                            autocomplete="postal-code"
+                        />
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">COUNTRY</span>
+                        <input
+                            class="field-control"
+                            type="text"
+                            data-field="country"
+                            value={country}
+                            oninput={handleInput}
+                            autocomplete="country-name"
+                        />
+                    </label>
+
+                </div>
+
+                <p class="billing-note">
+                    Your billing address will be the same as your
+                    shipping address.
+                </p>
+
+            </div>
+
+        </template>
+
+
+        <template if:true={errorMessage}>
+
+            <p class="address-error" role="alert">
+                {errorMessage}
+            </p>
+
+        </template>
+
+
+        <template if:true={isSaving}>
+
+            <p class="loading-copy">
+                Saving your address...
+            </p>
+
+        </template>
+
+    </section>
+
+</template>

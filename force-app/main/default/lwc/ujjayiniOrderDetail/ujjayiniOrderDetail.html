@@ -1,118 +1,179 @@
 <template>
 
-    <section class="order-container">
+    <main class="order-page">
 
-        <template if:true={isLoading}>
+        <div class="order-light" aria-hidden="true"></div>
 
-            <div class="state">
-                <p>Loading order details...</p>
-            </div>
+        <div class="order-inner">
 
-        </template>
+            <template if:true={isLoading}>
 
-        <template if:true={errorMessage}>
+                <section class="state">
+                    <div class="loader"></div>
+                    <p class="eyebrow">OPENING YOUR ORDER</p>
+                </section>
 
-            <div class="state error">
-                <p>{errorMessage}</p>
-            </div>
+            </template>
 
-        </template>
 
-        <template if:true={hasOrder}>
+            <template if:true={errorMessage}>
 
-            <div class="order-header">
+                <section class="state">
 
-                <p class="eyebrow">
-                    UJJAYINI ORDER
-                </p>
+                    <p class="eyebrow">ORDER UNAVAILABLE</p>
 
-                <h2>
-                    {order.orderNumber}
-                </h2>
+                    <h2 class="state-title">
+                        This order could not be opened.
+                    </h2>
 
-                <div class="order-summary">
+                    <p class="state-copy">{errorMessage}</p>
 
-                    <span class="status">
-                        {order.status}
-                    </span>
+                    <button class="ghost-button" type="button" onclick={goBack}>
+                        MY ORDERS
+                    </button>
 
-                    <span>
-                        Order Date: {order.effectiveDate}
-                    </span>
+                </section>
 
-                    <span>
-                        Total: ₹{order.totalAmount}
-                    </span>
+            </template>
 
-                </div>
 
-            </div>
+            <template if:true={hasOrder}>
 
-            <div class="items-section">
+                <button class="back-link" type="button" onclick={goBack}>
+                    ← MY ORDERS
+                </button>
 
-                <div class="section-heading">
 
-                    <p class="eyebrow">
-                        ORDER ITEMS
-                    </p>
+                <header class="order-header">
 
-                    <h3>
-                        Your Purchase
-                    </h3>
+                    <div>
 
-                </div>
+                        <p class="eyebrow">YOUR ACQUISITION</p>
 
-                <template if:true={hasItems}>
+                        <h1 class="order-headline">
+                            {headline}
+                        </h1>
 
-                    <div class="items-list">
+                        <p class="order-meta">
+                            Placed on {formattedDate}
+                        </p>
 
-                        <template
-                            for:each={order.items}
-                            for:item="item">
+                    </div>
 
-                            <article
-                                key={item.orderItemId}
-                                class="item-card">
+                    <div class="header-right">
+
+                        <span class={statusClass}>
+                            {order.displayStatus}
+                        </span>
+
+                        <strong class="order-total">
+                            {formattedTotal}
+                        </strong>
+
+                    </div>
+
+                </header>
+
+
+                <template if:true={notice}>
+
+                    <div class="notice" role="status">
+                        {notice}
+                    </div>
+
+                </template>
+
+
+                <template if:true={order.isCancelled}>
+
+                    <div class="cancelled-banner">
+
+                        <p class="eyebrow">ORDER CANCELLED</p>
+
+                        <p>
+                            Cancelled on {cancelledAtLabel}.
+                            <template if:true={isRefunded}>
+                                Your refund was started on {refundedAtLabel}
+                                to your original payment method.
+                            </template>
+                        </p>
+
+                    </div>
+
+                </template>
+
+
+                <template if:true={showTracking}>
+
+                    <section class="tracking">
+
+                        <p class="eyebrow">ITS JOURNEY TO YOU</p>
+
+                        <ol class="track">
+
+                            <template for:each={trackingSteps} for:item="step">
+
+                                <li key={step.key} class={step.className}>
+                                    <span class="track-dot"></span>
+                                    <span class="track-label">{step.label}</span>
+                                </li>
+
+                            </template>
+
+                        </ol>
+
+                    </section>
+
+                </template>
+
+
+                <section class="section">
+
+                    <p class="eyebrow">YOUR TIMEPIECES</p>
+
+                    <div class="items">
+
+                        <template for:each={items} for:item="item">
+
+                            <article key={item.orderItemId} class="item">
+
+                                <div class="item-visual">
+
+                                    <template if:true={item.productImageUrl}>
+                                        <img
+                                            class="item-image"
+                                            src={item.productImageUrl}
+                                            alt={item.productName}
+                                        />
+                                    </template>
+
+                                    <template if:false={item.productImageUrl}>
+                                        <span class="item-placeholder">U</span>
+                                    </template>
+
+                                </div>
 
                                 <div class="item-info">
 
-                                    <p class="item-label">
-                                        UJJAYINI WATCH
+                                    <template if:true={item.collectionName}>
+                                        <p class="item-collection">
+                                            {item.collectionName}
+                                        </p>
+                                    </template>
+
+                                    <h3 class="item-name">
+                                        {item.productName}
+                                    </h3>
+
+                                    <p class="item-unit">
+                                        {item.formattedUnit} × {item.quantityNumber}
                                     </p>
 
-                                    <h4>
-                                        {item.productName}
-                                    </h4>
-
                                 </div>
 
-                                <div class="item-details">
-
-                                    <div>
-                                        <span>Quantity</span>
-
-                                        <strong>
-                                            {item.quantity}
-                                        </strong>
-                                    </div>
-
-                                    <div>
-                                        <span>Unit Price</span>
-
-                                        <strong>
-                                            ₹{item.unitPrice}
-                                        </strong>
-                                    </div>
-
-                                    <div>
-                                        <span>Total</span>
-
-                                        <strong>
-                                            ₹{item.totalPrice}
-                                        </strong>
-                                    </div>
-
-                                </div>
+                                <strong class="item-total">
+                                    {item.formattedTotal}
+                                </strong>
 
                             </article>
 
@@ -120,22 +181,163 @@
 
                     </div>
 
+                </section>
+
+
+                <div class="detail-grid">
+
+                    <section class="panel">
+
+                        <p class="eyebrow">DELIVERY</p>
+
+                        <template if:true={hasShipping}>
+
+                            <template if:true={order.recipientName}>
+                                <p class="panel-strong">
+                                    {order.recipientName}
+                                </p>
+                            </template>
+
+                            <template for:each={shippingLines} for:item="line">
+                                <p key={line.key} class="panel-line">
+                                    {line.text}
+                                </p>
+                            </template>
+
+                        </template>
+
+                        <template if:false={hasShipping}>
+                            <p class="panel-line">
+                                No delivery address recorded for this order.
+                            </p>
+                        </template>
+
+                    </section>
+
+
+                    <section class="panel">
+
+                        <p class="eyebrow">PAYMENT</p>
+
+                        <template if:true={hasPayment}>
+
+                            <p class="panel-strong">
+                                {order.paymentStatus}
+                            </p>
+
+                            <template if:true={paidAtLabel}>
+                                <p class="panel-line">
+                                    Paid on {paidAtLabel}
+                                </p>
+                            </template>
+
+                        </template>
+
+                        <template if:false={hasPayment}>
+                            <p class="panel-line">
+                                Payment details are not available.
+                            </p>
+                        </template>
+
+                    </section>
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button class="primary-button" type="button" onclick={goToCollection}>
+                        <span class="primary-inner">VIEW IN MY COLLECTION</span>
+                    </button>
+                    <template if:true={canDownloadInvoice}>
+
+                        <button
+                            class="text-button"
+                            type="button"
+                            onclick={handleDownloadInvoice}
+                            disabled={isDownloadingInvoice}
+                        >
+                            {invoiceLabel}
+                        </button>
+
+                    </template>
+                    <button class="text-button" type="button" onclick={goToService}>
+                        NEED HELP? CONTACT SERVICE
+                    </button>
+
+                    <template if:true={canCancel}>
+
+                        <button class="cancel-link" type="button" onclick={openCancelModal}>
+                            CANCEL THIS ORDER
+                        </button>
+
+                    </template>
+
+                </div>
+                <template if:true={invoiceError}>
+                    <p class="modal-error" role="alert">
+                        {invoiceError}
+                    </p>
                 </template>
+            </template>
 
-            </div>
+        </div>
 
-            <div class="collection-action">
 
-                <button
-                    class="collection-button"
-                    onclick={goToCollection}>
-                    View in My Collection
-                </button>
+        <template if:true={showCancelModal}>
+
+            <div class="modal-backdrop" onclick={closeCancelModal}>
+
+                <div class="modal" onclick={stopPropagation}>
+
+                    <p class="eyebrow">CANCEL ORDER</p>
+
+                    <h2 class="modal-title">
+                        Cancel this order?
+                    </h2>
+
+                    <p class="modal-copy">
+                        Your payment of {formattedTotal} will be refunded to
+                        your original payment method, and the timepiece will
+                        be removed from your Collector's Vault. This cannot
+                        be undone.
+                    </p>
+
+                    <template if:true={cancelError}>
+                        <p class="modal-error" role="alert">
+                            {cancelError}
+                        </p>
+                    </template>
+
+                    <div class="modal-actions">
+
+                        <button
+                            class="modal-keep"
+                            type="button"
+                            onclick={closeCancelModal}
+                            disabled={isCancelling}
+                        >
+                            KEEP MY ORDER
+                        </button>
+
+                        <button
+                            class="modal-confirm"
+                            type="button"
+                            onclick={confirmCancel}
+                            disabled={isCancelling}
+                        >
+                            <template if:true={isCancelling}>CANCELLING</template>
+                            <template if:false={isCancelling}>YES, CANCEL AND REFUND</template>
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </template>
 
-    </section>
+    </main>
 
 </template>

@@ -433,8 +433,21 @@ export default class UjjayiniProductCatalog
 
     }
 
-
     decorateProduct(product) {
+
+        const isOutOfStock =
+            product.stockStatus === 'OUT_OF_STOCK';
+
+        const isLowStock =
+            product.stockStatus === 'LOW_STOCK';
+
+        let cartLabel = 'ADD TO CART';
+
+        if (isOutOfStock) {
+            cartLabel = 'OUT OF STOCK';
+        } else if (product.isAddingToCart) {
+            cartLabel = 'ADDING TO CART';
+        }
 
         return {
 
@@ -462,15 +475,31 @@ export default class UjjayiniProductCatalog
                     ? 'wishlist-button is-active'
                     : 'wishlist-button',
 
-            cartLabel:
+            isOutOfStock,
+
+            isLowStock,
+
+            lowStockLabel:
+                isLowStock
+                    ? 'ONLY ' +
+                      product.availableQuantity +
+                      ' REMAINING'
+                    : '',
+
+            cardClass:
+                isOutOfStock
+                    ? 'watch-card is-out-of-stock'
+                    : 'watch-card',
+
+            cartLabel,
+
+            cartDisabled:
+                isOutOfStock ||
                 product.isAddingToCart
-                    ? 'ADDING TO CART'
-                    : 'ADD TO CART'
 
         };
 
     }
-
 
     get totalCount() {
 

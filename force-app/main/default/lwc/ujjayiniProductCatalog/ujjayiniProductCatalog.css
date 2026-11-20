@@ -3459,3 +3459,44 @@
     }
 
 }
+/* =========================================================
+   STOCK STATUS
+========================================================= */
+
+.watch-card .stock-badge {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    z-index: 6;
+    padding: 7px 12px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    pointer-events: none;
+}
+
+.watch-card .stock-out {
+    border: 1px solid #c2433f;
+    background: rgba(40, 6, 8, 0.88);
+    color: #ff8a84;
+}
+
+.watch-card .stock-low {
+    border: 1px solid rgba(201, 162, 77, 0.6);
+    background: rgba(5, 6, 10, 0.85);
+    color: #c9a24d;
+}
+
+.watch-card.is-out-of-stock .watch-image-file {
+    filter: grayscale(1) brightness(0.5);
+}
+
+.watch-card.is-out-of-stock .cart-button,
+.watch-card.is-out-of-stock .cart-button:hover {
+    opacity: 1;
+    cursor: not-allowed;
+    background: transparent;
+    border-color: rgba(194, 67, 63, 0.55);
+    color: #e08a86;
+    box-shadow: none;
+}

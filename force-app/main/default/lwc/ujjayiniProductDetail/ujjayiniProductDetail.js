@@ -16,6 +16,9 @@ import getProduct
 import addToCart
     from '@salesforce/apex/UJJAYINICartController.addToCart';
 
+import getCurrentCart
+    from '@salesforce/apex/UJJAYINICartController.getCurrentCart';
+
 import productVideo
     from '@salesforce/resourceUrl/UJJAYINI_Product_Detail_Video';
 
@@ -37,6 +40,8 @@ export default class UjjayiniProductDetail
     errorMessage;
 
     isAddingToCart = false;
+
+    isBuyingNow = false;
 
 
     // Notification
@@ -342,7 +347,88 @@ export default class UjjayiniProductDetail
     }
 
 
+    // =========================================================
+    // STOCK
+    // =========================================================
+
+    get isOutOfStock() {
+
+        return (
+            !!this.product &&
+            this.product.stockStatus === 'OUT_OF_STOCK'
+        );
+
+    }
+
+
+    get isLowStock() {
+
+        return (
+            !!this.product &&
+            this.product.stockStatus === 'LOW_STOCK'
+        );
+
+    }
+
+
+    get lowStockLabel() {
+
+        return this.isLowStock
+            ? 'ONLY ' +
+              this.product.availableQuantity +
+              ' REMAINING'
+            : '';
+
+    }
+
+
+    get disableActions() {
+
+        return (
+            this.isAddingToCart ||
+            this.isBuyingNow ||
+            this.isOutOfStock
+        );
+
+    }
+
+
+    get buyNowClass() {
+
+        return this.isOutOfStock
+            ? 'buy-now is-unavailable'
+            : 'buy-now';
+
+    }
+
+
+    get cartButtonClass() {
+
+        return this.isOutOfStock
+            ? 'add-cart is-unavailable'
+            : 'add-cart';
+
+    }
+
+
+    get buyNowLabel() {
+
+        if (this.isOutOfStock) {
+            return 'OUT OF STOCK';
+        }
+
+        return this.isBuyingNow
+            ? 'PREPARING CHECKOUT'
+            : 'BUY NOW';
+
+    }
+
+
     get cartLabel() {
+
+        if (this.isOutOfStock) {
+            return 'UNAVAILABLE';
+        }
 
         return this.isAddingToCart
             ? 'ADDING TO CART'
@@ -373,6 +459,13 @@ export default class UjjayiniProductDetail
             !this.product ||
             !this.product.productId
         ) {
+
+            return;
+
+        }
+
+
+        if (this.isOutOfStock) {
 
             return;
 
@@ -429,6 +522,115 @@ export default class UjjayiniProductDetail
         finally {
 
             this.isAddingToCart = false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // BUY NOW
+    //
+    // Adds the watch to the cart (only if it is not already
+    // there, so the quantity never doubles) and opens the cart,
+    // where the customer proceeds to payment.
+    // =========================================================
+
+    async handleBuyNow() {
+
+        if (
+            !this.product ||
+            !this.product.productId
+        ) {
+
+            return;
+
+        }
+
+
+        if (this.isOutOfStock) {
+
+            return;
+
+        }
+
+
+        // Guest
+        if (isGuestUser) {
+
+            this.showGuestCartModal =
+                true;
+
+            return;
+
+        }
+
+
+        this.isBuyingNow = true;
+
+
+        try {
+
+            let alreadyInCart = false;
+
+
+            try {
+
+                const cart =
+                    await getCurrentCart();
+
+
+                alreadyInCart =
+                    !!(
+                        cart &&
+                        cart.items &&
+                        cart.items.some(
+                            item =>
+                                item.productId ===
+                                this.product.productId
+                        )
+                    );
+
+            }
+
+            catch (cartError) {
+
+                alreadyInCart = false;
+
+            }
+
+
+            if (!alreadyInCart) {
+
+                await addToCart({
+
+                    productId:
+                        this.product.productId,
+
+                    quantity: 1
+
+                });
+
+            }
+
+
+            window.location.href =
+                '/ujjayini/cart';
+
+        }
+
+        catch (error) {
+
+            this.isBuyingNow = false;
+
+
+            this.showNotificationPopup(
+                'error',
+                'UNABLE TO CONTINUE',
+                this.getErrorMessage(
+                    error
+                )
+            );
 
         }
 

@@ -1,88 +1,194 @@
 <template>
 
-    <section class="service-container">
+    <section class="service-shell">
 
-        <div class="service-header">
+        <div class="service-light" aria-hidden="true"></div>
 
-            <p class="eyebrow">
-                UJJAYINI
-            </p>
+        <div class="service-inner">
 
-            <h2>
-                Service Request
-            </h2>
+            <header class="service-header">
 
-            <p class="description">
-                Request repair, maintenance, inspection,
-                or other assistance for your timepiece.
-            </p>
+                <p class="eyebrow">
+                    UJJAYINI · SERVICE
+                </p>
 
-        </div>
+                <h2>
+                    Care for your <em>time.</em>
+                </h2>
 
-        <template if:true={showAssetSelector}>
+                <div class="gold-rule"></div>
 
-            <lightning-combobox
-                label="Timepiece"
-                value={assetId}
-                options={assetOptions}
-                onchange={handleAssetChange}>
-            </lightning-combobox>
+                <p class="description">
+                    Request repair, maintenance, inspection,
+                    or other assistance for your timepiece.
+                </p>
 
-        </template>
+            </header>
 
-        <lightning-combobox
-            label="Service Type"
-            value={serviceType}
-            options={serviceTypeOptions}
-            onchange={handleServiceTypeChange}>
-        </lightning-combobox>
 
-        <lightning-combobox
-            label="Priority"
-            value={priority}
-            options={priorityOptions}
-            onchange={handlePriorityChange}>
-        </lightning-combobox>
+            <div class="service-form">
 
-        <lightning-textarea
-            label="Service Description"
-            value={description}
-            onchange={handleDescriptionChange}
-            placeholder="Describe the service you need...">
-        </lightning-textarea>
+                <template if:true={showAssetSelector}>
 
-        <template if:true={successMessage}>
+                    <label class="field">
 
-            <div class="success-message">
-                {successMessage}
-            </div>
+                        <span class="field-label">
+                            TIMEPIECE
+                        </span>
 
-        </template>
+                        <span class="select-wrap">
 
-        <template if:true={errorMessage}>
+                            <select
+                                class="field-control"
+                                onchange={handleAssetChange}
+                            >
+                                <template
+                                    for:each={assetOptions}
+                                    for:item="option"
+                                >
+                                    <option
+                                        key={option.key}
+                                        value={option.value}
+                                        selected={option.selected}
+                                    >
+                                        {option.label}
+                                    </option>
+                                </template>
+                            </select>
 
-            <div class="error-message">
-                {errorMessage}
-            </div>
+                        </span>
 
-        </template>
+                    </label>
 
-        <div class="actions">
-
-            <button
-                class="submit-button"
-                onclick={handleSubmit}
-                disabled={isSubmitting}>
-
-                <template if:true={isSubmitting}>
-                    Submitting...
                 </template>
 
-                <template if:false={isSubmitting}>
-                    Submit Service Request
+
+                <div class="field-row">
+
+                    <label class="field">
+
+                        <span class="field-label">
+                            SERVICE TYPE
+                        </span>
+
+                        <span class="select-wrap">
+
+                            <select
+                                class="field-control"
+                                onchange={handleServiceTypeChange}
+                            >
+                                <template
+                                    for:each={serviceTypeOptions}
+                                    for:item="option"
+                                >
+                                    <option
+                                        key={option.key}
+                                        value={option.value}
+                                        selected={option.selected}
+                                    >
+                                        {option.label}
+                                    </option>
+                                </template>
+                            </select>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="field">
+
+                        <span class="field-label">
+                            PRIORITY
+                        </span>
+
+                        <span class="select-wrap">
+
+                            <select
+                                class="field-control"
+                                onchange={handlePriorityChange}
+                            >
+                                <template
+                                    for:each={priorityOptions}
+                                    for:item="option"
+                                >
+                                    <option
+                                        key={option.key}
+                                        value={option.value}
+                                        selected={option.selected}
+                                    >
+                                        {option.label}
+                                    </option>
+                                </template>
+                            </select>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <label class="field">
+
+                    <span class="field-label">
+                        SERVICE DESCRIPTION
+                    </span>
+
+                    <textarea
+                        class="field-control field-textarea"
+                        rows="5"
+                        value={description}
+                        oninput={handleDescriptionChange}
+                        placeholder="Describe the service you need..."
+                    ></textarea>
+
+                </label>
+
+
+                <template if:true={successMessage}>
+
+                    <div class="message success-message" role="status">
+                        {successMessage}
+                    </div>
+
                 </template>
 
-            </button>
+                <template if:true={errorMessage}>
+
+                    <div class="message error-message" role="alert">
+                        {errorMessage}
+                    </div>
+
+                </template>
+
+
+                <div class="actions">
+
+                    <button
+                        class="submit-button"
+                        type="button"
+                        onclick={handleSubmit}
+                        disabled={isSubmitting}
+                    >
+
+                        <span class="submit-inner">
+
+                            <template if:true={isSubmitting}>
+                                SUBMITTING
+                            </template>
+
+                            <template if:false={isSubmitting}>
+                                SUBMIT SERVICE REQUEST
+                            </template>
+
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
 
         </div>
 

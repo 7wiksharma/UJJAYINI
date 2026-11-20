@@ -1,130 +1,135 @@
 <template>
 
-    <section class="orders-container">
+    <main class="history-page">
 
-        <div class="orders-header">
+        <div class="history-light" aria-hidden="true"></div>
 
-            <p class="eyebrow">
-                UJJAYINI
-            </p>
+        <div class="history-inner">
 
-            <h2>
-                My Orders
-            </h2>
+            <header class="history-header">
 
-            <p class="subtitle">
-                View your UJJAYINI purchase history.
-            </p>
+                <p class="eyebrow">UJJAYINI</p>
+
+                <h1 class="history-title">
+                    Your <em>orders.</em>
+                </h1>
+
+                <div class="gold-rule"></div>
+
+                <p class="history-copy">
+                    Every timepiece you have acquired from the House of UJJAYINI.
+                </p>
+
+            </header>
+
+
+            <template if:true={isLoading}>
+
+                <section class="state">
+                    <div class="loader"></div>
+                </section>
+
+            </template>
+
+
+            <template if:true={errorMessage}>
+
+                <section class="state">
+                    <p class="eyebrow">ORDERS UNAVAILABLE</p>
+                    <p class="state-copy">{errorMessage}</p>
+                </section>
+
+            </template>
+
+
+            <template if:true={hasOrders}>
+
+                <div class="orders">
+
+                    <template for:each={orders} for:item="order">
+
+                        <article
+                            key={order.orderId}
+                            class={order.cardClass}
+                            data-order-id={order.orderId}
+                            onclick={openOrder}
+                        >
+
+                            <div class="order-visual">
+
+                                <template if:true={order.firstProductImageUrl}>
+                                    <img
+                                        class="order-image"
+                                        src={order.firstProductImageUrl}
+                                        alt={order.firstProductName}
+                                    />
+                                </template>
+
+                                <template if:false={order.firstProductImageUrl}>
+                                    <span class="order-placeholder">U</span>
+                                </template>
+
+                            </div>
+
+                            <div class="order-info">
+
+                                <p class="order-label">
+                                    ACQUIRED {order.formattedDate}
+                                </p>
+
+                                <h2 class="order-name">
+                                    {order.firstProductName}
+                                </h2>
+
+                                <p class="order-meta">
+                                     {order.itemLabel}
+                                </p>
+
+                            </div>
+
+                            <div class="order-side">
+
+                                <span class={order.statusClass}>
+                                    {order.displayStatus}
+                                </span>
+
+                                <strong class="order-total">
+                                    {order.formattedTotal}
+                                </strong>
+
+                                <span class="order-view">VIEW ORDER →</span>
+
+                            </div>
+
+                        </article>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <template if:true={isEmpty}>
+
+                <section class="state">
+
+                    <p class="eyebrow">NO ORDERS YET</p>
+
+                    <h2 class="state-title">
+                        Your first timepiece <em>awaits.</em>
+                    </h2>
+
+                    <button class="ghost-button" type="button" onclick={goToWatches}>
+                        EXPLORE THE TIMEPIECES
+                    </button>
+
+                </section>
+
+            </template>
 
         </div>
 
-        <template if:true={isLoading}>
-
-            <div class="state">
-                <p>Loading your orders...</p>
-            </div>
-
-        </template>
-
-        <template if:true={errorMessage}>
-
-            <div class="state error">
-                <p>{errorMessage}</p>
-            </div>
-
-        </template>
-
-        <template if:true={hasOrders}>
-
-            <div class="orders-list">
-
-                <template
-                    for:each={orders}
-                    for:item="order">
-
-                    <article
-                        key={order.orderId}
-                        class="order-card">
-
-                        <div class="order-top">
-
-                            <div>
-
-                                <p class="order-label">
-                                    UJJAYINI ORDER
-                                </p>
-
-                               <button
-                                class="order-number"
-                                data-order-id={order.orderId}
-                                   onclick={openOrder}>
-                                   {order.orderNumber}
-                                  </button>
-
-                            </div>
-
-                            <span class="status">
-                                {order.status}
-                            </span>
-
-                        </div>
-
-                        <div class="order-details">
-
-                            <div>
-                                <span>Order Date</span>
-
-                                <strong>
-                                    {order.effectiveDate}
-                                </strong>
-                            </div>
-
-                            <div>
-                                <span>Items</span>
-
-                                <strong>
-                                    {order.itemCount}
-                                </strong>
-                            </div>
-
-                            <div>
-                                <span>Total</span>
-
-                                <strong>
-                                    ₹{order.totalAmount}
-                                </strong>
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </template>
-
-            </div>
-
-        </template>
-
-        <template if:true={isEmpty}>
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    U
-                </div>
-
-                <h3>
-                    No Orders Yet
-                </h3>
-
-                <p>
-                    Your completed purchases will appear here.
-                </p>
-
-            </div>
-
-        </template>
-
-    </section>
+    </main>
 
 </template>

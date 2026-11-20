@@ -1,5 +1,13 @@
 public without sharing class UJJAYINIProductCatalogController {
 
+    /*
+     * A timepiece is shown as "low stock" when this many units
+     * (or fewer) are still available.
+     */
+    @TestVisible
+    private static final Integer LOW_STOCK_THRESHOLD = 2;
+
+
     public class ProductWrapper {
 
         @AuraEnabled public Id productId;
@@ -16,6 +24,13 @@ public without sharing class UJJAYINIProductCatalogController {
         @AuraEnabled public String caseMaterial;
         @AuraEnabled public String dialColor;
         @AuraEnabled public String modelNumber;
+
+        // Stock: IN_STOCK, LOW_STOCK or OUT_OF_STOCK
+        @AuraEnabled public String stockStatus;
+
+        // Only meaningful for LOW_STOCK. The exact stock of a
+        // product that is comfortably in stock is never exposed.
+        @AuraEnabled public Integer availableQuantity;
 
 
         public ProductWrapper(
@@ -178,18 +193,39 @@ public without sharing class UJJAYINIProductCatalogController {
 
 
         // -----------------------------------------------------
+        // GET STOCK
+        // -----------------------------------------------------
+
+        Map<Id, Decimal> availability =
+            getAvailabilityByProduct(
+                productIds
+            );
+
+
+
+        // -----------------------------------------------------
         // BUILD RESPONSE
         // -----------------------------------------------------
 
         for (Product2 product : productRecords) {
 
-            products.add(
+            ProductWrapper wrapper =
                 new ProductWrapper(
                     product,
                     productPrices.get(
                         product.Id
                     )
+                );
+
+            applyStock(
+                wrapper,
+                availability.get(
+                    product.Id
                 )
+            );
+
+            products.add(
+                wrapper
             );
         }
 
@@ -296,9 +332,133 @@ public without sharing class UJJAYINIProductCatalogController {
 
 
 
-        return new ProductWrapper(
-            product,
-            priceValue
+        ProductWrapper wrapper =
+            new ProductWrapper(
+                product,
+                priceValue
+            );
+
+
+        Map<Id, Decimal> availability =
+            getAvailabilityByProduct(
+                new Set<Id>{ product.Id }
+            );
+
+
+        applyStock(
+            wrapper,
+            availability.get(
+                product.Id
+            )
         );
+
+
+        return wrapper;
+    }
+
+
+
+    // =========================================================
+    // STOCK HELPERS
+    // =========================================================
+
+    /*
+     * Sum of Available__c over the Active inventory rows of each
+     * product. A product with no Active inventory row is simply
+     * absent from the map (and is treated as out of stock).
+     */
+    private static Map<Id, Decimal> getAvailabilityByProduct(
+        Set<Id> productIds
+    ) {
+
+        Map<Id, Decimal> availability =
+            new Map<Id, Decimal>();
+
+
+        if (
+            productIds == null ||
+            productIds.isEmpty()
+        ) {
+            return availability;
+        }
+
+
+        for (Inventory__c inventory : [
+
+            SELECT
+                Product__c,
+                Available__c
+
+            FROM Inventory__c
+
+            WHERE Product__c IN :productIds
+
+            AND Inventory_Status__c = 'Active'
+
+            WITH SYSTEM_MODE
+
+        ]) {
+
+            Decimal current =
+                availability.get(
+                    inventory.Product__c
+                );
+
+            if (current == null) {
+                current = 0;
+            }
+
+            Decimal available =
+                inventory.Available__c;
+
+            if (available == null) {
+                available = 0;
+            }
+
+            availability.put(
+                inventory.Product__c,
+                current + available
+            );
+        }
+
+
+        return availability;
+    }
+
+
+    private static void applyStock(
+        ProductWrapper wrapper,
+        Decimal available
+    ) {
+
+        if (
+            available == null ||
+            available <= 0
+        ) {
+
+            wrapper.stockStatus =
+                'OUT_OF_STOCK';
+
+            wrapper.availableQuantity =
+                0;
+
+            return;
+        }
+
+
+        if (available <= LOW_STOCK_THRESHOLD) {
+
+            wrapper.stockStatus =
+                'LOW_STOCK';
+
+            wrapper.availableQuantity =
+                Integer.valueOf(available);
+
+            return;
+        }
+
+
+        wrapper.stockStatus =
+            'IN_STOCK';
     }
 }

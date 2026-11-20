@@ -99,10 +99,11 @@ public with sharing class CollectorVaultService {
                    Status,
                    SerialNumber,
                    PurchaseDate
-            FROM Asset
-            WHERE AccountId = :currentUser.Contact.AccountId
-            WITH SYSTEM_MODE
-            ORDER BY PurchaseDate DESC, CreatedDate DESC
+                    FROM Asset
+                     WHERE AccountId = :currentUser.Contact.AccountId
+                      AND Status != 'Obsolete'
+                    WITH SYSTEM_MODE
+                  ORDER BY PurchaseDate DESC, CreatedDate DESC
         ];
 
 

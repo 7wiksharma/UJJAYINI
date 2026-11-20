@@ -2243,3 +2243,142 @@
     }
 
 }
+/* =========================================================
+   BUY NOW (primary) + ADD TO CART (secondary)
+========================================================= */
+
+.buy-now {
+
+    min-width: 220px;
+
+    padding: 16px 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 25px;
+
+    border: 1px solid var(--gold);
+
+    background:
+        rgba(201, 162, 77, 0.92);
+
+    color: var(--black);
+
+    cursor: pointer;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.28em;
+
+    transition:
+        box-shadow 0.35s ease,
+        transform 0.35s ease,
+        background 0.35s ease;
+
+}
+
+
+.buy-now:hover:not(:disabled) {
+
+    transform: translateY(-2px);
+
+    background: var(--gold-bright);
+
+    box-shadow:
+        0 0 45px
+        rgba(201, 162, 77, 0.35);
+
+}
+
+
+.buy-now:disabled {
+
+    opacity: 0.65;
+
+    cursor: wait;
+
+}
+
+
+.actions .add-cart {
+
+    background:
+        rgba(5, 6, 10, 0.35);
+
+    color: var(--ivory);
+
+}
+
+
+.actions .add-cart:hover:not(:disabled) {
+
+    background:
+        rgba(201, 162, 77, 0.12);
+
+    color: var(--gold-bright);
+
+    box-shadow:
+        0 0 30px
+        rgba(201, 162, 77, 0.18);
+
+}
+
+
+/* =========================================================
+   STOCK STATUS
+========================================================= */
+
+.price-block .stock-line {
+
+    margin-top: 6px;
+
+    font-style: normal;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.32em;
+
+}
+
+
+.price-block .stock-out {
+
+    color: #ff8a84;
+
+}
+
+
+.price-block .stock-low {
+
+    color: var(--gold-bright);
+
+}
+
+
+.buy-now.is-unavailable,
+.actions .add-cart.is-unavailable {
+
+    opacity: 1;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    background:
+        rgba(40, 6, 8, 0.55);
+
+    border-color: #c2433f;
+
+    color: #ff8a84;
+
+    box-shadow: none;
+
+}

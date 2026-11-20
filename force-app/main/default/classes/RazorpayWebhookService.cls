@@ -1145,6 +1145,13 @@ public without sharing class RazorpayWebhookService {
         InventoryReservationService.confirmReservationsForOrder(
             orderId
         );
+        /*
+         * Email the invoice once (idempotent and never fails
+         * the webhook).
+         */
+        OrderInvoiceService.sendInvoiceEmailSafely(
+            orderId
+        );
     }
 
 

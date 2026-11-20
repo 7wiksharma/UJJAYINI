@@ -201,22 +201,54 @@
                                 {formattedPrice}
                             </strong>
 
+                            <template if:true={isOutOfStock}>
+
+                                <em class="stock-line stock-out">
+                                    OUT OF STOCK
+                                </em>
+
+                            </template>
+
+                            <template if:true={isLowStock}>
+
+                                <em class="stock-line stock-low">
+                                    {lowStockLabel}
+                                </em>
+
+                            </template>
+
                         </div>
 
 
                         <div class="actions">
 
                             <button
-                                class="add-cart"
+                                class={buyNowClass}
+                                onclick={handleBuyNow}
+                                disabled={disableActions}
+                            >
+                                <span>
+                                    {buyNowLabel}
+                                </span>
+
+                                <span>
+                                    ↗
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                class={cartButtonClass}
                                 onclick={handleAddToCart}
-                                disabled={isAddingToCart}
+                                disabled={disableActions}
                             >
                                 <span>
                                     {cartLabel}
                                 </span>
 
                                 <span>
-                                    ↗
+                                    +
                                 </span>
 
                             </button>
@@ -669,7 +701,7 @@
 
                     <span>
                         Sign in or create your UJJAYINI account
-                        to add this timepiece to your collection.
+                        to make this timepiece part of your collection.
                     </span>
 
 

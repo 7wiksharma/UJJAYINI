@@ -1,0 +1,139 @@
+:host {
+    display: block;
+}
+
+.address-block {
+    --ivory: #f3ead7;
+    --ivory-soft: rgba(243, 234, 215, 0.74);
+    --ivory-dim: rgba(243, 234, 215, 0.46);
+    --gold: #c9a24d;
+    --gold-soft: rgba(201, 162, 77, 0.42);
+    --gold-faint: rgba(201, 162, 77, 0.2);
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--gold-faint);
+    color: var(--ivory);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.address-block *,
+.address-block *::before,
+.address-block *::after {
+    box-sizing: border-box;
+}
+
+.address-block p {
+    margin: 0;
+}
+
+.address-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 0.42em;
+}
+
+.saved-mark {
+    color: var(--gold);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+}
+
+.delivering-to {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ivory-dim);
+}
+
+.delivering-to strong {
+    color: var(--ivory);
+    font-weight: 600;
+}
+
+.loading-copy {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ivory-dim);
+}
+
+.address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.field-label {
+    font-size: 8px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+}
+
+.field-control {
+    width: 100%;
+    padding: 9px 0;
+    border: 0;
+    border-bottom: 1px solid var(--gold-soft);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ivory);
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    outline: none;
+    transition: border-color 0.4s ease;
+}
+
+.field-control:focus {
+    border-bottom-color: var(--gold);
+}
+
+.field-control::placeholder {
+    color: var(--ivory-dim);
+}
+
+.billing-note {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--ivory-dim);
+}
+
+.address-error {
+    padding: 12px 14px;
+    border-left: 1px solid #b0505a;
+    background: rgba(176, 80, 90, 0.1);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ivory-soft);
+}
+
+@media (max-width: 420px) {
+
+    .field-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
