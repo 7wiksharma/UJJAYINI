@@ -17,21 +17,6 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
         }
 
         /*
-         * Determine the customer account.
-         *
-         * If Salesforce provides an Account Id,
-         * use that account.
-         *
-         * Otherwise use/create the default
-         * UJJAYINI Customers account.
-         */
-        Id customerAccountId = accountId;
-
-        if (customerAccountId == null) {
-            customerAccountId = getDefaultCustomerAccountId();
-        }
-
-        /*
          * Build the external User record.
          */
         User userRecord = new User();
@@ -60,6 +45,33 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
          * Populate Salesforce-required User fields.
          */
         populateRequiredUserFields(userRecord);
+
+        /*
+         * One customer, one account: never register two
+         * customers with the same email.
+         */
+        Integer existingCustomers = [
+            SELECT COUNT()
+            FROM User
+            WHERE Email = :userRecord.Email
+            AND IsActive = true
+            AND ContactId != null
+        ];
+
+        if (existingCustomers > 0) {
+            throw new IllegalArgumentException(
+                'An account with this email already exists. Please sign in.'
+            );
+        }
+
+        /*
+         * Every customer gets their OWN account, so carts,
+         * orders and the Collector's Vault are never shared
+         * between customers. The "accountId" from the site
+         * settings is intentionally not used.
+         */
+        Id customerAccountId =
+            createCustomerAccount(userRecord);
 
         /*
          * Create the Contact that will be associated
@@ -130,27 +142,16 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
 
 
     /*
-     * Gets or creates the default UJJAYINI customer account.
+     * Creates the customer's own account.
      *
      * Salesforce requires the owner of a portal/community
-     * account to have a Salesforce Role.
+     * account to have a Salesforce Role, so the account is
+     * owned by the registration user, who must have one.
      */
-    private Id getDefaultCustomerAccountId() {
+    private Id createCustomerAccount(
+        User userRecord
+    ) {
 
-        /*
-         * Find an existing UJJAYINI customer account.
-         */
-        List<Account> existingAccounts = [
-            SELECT Id,
-                   OwnerId
-            FROM Account
-            WHERE Name = 'UJJAYINI Customers'
-            LIMIT 1
-        ];
-
-        /*
-         * Get the user executing registration.
-         */
         User currentUser = [
             SELECT Id,
                    UserRoleId
@@ -159,9 +160,6 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
             LIMIT 1
         ];
 
-        /*
-         * The registration user must have a Salesforce Role.
-         */
         if (currentUser.UserRoleId == null) {
 
             throw new IllegalArgumentException(
@@ -169,33 +167,16 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
             );
         }
 
-        /*
-         * If the account already exists,
-         * make sure its owner is the current
-         * registration user.
-         */
-        if (!existingAccounts.isEmpty()) {
+        String accountName =
+            (
+                (String.isBlank(userRecord.FirstName)
+                    ? ''
+                    : userRecord.FirstName + ' ') +
+                userRecord.LastName
+            ).trim();
 
-            Account existingAccount =
-                existingAccounts[0];
-
-            if (existingAccount.OwnerId != currentUser.Id) {
-
-                existingAccount.OwnerId =
-                    currentUser.Id;
-
-                update existingAccount;
-            }
-
-            return existingAccount.Id;
-        }
-
-        /*
-         * Create the default UJJAYINI customer account
-         * with an owner who definitely has a role.
-         */
         Account customerAccount = new Account(
-            Name = 'UJJAYINI Customers',
+            Name = accountName.left(255),
             OwnerId = currentUser.Id
         );
 
@@ -232,6 +213,9 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
             );
         }
 
+        userRecord.Email =
+            userRecord.Email.trim().toLowerCase();
+
         if (String.isBlank(userRecord.Username)) {
 
             userRecord.Username =
@@ -263,13 +247,18 @@ global with sharing class UJJAYINIConfigurableSelfRegHandler
         String email
     ) {
 
-        String username =
+        String localPart =
             email.substringBefore('@')
+                .replaceAll('[^a-zA-Z0-9._-]', '');
+
+        if (String.isBlank(localPart)) {
+            localPart = 'collector';
+        }
+
+        return localPart.left(30)
             + '.'
             + String.valueOf(CURRENT_TIME)
             + '@ujjayini.com';
-
-        return username;
     }
 
 

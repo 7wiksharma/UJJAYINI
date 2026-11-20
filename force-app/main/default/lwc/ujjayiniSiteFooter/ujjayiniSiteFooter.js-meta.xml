@@ -2,16 +2,22 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>68.0</apiVersion>
     <isExposed>true</isExposed>
-
     <masterLabel>UJJAYINI Site Footer</masterLabel>
-
-    <description>
-        Premium global footer for the UJJAYINI Experience Cloud site.
-    </description>
-
+    <description>Editorial footer with crown emblem, adaptive theme and concierge enquiries.</description>
     <targets>
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>
-
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property
+                name="theme"
+                type="String"
+                label="Footer theme"
+                description="Auto follows the page. Or choose a fixed theme."
+                datasource="Auto,Noir,Midnight,Royal,Emerald"
+                default="Auto"
+            />
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

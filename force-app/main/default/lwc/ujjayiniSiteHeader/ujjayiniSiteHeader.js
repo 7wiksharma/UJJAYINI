@@ -1,116 +1,29 @@
-import { LightningElement } from 'lwc';
-import { NavigationMixin } from 'lightning/navigation';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { LightningElement, wire } from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
 
 import isGuestUser from '@salesforce/user/isGuest';
+import basePath from '@salesforce/community/basePath';
 
-import getProducts
-    from '@salesforce/apex/UJJAYINIProductCatalogController.getProducts';
-
-import addToCart
-    from '@salesforce/apex/UJJAYINICartController.addToCart';
-
-import getWishlistItems
-    from '@salesforce/apex/UJJAYINIWishlistController.getWishlistItems';
-
-import addToWishlist
-    from '@salesforce/apex/UJJAYINIWishlistController.addToWishlist';
-
-import removeFromWishlist
-    from '@salesforce/apex/UJJAYINIWishlistController.removeFromWishlist';
-
-import pantherVideo
-    from '@salesforce/resourceUrl/UJJAYINI_BlackPanther';
+import getHeaderInfo
+    from '@salesforce/apex/UJJAYINIHeaderController.getHeaderInfo';
 
 
-// =========================================================
-// COLLECTION CONFIG
-// =========================================================
-
-const COLLECTIONS = [
-    {
-        key: 'indranila',
-        filter: 'INDRANĪLA',
-        number: '01',
-        eyebrow: 'THE CELESTIAL COLLECTION',
-        title: 'Indranīla',
-        tagline: 'The depth of midnight. The brilliance of sapphire.',
-        signature: 'SAPPHIRE · MIDNIGHT',
-        className: 'collection-block indranila-section'
-    },
-
-    {
-        key: 'hiranya',
-        filter: 'HIRANYA',
-        number: '02',
-        eyebrow: 'THE SOVEREIGN COLLECTION',
-        title: 'Hiranya',
-        tagline: 'Gold forged into memory. Radiance made eternal.',
-        signature: 'GOLD · DAWN',
-        className: 'collection-block hiranya-section'
-    },
-
-    {
-        key: 'ayas',
-        filter: 'AYAS',
-        number: '03',
-        eyebrow: 'THE ETERNAL COLLECTION',
-        title: 'Ayas',
-        tagline: 'Steel shaped by precision. Permanence in every detail.',
-        signature: 'STEEL · ETERNAL',
-        className: 'collection-block ayas-section'
-    }
-];
+const MOBILE_BREAKPOINT = 1150;
 
 
-const FILTERS = [
-    {
-        value: 'ALL',
-        label: 'ALL'
-    },
+export default class UjjayiniSiteHeader extends LightningElement {
 
-    {
-        value: 'INDRANĪLA',
-        label: 'INDRANĪLA'
-    },
+    menuOpen = false;
+    accountMenuOpen = false;
 
-    {
-        value: 'HIRANYA',
-        label: 'HIRANYA'
-    },
+    currentPath = '/ujjayini/';
 
-    {
-        value: 'AYAS',
-        label: 'AYAS'
-    }
-];
+    firstName = '';
+    lastName = '';
+    cartCount = 0;
 
-
-export default class UjjayiniProductCatalog
-    extends NavigationMixin(LightningElement) {
-
-
-    // =========================================================
-    // STATE
-    // =========================================================
-
-    products = [];
-
-    error;
-
-    isLoading = true;
-
-    retryCount = 0;
-
-    activeCollection = 'ALL';
-
-    sortBy = 'featured';
-
-    videoReady = false;
-
-    _videoInitialized = false;
-
-    showGuestCartModal = false;
+    _listenersAttached = false;
+    _infoRequest = 0;
 
 
     // =========================================================
@@ -118,874 +31,344 @@ export default class UjjayiniProductCatalog
     // =========================================================
 
     connectedCallback() {
-        this.loadProducts();
+
+        this.currentPath = this.normalizePath(
+            window.location.pathname || '/ujjayini/'
+        );
+
+        this.attachListeners();
+
+        this.refreshHeaderInfo();
     }
 
 
-    renderedCallback() {
+    disconnectedCallback() {
 
-        if (this._videoInitialized) {
+        this.detachListeners();
+
+        // Never leave the page scroll-locked.
+        this.setBodyScrollLock(false);
+    }
+
+
+    attachListeners() {
+
+        if (this._listenersAttached) {
             return;
         }
 
-        const video = this.template.querySelector('video');
+        document.addEventListener('click', this.handleDocumentClick);
+        window.addEventListener('keydown', this.handleKeydown);
+        window.addEventListener('resize', this.handleResize);
+        window.addEventListener('pageshow', this.handlePageShow);
 
-        if (!video) {
+        this._listenersAttached = true;
+    }
+
+
+    detachListeners() {
+
+        if (!this._listenersAttached) {
             return;
         }
 
-        this._videoInitialized = true;
+        document.removeEventListener('click', this.handleDocumentClick);
+        window.removeEventListener('keydown', this.handleKeydown);
+        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('pageshow', this.handlePageShow);
 
-        video.muted = true;
-        video.defaultMuted = true;
+        this._listenersAttached = false;
+    }
 
-        const reduceMotion =
-            window.matchMedia &&
-            window.matchMedia(
-                '(prefers-reduced-motion: reduce)'
-            ).matches;
 
-        if (reduceMotion) {
-            this.videoReady = true;
+    // =========================================================
+    // ROUTE SYNC
+    // =========================================================
+
+    @wire(CurrentPageReference)
+    handlePageReference(pageReference) {
+
+        if (!pageReference) {
             return;
         }
 
-        const playPromise = video.play();
-
-        if (playPromise && playPromise.catch) {
-
-            playPromise.catch(() => {
-                // Browser blocked autoplay.
-            });
-
-        }
-    }
-
-
-    // =========================================================
-    // VIDEO
-    // =========================================================
-
-    get pantherVideoUrl() {
-        return pantherVideo;
-    }
-
-
-    handleVideoReady() {
-        this.videoReady = true;
-    }
-
-
-    get videoClass() {
-
-        return this.videoReady
-            ? 'panther-video is-ready'
-            : 'panther-video';
-
-    }
-
-
-    // =========================================================
-    // LOAD PRODUCTS
-    // =========================================================
-
-    async loadProducts() {
-
-        this.isLoading = true;
-
-        this.error = undefined;
-
-        try {
-
-            const [
-                productData,
-                wishlistData
-            ] = await Promise.all([
-
-                getProducts(),
-
-                getWishlistItems()
-
-            ]);
-
-
-            const wishlistedProductIds =
-                new Set(
-                    (wishlistData || [])
-                        .map(item => item.productId)
-                );
-
-
-            this.products =
-                (productData || []).map(
-                    (product, index) => ({
-
-                        ...product,
-
-                        isAddingToCart: false,
-
-                        isAddingToWishlist: false,
-
-                        isWishlisted:
-                            wishlistedProductIds.has(
-                                product.productId
-                            ),
-
-                        displayIndex:
-                            String(index + 1)
-                                .padStart(2, '0')
-
-                    })
-                );
-
-
-            this.error = undefined;
-
-            this.isLoading = false;
-
-            this.retryCount = 0;
-
-        } catch (error) {
-
-            this.products = [];
-
-            this.error = error;
-
-            this.isLoading = false;
-
-
-            if (this.retryCount < 3) {
-
-                this.retryCount++;
-
-                setTimeout(() => {
-
-                    this.loadProducts();
-
-                }, 1000);
-
-            }
-
-        }
-    }
-
-
-    // =========================================================
-    // COLLECTION HELPERS
-    // =========================================================
-
-    normalizeCollection(name) {
-
-        if (!name) {
-            return '';
-        }
-
-        return name
-            .toLowerCase()
-            .replace(/ī/g, 'i')
-            .trim();
-
-    }
-
-
-    isCollection(product, collection) {
-
-        return (
-            this.normalizeCollection(
-                product.collectionName
-            ) ===
-            this.normalizeCollection(
-                collection
-            )
+        this.currentPath = this.normalizePath(
+            window.location.pathname || '/ujjayini/'
         );
 
+        this.closeAllMenus();
+
+        // Cart may have changed on the page we came from.
+        this.refreshHeaderInfo();
     }
 
 
     // =========================================================
-    // FILTERED + SORTED PRODUCTS
+    // GLOBAL EVENT HANDLERS (arrow functions keep "this")
     // =========================================================
 
-    get filteredProducts() {
+    handleDocumentClick = event => {
 
-        let result = [...this.products];
-
-
-        if (
-            this.activeCollection !== 'ALL'
-        ) {
-
-            result = result.filter(
-                product =>
-                    this.isCollection(
-                        product,
-                        this.activeCollection
-                    )
-            );
-
-        }
-
-
-        result.sort((a, b) => {
-
-            if (this.sortBy === 'price-low') {
-
-                return (
-                    (a.price || 0) -
-                    (b.price || 0)
-                );
-
-            }
-
-
-            if (this.sortBy === 'price-high') {
-
-                return (
-                    (b.price || 0) -
-                    (a.price || 0)
-                );
-
-            }
-
-
-            if (this.sortBy === 'name') {
-
-                return (
-                    (a.productName || '')
-                        .localeCompare(
-                            b.productName || ''
-                        )
-                );
-
-            }
-
-
-            return 0;
-
-        });
-
-
-        return result;
-
-    }
-
-
-    // =========================================================
-    // COLLECTION SECTIONS
-    // =========================================================
-
-    get collectionSections() {
-
-        const filtered =
-            this.filteredProducts;
-
-
-        return COLLECTIONS
-
-            .filter(collection =>
-
-                this.activeCollection === 'ALL' ||
-
-                this.normalizeCollection(
-                    this.activeCollection
-                ) ===
-                this.normalizeCollection(
-                    collection.filter
-                )
-
-            )
-
-            .map(collection => ({
-
-                ...collection,
-
-                products:
-
-                    filtered
-
-                        .filter(product =>
-                            this.isCollection(
-                                product,
-                                collection.filter
-                            )
-                        )
-
-                        .map(product =>
-                            this.decorateProduct(product)
-                        )
-
-            }))
-
-            .filter(section =>
-                section.products.length > 0
-            );
-
-    }
-
-
-    decorateProduct(product) {
-
-        return {
-
-            ...product,
-
-            formattedPrice:
-                product.price
-                    ? Number(
-                        product.price
-                    ).toLocaleString('en-IN')
-                    : '',
-
-            wishlistIcon:
-                product.isWishlisted
-                    ? '♥'
-                    : '♡',
-
-            wishlistTitle:
-                product.isWishlisted
-                    ? 'Remove from Wishlist'
-                    : 'Add to Wishlist',
-
-            wishlistClass:
-                product.isWishlisted
-                    ? 'wishlist-button is-active'
-                    : 'wishlist-button',
-
-            cartLabel:
-                product.isAddingToCart
-                    ? 'ADDING TO CART'
-                    : 'ADD TO CART'
-
-        };
-
-    }
-
-
-    get totalCount() {
-
-        return String(
-            this.products.length
-        ).padStart(2, '0');
-
-    }
-
-
-    // =========================================================
-    // FILTER BUTTONS
-    // =========================================================
-
-    get filterOptions() {
-
-        return FILTERS.map(filter => ({
-
-            ...filter,
-
-            className:
-                this.activeCollection ===
-                filter.value
-
-                    ? 'filter-button active'
-
-                    : 'filter-button'
-
-        }));
-
-    }
-
-
-    // =========================================================
-    // FILTER
-    // =========================================================
-
-    handleCollectionFilter(event) {
-
-        this.activeCollection =
-            event.currentTarget.dataset.filter;
-
-        /*
-         * IMPORTANT:
-         * Do NOT scroll to top here.
-         *
-         * The filter rail is now sticky inside
-         * the catalog workspace.
-         *
-         * Keeping scroll position makes filtering
-         * feel natural instead of throwing the
-         * user back to the hero.
-         */
-    }
-
-
-    handleSortChange(event) {
-
-        this.sortBy =
-            event.target.value;
-
-    }
-
-
-    resetFilters() {
-
-        this.activeCollection = 'ALL';
-
-        this.sortBy = 'featured';
-
-    }
-
-
-    // =========================================================
-    // HERO CTA
-    // =========================================================
-
-    handleScrollToCatalog() {
-
-        const target =
-            this.template.querySelector(
-                '.catalog-workspace'
-            );
-
-
-        if (target) {
-
-            target.scrollIntoView({
-
-                behavior: 'smooth',
-
-                block: 'start'
-
-            });
-
-        }
-
-    }
-
-
-    // =========================================================
-    // PAGE STATES
-    // =========================================================
-
-    get hasProducts() {
-
-        return this.products.length > 0;
-
-    }
-
-
-    get showEmpty() {
-
-        return (
-
-            !this.isLoading &&
-
-            !this.hasError &&
-
-            this.filteredProducts.length === 0
-
-        );
-
-    }
-
-
-    get hasError() {
-
-        return (
-
-            this.error != null &&
-
-            this.products.length === 0
-
-        );
-
-    }
-
-
-    get errorMessage() {
-
-        return this.getErrorMessage(
-            this.error
-        );
-
-    }
-
-
-    // =========================================================
-    // ADD TO CART
-    // =========================================================
-
-    async handleAddToCart(event) {
-
-        event.stopPropagation();
-
-
-        const productId =
-            event.currentTarget.dataset.productId;
-
-
-        if (!productId) {
+        if (!this.accountMenuOpen) {
             return;
         }
 
+        const path =
+            typeof event.composedPath === 'function'
+                ? event.composedPath()
+                : [];
 
-        // -----------------------------------------------------
-        // GUEST USER
-        // -----------------------------------------------------
+        if (!path.includes(this.template.host)) {
+            this.accountMenuOpen = false;
+        }
+    };
+
+
+    handleKeydown = event => {
+
+        if (event.key === 'Escape') {
+            this.closeAllMenus();
+        }
+    };
+
+
+    handleResize = () => {
+
+        if (this.menuOpen && window.innerWidth > MOBILE_BREAKPOINT) {
+            this.closeAllMenus();
+        }
+    };
+
+
+    handlePageShow = event => {
+
+        // Coming back with the browser Back button.
+        if (event.persisted) {
+            this.closeAllMenus();
+            this.refreshHeaderInfo();
+        }
+    };
+
+
+    // =========================================================
+    // DATA
+    // =========================================================
+
+    get isLoggedIn() {
+        return !isGuestUser;
+    }
+
+
+    async refreshHeaderInfo() {
 
         if (isGuestUser) {
-
-            this.showGuestCartModal = true;
-
             return;
-
         }
 
-
-        // -----------------------------------------------------
-        // AUTHENTICATED USER
-        // -----------------------------------------------------
-
-        this.updateProduct(
-
-            productId,
-
-            {
-                isAddingToCart: true
-            }
-
-        );
-
+        // Ignore slower, older responses.
+        const request = ++this._infoRequest;
 
         try {
 
-            await addToCart({
+            const info = await getHeaderInfo();
 
-                productId,
+            if (request !== this._infoRequest || !info) {
+                return;
+            }
 
-                quantity: 1
-
-            });
-
-
-            this.showToast(
-
-                'Added to Cart',
-
-                'Watch added to your cart successfully.',
-
-                'success'
-
-            );
+            this.firstName = info.firstName || '';
+            this.lastName = info.lastName || '';
+            this.cartCount = info.cartCount || 0;
 
         } catch (error) {
 
-            this.showToast(
-
-                'Unable to Add to Cart',
-
-                this.getErrorMessage(error),
-
-                'error'
-
-            );
-
-        } finally {
-
-            this.updateProduct(
-
-                productId,
-
-                {
-                    isAddingToCart: false
-                }
-
-            );
-
+            // The header must never break the page.
         }
+    }
 
+
+    get initials() {
+
+        const letters =
+            (this.firstName ? this.firstName.charAt(0) : '') +
+            (this.lastName ? this.lastName.charAt(0) : '');
+
+        return (letters || 'U').toUpperCase();
+    }
+
+    get displayName() {
+        return [this.firstName, this.lastName].filter(part => part).join(' ');
+    }
+
+    get hasCartItems() {
+        return this.cartCount > 0;
+    }
+
+    get cartBadge() {
+        return this.cartCount > 9 ? '9+' : String(this.cartCount);
+    }
+
+    get cartLabel() {
+        return this.hasCartItems
+            ? 'Cart, ' + this.cartCount + ' items'
+            : 'Cart';
     }
 
 
     // =========================================================
-    // GUEST CART MODAL
+    // MENUS
     // =========================================================
 
-    closeGuestCartModal() {
+    toggleMenu() {
 
-        this.showGuestCartModal = false;
+        this.menuOpen = !this.menuOpen;
+        this.accountMenuOpen = false;
 
+        this.setBodyScrollLock(this.menuOpen);
     }
 
+    closeMenu() {
+        this.closeAllMenus();
+    }
 
-    stopModalPropagation(event) {
+    toggleAccountMenu(event) {
 
         event.stopPropagation();
 
+        this.accountMenuOpen = !this.accountMenuOpen;
     }
 
+    closeAllMenus() {
 
-    handleGuestLogin() {
+        this.menuOpen = false;
+        this.accountMenuOpen = false;
 
-        const startUrl =
-            window.location.pathname +
-            window.location.search;
-
-
-        window.location.href =
-            '/ujjayini/login?startURL=' +
-            encodeURIComponent(
-                startUrl
-            );
-
+        this.setBodyScrollLock(false);
     }
 
-
-    handleGuestSignup() {
-
-        window.location.href =
-            '/ujjayini/self-register';
-
-    }
-
-
-    // =========================================================
-    // WISHLIST
-    // =========================================================
-
-    async handleWishlist(event) {
-
-        event.stopPropagation();
-
-
-        const productId =
-            event.currentTarget.dataset.productId;
-
-
-        const product =
-            this.products.find(
-                item =>
-                    item.productId === productId
-            );
-
-
-        if (!product) {
-            return;
-        }
-
-
-        this.updateProduct(
-
-            productId,
-
-            {
-                isAddingToWishlist: true
-            }
-
-        );
-
+    setBodyScrollLock(locked) {
 
         try {
-
-            if (product.isWishlisted) {
-
-                await removeFromWishlist({
-                    productId
-                });
-
-
-                this.updateProduct(
-
-                    productId,
-
-                    {
-                        isWishlisted: false,
-
-                        isAddingToWishlist: false
-                    }
-
-                );
-
-
-                this.showToast(
-
-                    'Removed from Wishlist',
-
-                    'Watch removed from your wishlist.',
-
-                    'success'
-
-                );
-
-            } else {
-
-                await addToWishlist({
-                    productId
-                });
-
-
-                this.updateProduct(
-
-                    productId,
-
-                    {
-                        isWishlisted: true,
-
-                        isAddingToWishlist: false
-                    }
-
-                );
-
-
-                this.showToast(
-
-                    'Added to Wishlist',
-
-                    'Watch added to your wishlist.',
-
-                    'success'
-
-                );
-
-            }
-
+            document.body.style.overflow = locked ? 'hidden' : '';
         } catch (error) {
+            // Not critical.
+        }
+    }
 
-            this.updateProduct(
+    get menuExpanded() {
+        return this.menuOpen ? 'true' : 'false';
+    }
 
-                productId,
+    get accountExpanded() {
+        return this.accountMenuOpen ? 'true' : 'false';
+    }
 
-                {
-                    isAddingToWishlist: false
-                }
+    get headerClass() {
+        return this.menuOpen
+            ? 'site-header menu-open'
+            : 'site-header';
+    }
 
-            );
+    get menuButtonClass() {
+        return this.menuOpen
+            ? 'menu-button is-open'
+            : 'menu-button';
+    }
+
+    get accountButtonClass() {
+
+        const active =
+            this.accountMenuOpen ||
+            this.isCurrentPage('/ujjayini/my-account');
+
+        return active
+            ? 'account-button is-active'
+            : 'account-button';
+    }
 
 
-            this.showToast(
+    // =========================================================
+    // SIGN OUT
+    // =========================================================
 
-                'Wishlist Error',
+    handleSignOut() {
 
-                this.getErrorMessage(error),
+        this.closeAllMenus();
 
-                'error'
+        const prefix = (basePath || '/ujjayini').replace(/\/s$/i, '');
 
-            );
+        window.location.href =
+            prefix +
+            '/secur/logout.jsp?retUrl=' +
+            encodeURIComponent(prefix + '/');
+    }
 
+
+    // =========================================================
+    // ACTIVE CLASSES
+    // =========================================================
+
+    get homeNavClass() { return this.navClass('/ujjayini/'); }
+    get collectionsNavClass() { return this.navClass('/ujjayini/collections'); }
+    get watchesNavClass() { return this.navClass('/ujjayini/watches'); }
+    get aboutNavClass() { return this.navClass('/ujjayini/about-us'); }
+    get serviceNavClass() { return this.navClass('/ujjayini/service'); }
+
+    get wishlistIconClass() { return this.iconClass('/ujjayini/wishlist'); }
+    get cartIconClass() { return this.iconClass('/ujjayini/cart'); }
+
+    get homeMobileClass() { return this.mobileClass('/ujjayini/'); }
+    get collectionsMobileClass() { return this.mobileClass('/ujjayini/collections'); }
+    get watchesMobileClass() { return this.mobileClass('/ujjayini/watches'); }
+    get aboutMobileClass() { return this.mobileClass('/ujjayini/about-us'); }
+    get serviceMobileClass() { return this.mobileClass('/ujjayini/service'); }
+    get wishlistMobileClass() { return this.mobileClass('/ujjayini/wishlist'); }
+    get cartMobileClass() { return this.mobileClass('/ujjayini/cart'); }
+    get accountMobileClass() { return this.mobileClass('/ujjayini/my-account'); }
+    get ordersMobileClass() { return this.mobileClass('/ujjayini/order-history'); }
+
+    navClass(path) {
+        return this.isCurrentPage(path) ? 'nav-link active' : 'nav-link';
+    }
+
+    iconClass(path) {
+        return this.isCurrentPage(path) ? 'icon-link active' : 'icon-link';
+    }
+
+    mobileClass(path) {
+        return this.isCurrentPage(path) ? 'mobile-link active' : 'mobile-link';
+    }
+
+
+    // =========================================================
+    // PATH HELPERS
+    // =========================================================
+
+    isCurrentPage(pagePath) {
+
+        const current = this.normalizePath(this.currentPath);
+        const target = this.normalizePath(pagePath);
+
+        // HOME is active only on the home page itself.
+        if (target === '/ujjayini') {
+            return current === '/ujjayini';
         }
 
+        return current === target || current.startsWith(target + '/');
     }
 
+    normalizePath(path) {
 
-    // =========================================================
-    // PRODUCT UPDATE
-    // =========================================================
-
-    updateProduct(
-        productId,
-        changes
-    ) {
-
-        this.products =
-            this.products.map(product =>
-
-                product.productId === productId
-
-                    ? {
-                        ...product,
-                        ...changes
-                    }
-
-                    : product
-
-            );
-
-    }
-
-
-    // =========================================================
-    // PRODUCT DETAIL
-    // =========================================================
-
-    handleProductClick(event) {
-
-        event.stopPropagation();
-
-
-        const productId =
-            event.currentTarget.dataset.productId;
-
-
-        if (!productId) {
-            return;
+        if (!path) {
+            return '/';
         }
 
+        let normalized = path.split('?')[0].split('#')[0];
 
-        this[
-            NavigationMixin.Navigate
-        ]({
-
-            type: 'comm__namedPage',
-
-            attributes: {
-                name: 'Product_Detail__c'
-            },
-
-            state: {
-                productId
-            }
-
-        });
-
-    }
-
-
-    // =========================================================
-    // ERROR
-    // =========================================================
-
-    getErrorMessage(error) {
-
-        if (error?.body?.message) {
-
-            return error.body.message;
-
+        if (normalized.length > 1 && normalized.endsWith('/')) {
+            normalized = normalized.slice(0, -1);
         }
 
-
-        if (error?.message) {
-
-            return error.message;
-
-        }
-
-
-        return 'Something went wrong.';
-
+        return normalized;
     }
-
-
-    // =========================================================
-    // TOAST
-    // =========================================================
-
-    showToast(
-        title,
-        message,
-        variant
-    ) {
-
-        this.dispatchEvent(
-
-            new ShowToastEvent({
-
-                title,
-
-                message,
-
-                variant
-
-            })
-
-        );
-
-    }
-
 }

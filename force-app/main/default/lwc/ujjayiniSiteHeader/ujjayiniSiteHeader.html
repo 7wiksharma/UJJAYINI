@@ -1,603 +1,209 @@
 <template>
-    <main class="watches-page">
+    <header class={headerClass}>
 
-        <!-- =================================================
-             PANTHER VIDEO BACKGROUND
-        ================================================== -->
-        <div class="video-stage" aria-hidden="true">
-            <video
-                class={videoClass}
-                src={pantherVideoUrl}
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="auto"
-                onloadeddata={handleVideoReady}
-            ></video>
+        <div class="header-inner">
 
-            <div class="video-tint"></div>
-            <div class="video-vignette"></div>
+            <!-- BRAND -->
+            <a href="/ujjayini/" class="brand" aria-label="UJJAYINI Home">
+                <span class="brand-name">UJJAYINI</span>
+                <span class="brand-tagline">THE BEGINNING OF YOUR TIME</span>
+            </a>
+
+            <!-- DESKTOP NAVIGATION -->
+            <nav class="main-nav" aria-label="Primary navigation">
+                <a href="/ujjayini/" class={homeNavClass}>HOME</a>
+                <a href="/ujjayini/collections" class={collectionsNavClass}>COLLECTIONS</a>
+                <a href="/ujjayini/watches" class={watchesNavClass}>WATCHES</a>
+                <a href="/ujjayini/about-us" class={aboutNavClass}>ABOUT US</a>
+                <a href="/ujjayini/service" class={serviceNavClass}>SERVICE</a>
+            </nav>
+
+            <!-- RIGHT ACTIONS -->
+            <div class="utility-nav">
+
+                <a href="/ujjayini/wishlist" class={wishlistIconClass} aria-label="Wishlist" title="Wishlist">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 20s-7-4.4-7-10.1A4 4 0 0 1 12 7.3a4 4 0 0 1 7 2.6C19 15.6 12 20 12 20z"></path>
+                    </svg>
+                </a>
+
+                <a href="/ujjayini/cart" class={cartIconClass} aria-label={cartLabel} title="Cart">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5.5 8.5h13l-1.1 11.5H6.6L5.5 8.5z"></path>
+                        <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"></path>
+                    </svg>
+                    <template if:true={hasCartItems}>
+                        <span class="badge">{cartBadge}</span>
+                    </template>
+                </a>
+
+                <!-- GUEST -->
+                <template if:false={isLoggedIn}>
+                    <a href="/ujjayini/login" class="utility-link">LOGIN</a>
+                    <a href="/ujjayini/SelfRegister" class="utility-link signup-link">SIGN UP</a>
+                </template>
+
+                <!-- SIGNED IN -->
+                <template if:true={isLoggedIn}>
+
+                    <div class="account-wrap">
+
+                        <button
+                            class={accountButtonClass}
+                            type="button"
+                            onclick={toggleAccountMenu}
+                            aria-haspopup="true"
+                            aria-expanded={accountExpanded}
+                            aria-label="Your account"
+                        >
+                            <span class="avatar">{initials}</span>
+                        </button>
+
+                        <template if:true={accountMenuOpen}>
+
+                            <div class="account-menu" role="menu">
+
+                                <div class="account-head">
+                                    <span class="account-kicker">SIGNED IN AS</span>
+                                    <span class="account-name">{displayName}</span>
+                                </div>
+
+                                <a href="/ujjayini/my-account" class="account-item" role="menuitem" onclick={closeMenu}>
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <circle cx="12" cy="8" r="3.5"></circle>
+                                        <path d="M5 20c1.4-3.4 4-5 7-5s5.6 1.6 7 5"></path>
+                                    </svg>
+                                    <span>MY ACCOUNT</span>
+                                </a>
+
+                                <a href="/ujjayini/order-history" class="account-item" role="menuitem" onclick={closeMenu}>
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M7 3.5h7.5l3.5 3.5v13.5H7z"></path>
+                                        <path d="M14.5 3.5V7H18"></path>
+                                        <path d="M9.5 12h6M9.5 15.5h6"></path>
+                                    </svg>
+                                    <span>ORDERS</span>
+                                </a>
+
+                                <a href="/ujjayini/collector-vault" class="account-item" role="menuitem" onclick={closeMenu}>
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="5" y="10.5" width="14" height="10" rx="1"></rect>
+                                        <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path>
+                                    </svg>
+                                    <span>COLLECTOR'S VAULT</span>
+                                </a>
+
+                                <div class="account-divider"></div>
+
+                                <button type="button" class="account-item sign-out" role="menuitem" onclick={handleSignOut}>
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M14 4h5v16h-5"></path>
+                                        <path d="M10 8l-4 4 4 4"></path>
+                                        <path d="M6 12h10"></path>
+                                    </svg>
+                                    <span>SIGN OUT</span>
+                                </button>
+
+                            </div>
+
+                        </template>
+
+                    </div>
+
+                </template>
+
+                <span class="utility-divider"></span>
+
+                <a href="/ujjayini/collector-vault" class="vault-button">
+                    <span>ENTER VAULT</span>
+                    <span class="vault-arrow">↗</span>
+                </a>
+
+            </div>
+
+            <!-- MOBILE MENU BUTTON -->
+            <button
+                class={menuButtonClass}
+                type="button"
+                onclick={toggleMenu}
+                aria-label="Toggle navigation menu"
+                aria-expanded={menuExpanded}
+            >
+                <span class="bar bar-top"></span>
+                <span class="bar bar-bottom"></span>
+            </button>
+
         </div>
 
+        <!-- MOBILE NAVIGATION -->
+        <template if:true={menuOpen}>
 
-        <!-- =================================================
-             HERO
-        ================================================== -->
-        <section class="catalog-intro">
+            <nav class="mobile-menu" aria-label="Mobile navigation">
 
-            <div class="intro-content">
-
-                <p class="eyebrow">
-                    THE HOUSE OF UJJAYINI
-                </p>
-
-                <h1>
-                    Time,
-                    <em>in three expressions.</em>
-                </h1>
-
-                <div class="intro-rule"></div>
-
-                <p class="intro-copy">
-                    Discover the timepieces of UJJAYINI —
-                    three distinct expressions of horology,
-                    shaped by gold, sapphire and steel.
-                </p>
-
-                <button
-                    class="intro-cta"
-                    type="button"
-                    onclick={handleScrollToCatalog}
-                >
-                    <span>VIEW THE TIMEPIECES</span>
-                    <span class="intro-cta-arrow">↓</span>
-                </button>
-
-            </div>
-
-
-            <div class="intro-side">
-
-                <div class="intro-index">
-
-                    <span class="index-roman">
-                        III
-                    </span>
-
-                    <span class="index-label">
-                        THE TIMEPIECES
-                    </span>
-
-                </div>
-
-
-                <template if:true={hasProducts}>
-
-                    <div class="intro-stats">
-
-                        <div class="stat">
-
-                            <strong>
-                                {totalCount}
-                            </strong>
-
-                            <span>
-                                TIMEPIECES
-                            </span>
-
+                <template if:true={isLoggedIn}>
+                    <div class="mobile-account">
+                        <span class="avatar">{initials}</span>
+                        <div>
+                            <span class="account-kicker">SIGNED IN AS</span>
+                            <span class="account-name">{displayName}</span>
                         </div>
-
-                        <div class="stat">
-
-                            <strong>
-                                03
-                            </strong>
-
-                            <span>
-                                COLLECTIONS
-                            </span>
-
-                        </div>
-
                     </div>
-
                 </template>
 
-            </div>
+                <a href="/ujjayini/" onclick={closeMenu} class={homeMobileClass}>
+                    <span class="mobile-index">01</span>HOME
+                </a>
+                <a href="/ujjayini/collections" onclick={closeMenu} class={collectionsMobileClass}>
+                    <span class="mobile-index">02</span>COLLECTIONS
+                </a>
+                <a href="/ujjayini/watches" onclick={closeMenu} class={watchesMobileClass}>
+                    <span class="mobile-index">03</span>WATCHES
+                </a>
+                <a href="/ujjayini/about-us" onclick={closeMenu} class={aboutMobileClass}>
+                    <span class="mobile-index">04</span>ABOUT US
+                </a>
+                <a href="/ujjayini/service" onclick={closeMenu} class={serviceMobileClass}>
+                    <span class="mobile-index">05</span>SERVICE
+                </a>
+                <a href="/ujjayini/wishlist" onclick={closeMenu} class={wishlistMobileClass}>
+                    <span class="mobile-index">06</span>WISHLIST
+                </a>
+                <a href="/ujjayini/cart" onclick={closeMenu} class={cartMobileClass}>
+                    <span class="mobile-index">07</span>CART
+                    <template if:true={hasCartItems}>
+                        <span class="mobile-badge">{cartBadge}</span>
+                    </template>
+                </a>
 
-        </section>
-
-
-
-        <!-- =================================================
-             CATALOG WORKSPACE
-        ================================================== -->
-        <section class="catalog-workspace">
-
-
-            <!-- =================================================
-                 LEFT FILTER RAIL
-            ================================================== -->
-            <aside class="filter-section">
-
-                <div class="filter-header">
-
-                    <div class="filter-brand">
-
-                        <span class="filter-eyebrow">
-                            CURATE
-                        </span>
-
-                        <span class="filter-eyebrow">
-                            YOUR TIME
-                        </span>
-
-                    </div>
-
-
-                    <div class="product-count">
-
-                        {filteredProducts.length}
-                        <span>TIMEPIECES</span>
-
-                    </div>
-
-
-                    <div class="filter-controls">
-
-                        <template
-                            for:each={filterOptions}
-                            for:item="filter"
-                        >
-
-                            <button
-                                key={filter.value}
-                                class={filter.className}
-                                data-filter={filter.value}
-                                onclick={handleCollectionFilter}
-                            >
-                                {filter.label}
-                            </button>
-
-                        </template>
-
-
-                        <select
-                            class="sort-select"
-                            value={sortBy}
-                            onchange={handleSortChange}
-                        >
-
-                            <option value="featured">
-                                FEATURED
-                            </option>
-
-                            <option value="price-low">
-                                PRICE · LOW TO HIGH
-                            </option>
-
-                            <option value="price-high">
-                                PRICE · HIGH TO LOW
-                            </option>
-
-                            <option value="name">
-                                NAME · A–Z
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="filter-vertical-line"></div>
-
-                </div>
-
-            </aside>
-
-
-
-            <!-- =================================================
-                 PRODUCTS AREA
-            ================================================== -->
-            <div class="catalog-results">
-
-
-                <!-- =================================================
-                     LOADING
-                ================================================== -->
-                <template if:true={isLoading}>
-
-                    <section class="loading-state">
-
-                        <div class="loader-ring"></div>
-
-                        <p>
-                            ENTERING THE HOUSE OF UJJAYINI
-                        </p>
-
-                    </section>
-
+                <template if:false={isLoggedIn}>
+                    <a href="/ujjayini/login" onclick={closeMenu} class="mobile-link">
+                        <span class="mobile-index">08</span>LOGIN
+                    </a>
+                    <a href="/ujjayini/SelfRegister" onclick={closeMenu} class="mobile-link">
+                        <span class="mobile-index">09</span>SIGN UP
+                    </a>
                 </template>
 
-
-
-                <!-- =================================================
-                     ERROR
-                ================================================== -->
-                <template if:true={hasError}>
-
-                    <section class="catalog-state">
-
-                        <p class="state-eyebrow">
-                            COLLECTION UNAVAILABLE
-                        </p>
-
-                        <h2>
-                            The timepieces could not be loaded.
-                        </h2>
-
-                        <p>
-                            {errorMessage}
-                        </p>
-
-                    </section>
-
-                </template>
-
-
-
-                <!-- =================================================
-                     COLLECTIONS
-                ================================================== -->
-                <template if:true={hasProducts}>
-
-                    <div class="collections-container">
-
-                        <template
-                            for:each={collectionSections}
-                            for:item="section"
-                        >
-
-                            <section
-                                key={section.key}
-                                class={section.className}
-                            >
-
-
-                                <!-- COLLECTION HEADER -->
-                                <div class="collection-header">
-
-                                    <div class="collection-number">
-                                        {section.number}
-                                    </div>
-
-
-                                    <div class="collection-title">
-
-                                        <p class="collection-eyebrow">
-                                            {section.eyebrow}
-                                        </p>
-
-                                        <h2>
-                                            {section.title}
-                                        </h2>
-
-                                        <p class="collection-tagline">
-                                            {section.tagline}
-                                        </p>
-
-                                    </div>
-
-
-                                    <div class="collection-signature">
-                                        {section.signature}
-                                    </div>
-
-                                </div>
-
-
-
-                                <!-- PRODUCTS -->
-                                <div class="product-grid">
-
-                                    <template
-                                        for:each={section.products}
-                                        for:item="product"
-                                    >
-
-                                        <article
-                                            key={product.productId}
-                                            class="watch-card"
-                                            data-product-id={product.productId}
-                                            onclick={handleProductClick}
-                                        >
-
-
-                                            <!-- IMAGE -->
-                                            <div class="watch-image">
-
-                                                <template
-                                                    if:true={product.productImageUrl}
-                                                >
-
-                                                    <img
-                                                        src={product.productImageUrl}
-                                                        alt={product.productName}
-                                                        class="watch-image-file"
-                                                    />
-
-                                                </template>
-
-
-                                                <template
-                                                    if:false={product.productImageUrl}
-                                                >
-
-                                                    <div class="image-placeholder">
-                                                        UJJAYINI
-                                                    </div>
-
-                                                </template>
-
-
-                                                <div class="image-shade"></div>
-
-
-                                                <span class="watch-index">
-                                                    {product.displayIndex}
-                                                </span>
-
-
-                                                <button
-                                                    class={product.wishlistClass}
-                                                    data-product-id={product.productId}
-                                                    onclick={handleWishlist}
-                                                    disabled={product.isAddingToWishlist}
-                                                    title={product.wishlistTitle}
-                                                    aria-label={product.wishlistTitle}
-                                                >
-                                                    {product.wishlistIcon}
-                                                </button>
-
-                                            </div>
-
-
-
-                                            <!-- DETAILS -->
-                                            <div class="watch-details">
-
-                                                <p class="card-collection">
-                                                    {product.collectionName}
-                                                </p>
-
-
-                                                <h3>
-                                                    {product.productName}
-                                                </h3>
-
-
-                                                <template
-                                                    if:true={product.productCode}
-                                                >
-
-                                                    <p class="watch-code">
-                                                        {product.productCode}
-                                                    </p>
-
-                                                </template>
-
-
-                                                <template
-                                                    if:true={product.description}
-                                                >
-
-                                                    <p class="watch-description">
-                                                        {product.description}
-                                                    </p>
-
-                                                </template>
-
-
-                                                <div class="watch-footer">
-
-                                                    <template
-                                                        if:true={product.price}
-                                                    >
-
-                                                        <span class="watch-price">
-                                                            ₹{product.formattedPrice}
-                                                        </span>
-
-                                                    </template>
-
-
-                                                    <button
-                                                        class="explore-button"
-                                                        data-product-id={product.productId}
-                                                        onclick={handleProductClick}
-                                                    >
-
-                                                        <span>
-                                                            EXPLORE
-                                                        </span>
-
-                                                        <span>
-                                                            ↗
-                                                        </span>
-
-                                                    </button>
-
-                                                </div>
-
-
-                                                <button
-                                                    class="cart-button"
-                                                    data-product-id={product.productId}
-                                                    onclick={handleAddToCart}
-                                                    disabled={product.isAddingToCart}
-                                                >
-                                                    {product.cartLabel}
-                                                </button>
-
-                                            </div>
-
-                                        </article>
-
-                                    </template>
-
-                                </div>
-
-                            </section>
-
-                        </template>
-
-                    </div>
-
-                </template>
-
-
-
-                <!-- =================================================
-                     EMPTY
-                ================================================== -->
-                <template if:true={showEmpty}>
-
-                    <section class="catalog-state">
-
-                        <p class="state-eyebrow">
-                            UJJAYINI HOROLOGY
-                        </p>
-
-                        <h2>
-                            No timepieces found.
-                        </h2>
-
-                        <p>
-                            Try another collection or reset your filters.
-                        </p>
-
-                        <button
-                            class="reset-button"
-                            onclick={resetFilters}
-                        >
-                            RESET FILTERS
-                        </button>
-
-                    </section>
-
-                </template>
-
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             CLOSING
-        ================================================== -->
-        <section class="catalog-closing">
-
-            <div class="closing-rule"></div>
-
-            <p>
-                TIME IS NOT SIMPLY MEASURED.
-                <em>IT IS REMEMBERED.</em>
-            </p>
-
-        </section>
-
-
-
-        <!-- =================================================
-             GUEST CART MODAL
-        ================================================== -->
-        <template if:true={showGuestCartModal}>
-
-            <div
-                class="guest-modal-backdrop"
-                onclick={closeGuestCartModal}
-            >
-
-                <div
-                    class="guest-modal"
-                    onclick={stopModalPropagation}
-                >
-
-                    <button
-                        class="guest-modal-close"
-                        type="button"
-                        onclick={closeGuestCartModal}
-                        aria-label="Close"
-                    >
-                        ×
+                <template if:true={isLoggedIn}>
+                    <a href="/ujjayini/my-account" onclick={closeMenu} class={accountMobileClass}>
+                        <span class="mobile-index">08</span>MY ACCOUNT
+                    </a>
+                    <a href="/ujjayini/order-history" onclick={closeMenu} class={ordersMobileClass}>
+                        <span class="mobile-index">09</span>ORDERS
+                    </a>
+                    <button type="button" onclick={handleSignOut} class="mobile-link mobile-signout">
+                        <span class="mobile-index">10</span>SIGN OUT
                     </button>
+                </template>
 
+                <a href="/ujjayini/collector-vault" onclick={closeMenu} class="mobile-vault">
+                    <span>ENTER COLLECTOR'S VAULT</span>
+                    <span class="vault-arrow">↗</span>
+                </a>
 
-                    <div class="guest-modal-mark">
-                        U
-                    </div>
-
-
-                    <p class="guest-modal-eyebrow">
-                        THE HOUSE OF UJJAYINI
-                    </p>
-
-
-                    <h2>
-                        Become part of
-                        <em>the family.</em>
-                    </h2>
-
-
-                    <div class="guest-modal-rule"></div>
-
-
-                    <p class="guest-modal-copy">
-                        Your collection deserves a place of its own.
-                        Sign in or create your UJJAYINI account to
-                        add this timepiece to your private collection.
-                    </p>
-
-
-                    <div class="guest-modal-actions">
-
-                        <button
-                            class="guest-login-button"
-                            type="button"
-                            onclick={handleGuestLogin}
-                        >
-                            SIGN IN
-                        </button>
-
-
-                        <button
-                            class="guest-signup-button"
-                            type="button"
-                            onclick={handleGuestSignup}
-                        >
-                            BECOME A MEMBER
-                        </button>
-
-                    </div>
-
-
-                    <button
-                        class="guest-continue"
-                        type="button"
-                        onclick={closeGuestCartModal}
-                    >
-                        CONTINUE EXPLORING
-                    </button>
-
-                </div>
-
-            </div>
+            </nav>
 
         </template>
 
-    </main>
+    </header>
 </template>

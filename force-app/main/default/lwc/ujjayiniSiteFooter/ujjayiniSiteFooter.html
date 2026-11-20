@@ -1,237 +1,347 @@
 <template>
 
-    <footer class="site-footer">
+    <footer class={footerClass}>
 
-        <!-- ATMOSPHERE -->
-        <div class="footer-atmosphere"></div>
+        <!-- Fades in from the page above, so there is never a hard seam -->
+        <div class="footer-fade" aria-hidden="true"></div>
+        <div class="footer-glow" aria-hidden="true"></div>
 
-        <!-- TOP GOLD RULE -->
-        <div class="gold-rule"></div>
 
+        <!-- =====================================================
+             CROWN EMBLEM ON THE GOLD LINE
+        ====================================================== -->
+
+        <div class="emblem-row" aria-hidden="true">
+
+            <svg class="emblem" viewBox="0 0 1200 230" preserveAspectRatio="xMidYMid meet">
+
+                <!-- Gold lines -->
+                <line class="rule" x1="30" y1="150" x2="520" y2="150"></line>
+                <line class="rule thin" x1="80" y1="158" x2="525" y2="158"></line>
+                <line class="rule" x1="680" y1="150" x2="1170" y2="150"></line>
+                <line class="rule thin" x1="675" y1="158" x2="1120" y2="158"></line>
+
+                <!-- Diamonds at the ends of the lines -->
+                <path class="gem" d="M30 146 l5 4 -5 4 -5 -4 z"></path>
+                <path class="gem" d="M1170 146 l5 4 -5 4 -5 -4 z"></path>
+                <path class="gem" d="M512 145 l7 5 -7 5 -7 -5 z"></path>
+                <path class="gem" d="M688 145 l7 5 -7 5 -7 -5 z"></path>
+
+                <!-- Scrolls beside the medallion -->
+                <path class="scroll" d="M522 150 C 530 128, 548 124, 556 136 C 548 132, 538 136, 536 146"></path>
+                <path class="scroll" d="M522 150 C 530 172, 548 176, 556 164 C 548 168, 538 164, 536 154"></path>
+                <path class="scroll" d="M678 150 C 670 128, 652 124, 644 136 C 652 132, 662 136, 664 146"></path>
+                <path class="scroll" d="M678 150 C 670 172, 652 176, 644 164 C 652 168, 662 164, 664 154"></path>
+
+                <!-- Medallion -->
+                <circle class="disc" cx="600" cy="150" r="58"></circle>
+                <circle class="ring" cx="600" cy="150" r="58"></circle>
+
+                <g class="gear">
+                    <circle class="gear-teeth" cx="600" cy="150" r="50"></circle>
+                </g>
+
+                <circle class="ring inner" cx="600" cy="150" r="42"></circle>
+
+                <!-- Hour marks -->
+                <path class="mark" d="M600 112 v6 M600 182 v6 M562 150 h6 M632 150 h6"></path>
+
+                <text class="monogram" x="600" y="166" text-anchor="middle">U</text>
+
+                <!-- Crown -->
+                <path class="crown" d="M566 86 L571 58 L584 72 L600 48 L616 72 L629 58 L634 86 Z"></path>
+                <rect class="crown" x="563" y="86" width="74" height="7"></rect>
+                <circle class="jewel" cx="571" cy="55" r="3.2"></circle>
+                <circle class="jewel" cx="600" cy="44" r="3.8"></circle>
+                <circle class="jewel" cx="629" cy="55" r="3.2"></circle>
+                <path class="crown-line" d="M572 80 h56"></path>
+
+                <!-- Small stars -->
+                <path class="spark" d="M470 120 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2 z"></path>
+                <path class="spark" d="M730 120 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2 z"></path>
+
+                <text class="est" x="600" y="226" text-anchor="middle">MAISON UJJAYINI · EST. IN UJJAIN</text>
+
+            </svg>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN COLUMNS
+        ====================================================== -->
 
         <div class="footer-inner">
 
-
-            <!-- =========================================
-                 BRAND COLUMN
-            ========================================== -->
-
             <div class="brand-column">
 
-                <a
-                    href="/ujjayini/"
-                    class="footer-brand"
-                >
-                    UJJAYINI
-                </a>
+                <a href="/ujjayini/" class="footer-brand">UJJAYINI</a>
 
-                <div class="brand-subtitle">
-                    THE BEGINNING OF YOUR TIME
-                </div>
+                <div class="brand-subtitle">THE BEGINNING OF YOUR TIME</div>
 
                 <p class="brand-story">
-                    A contemporary house of horology inspired
-                    by the ancient city of Ujjayini — where
-                    India's relationship with time began.
+                    A contemporary house of horology inspired by the
+                    ancient city of Ujjayini, where India's relationship
+                    with time began.
                 </p>
 
-                <div class="footer-mark">
-                    U · HOROLOGY · INDIA
+                <div class="badges">
+                    <span class="badge">HAUTE HOROLOGERIE</span>
+                    <span class="badge">UJJAIN · INDIA</span>
                 </div>
 
             </div>
 
-
-            <!-- =========================================
-                 NAVIGATION
-            ========================================== -->
 
             <div class="footer-column">
 
-                <div class="column-label">
-                    EXPLORE
-                </div>
+                <div class="column-label">COLLECTIONS</div>
 
-                <a href="/ujjayini/" class="footer-link">
-                    HOME
-                </a>
-
-                <a href="/ujjayini/collections" class="footer-link">
-                    COLLECTIONS
-                </a>
-
-                <a href="/ujjayini/watches" class="footer-link">
-                    WATCHES
-                </a>
-
-                <a href="/ujjayini/about-us" class="footer-link">
-                    ABOUT US
-                </a>
+                <a href="/ujjayini/watches" class="footer-link">Indranīla</a>
+                <a href="/ujjayini/watches" class="footer-link">Hiranya</a>
+                <a href="/ujjayini/watches" class="footer-link">Ayas</a>
+                <a href="/ujjayini/collections" class="footer-link">The Collections</a>
+                <a href="/ujjayini/watches" class="footer-link gold-link">All Timepieces</a>
 
             </div>
 
-
-            <!-- =========================================
-                 SERVICE
-            ========================================== -->
 
             <div class="footer-column">
 
-                <div class="column-label">
-                    SERVICE
-                </div>
+                <div class="column-label">THE MAISON</div>
 
-                <a href="/ujjayini/service" class="footer-link">
-                    CUSTOMER SERVICE
-                </a>
-
-                <a href="/ujjayini/service" class="footer-link">
-                    WATCH CARE
-                </a>
-
-                <a href="/ujjayini/service" class="footer-link">
-                    SHIPPING
-                </a>
-
-                <a href="/ujjayini/service" class="footer-link">
-                    RETURNS
-                </a>
+                <a href="/ujjayini/about-us" class="footer-link">Our Story</a>
+                <a href="/ujjayini/" class="footer-link">The House</a>
+                <a href="/ujjayini/collector-vault" class="footer-link">Collector's Vault</a>
+                <a href="/ujjayini/wishlist" class="footer-link">Wishlist</a>
 
             </div>
 
-
-            <!-- =========================================
-                 COLLECTOR
-            ========================================== -->
 
             <div class="footer-column">
 
-                <div class="column-label">
-                    COLLECTOR
-                </div>
+                <div class="column-label">CLIENT CARE</div>
 
-                <a
-                    href="/ujjayini/collector-vault"
-                    class="footer-link gold-link"
-                >
-                    COLLECTOR'S VAULT
-                </a>
+                <a href="/ujjayini/service" class="footer-link">Service &amp; Repair</a>
 
-                <a
-                    href="/ujjayini/wishlist"
-                    class="footer-link"
+                <button
+                    type="button"
+                    class="footer-link link-button"
+                    data-subject="Private Viewing"
+                    onclick={openContact}
                 >
-                    WISHLIST
-                </a>
+                    Book a Private Viewing
+                </button>
 
-                <a
-                    href="/ujjayini/cart"
-                    class="footer-link"
+                <button
+                    type="button"
+                    class="footer-link link-button"
+                    data-subject="General Enquiry"
+                    onclick={openContact}
                 >
-                    CART
-                </a>
+                    Contact Us
+                </button>
 
-                <a
-                    href="/ujjayini/login"
-                    class="footer-link"
-                >
-                    LOGIN
-                </a>
+                <template if:true={isLoggedIn}>
+                    <a href="/ujjayini/order-history" class="footer-link">My Orders</a>
+                    <a href="/ujjayini/my-account" class="footer-link">My Account</a>
+                </template>
+
+                <template if:false={isLoggedIn}>
+                    <a href="/ujjayini/login" class="footer-link">Sign In</a>
+                    <a href="/ujjayini/SelfRegister" class="footer-link">Become a Member</a>
+                </template>
 
             </div>
 
 
-            <!-- =========================================
-                 NEWSLETTER
-            ========================================== -->
+            <div class="concierge-column">
 
-            <div class="newsletter-column">
+                <div class="column-label">CONCIERGE</div>
 
-                <div class="column-label">
-                    THE JOURNAL
-                </div>
-
-                <p class="newsletter-copy">
-                    Receive new collections, horological
-                    stories and private invitations from
-                    UJJAYINI.
+                <p class="concierge-copy">
+                    Speak with the House about a timepiece, a private
+                    viewing or anything else.
                 </p>
 
-                <div class="newsletter-form">
+                <button
+                    type="button"
+                    class="concierge-button"
+                    data-subject="General Enquiry"
+                    onclick={openContact}
+                >
+                    <span>CONTACT THE CONCIERGE</span>
+                    <span class="arrow">↗</span>
+                </button>
 
-                    <input
-                        type="email"
-                        placeholder="YOUR EMAIL ADDRESS"
-                        aria-label="Email address"
-                    />
-
-                    <button
-                        type="button"
-                    >
-                        JOIN
-                        <span>↗</span>
-                    </button>
-
-                </div>
-
-                <div class="privacy-note">
-                    By subscribing, you agree to receive
-                    communications from UJJAYINI.
-                </div>
+             
 
             </div>
 
         </div>
 
 
-        <!-- =========================================
-             LOWER FOOTER
-        ========================================== -->
+        <!-- =====================================================
+             LOWER BAR
+        ====================================================== -->
 
         <div class="footer-lower">
 
             <div class="copyright">
-                © UJJAYINI · ALL RIGHTS RESERVED
+                © {year} UJJAYINI · ALL RIGHTS RESERVED
             </div>
 
-            <div class="footer-center">
-                THE BEGINNING OF YOUR TIME
-            </div>
+            <button
+                type="button"
+                class="top-button"
+                onclick={scrollToTop}
+                aria-label="Back to top"
+            >
+                <svg viewBox="0 0 40 40" aria-hidden="true">
+                    <circle cx="20" cy="20" r="17"></circle>
+                    <path d="M20 9 L23 20 L20 31 L17 20 Z"></path>
+                    <path d="M20 4 v3 M20 33 v3 M4 20 h3 M33 20 h3"></path>
+                </svg>
+            </button>
 
             <div class="legal-links">
-
-                <a href="/ujjayini/privacy">
-                    PRIVACY
-                </a>
-
-                <a href="/ujjayini/terms">
-                    TERMS
-                </a>
-
+                <a href="/ujjayini/privacy">PRIVACY</a>
+                <a href="/ujjayini/terms">TERMS</a>
+                <a href="/ujjayini/service">CARE</a>
             </div>
 
         </div>
 
-
-        <!-- =========================================
-             FINAL BRAND LINE
-        ========================================== -->
-
         <div class="footer-ending">
-
-            <span>
-                UJJAYINI
-            </span>
-
-            <span class="ending-dot">
-                ·
-            </span>
-
-            <span>
-                EST. IN THE LANGUAGE OF TIME
-            </span>
-
+            <span>TIME IS NOT SIMPLY MEASURED</span>
+            <span class="ending-dot">·</span>
+            <span>IT IS REMEMBERED</span>
         </div>
+
+
+        <!-- =====================================================
+             CONTACT MODAL
+        ====================================================== -->
+
+        <template if:true={modalOpen}>
+
+            <div class="modal-backdrop" onclick={closeContact}>
+
+                <div
+                    class="modal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Contact the House of UJJAYINI"
+                    onclick={stopPropagation}
+                >
+
+                    <button
+                        type="button"
+                        class="modal-close"
+                        onclick={closeContact}
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+
+                    <div class="modal-crown" aria-hidden="true">
+                        <svg viewBox="0 0 80 50">
+                            <path d="M10 40 L15 14 L28 26 L40 6 L52 26 L65 14 L70 40 Z"></path>
+                            <rect x="8" y="40" width="64" height="6"></rect>
+                        </svg>
+                    </div>
+
+
+                    <template if:false={modalSent}>
+
+                        <p class="modal-eyebrow">THE CONCIERGE</p>
+
+                        <h2 class="modal-title">
+                            Speak with <em>the House.</em>
+                        </h2>
+
+                        <div class="modal-form">
+
+                            <label class="field">
+                                <span class="field-label">NAME</span>
+                                <input class="field-control" type="text" data-field="name" value={name} oninput={handleField} autocomplete="name" maxlength="120" />
+                            </label>
+
+                            <div class="field-row">
+
+                                <label class="field">
+                                    <span class="field-label">EMAIL</span>
+                                    <input class="field-control" type="email" data-field="email" value={email} oninput={handleField} autocomplete="email" maxlength="80" />
+                                </label>
+
+                                <label class="field">
+                                    <span class="field-label">PHONE (OPTIONAL)</span>
+                                    <input class="field-control" type="tel" data-field="phone" value={phone} oninput={handleField} autocomplete="tel" maxlength="20" />
+                                </label>
+
+                            </div>
+
+                            <label class="field">
+                                <span class="field-label">SUBJECT</span>
+                                <span class="select-wrap">
+                                    <select class="field-control" data-field="subject" onchange={handleField}>
+                                        <template for:each={subjectOptions} for:item="option">
+                                            <option key={option.key} value={option.value} selected={option.selected}>
+                                                {option.value}
+                                            </option>
+                                        </template>
+                                    </select>
+                                </span>
+                            </label>
+
+                            <label class="field">
+                                <span class="field-label">MESSAGE</span>
+                                <textarea class="field-control field-textarea" rows="4" data-field="message" value={message} oninput={handleField} maxlength="2000"></textarea>
+                            </label>
+
+                            <!-- Honeypot: hidden from people, tempting for bots -->
+                            <input class="trap" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" data-field="website" value={website} oninput={handleField} />
+
+                            <template if:true={formError}>
+                                <p class="form-error" role="alert">{formError}</p>
+                            </template>
+
+                            <button type="button" class="send-button" onclick={sendEnquiry} disabled={isSending}>
+                                <span class="send-inner">{sendLabel}</span>
+                            </button>
+
+                        </div>
+
+                    </template>
+
+
+                    <template if:true={modalSent}>
+
+                        <div class="sent">
+
+                            <div class="sent-mark">✓</div>
+
+                            <p class="modal-eyebrow">ENQUIRY RECEIVED</p>
+
+                            <h2 class="modal-title">
+                                Your enquiry has been <em>submitted.</em>
+                            </h2>
+
+                            <p class="sent-copy">{sentMessage}</p>
+
+                            <button type="button" class="send-button" onclick={closeContact}>
+                                <span class="send-inner">CLOSE</span>
+                            </button>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </div>
+
+        </template>
 
     </footer>
 

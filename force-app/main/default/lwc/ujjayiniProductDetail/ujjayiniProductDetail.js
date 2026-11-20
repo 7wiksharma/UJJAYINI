@@ -699,7 +699,7 @@ export default class UjjayiniProductDetail
     handleGuestSignup() {
 
         window.location.href =
-            '/ujjayini/self-register';
+            '/ujjayini/SelfRegister';
 
     }
 

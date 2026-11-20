@@ -1,0 +1,45 @@
+<template>
+
+    <main class="legal-page">
+
+        <div class="legal-inner">
+
+            <header class="legal-header">
+                <p class="eyebrow">{doc.eyebrow}</p>
+                <h1 class="legal-title">{doc.title} <em>{doc.accent}</em></h1>
+                <div class="gold-rule"></div>
+                <p class="legal-intro">{doc.intro}</p>
+                <p class="updated">LAST UPDATED · {doc.updated}</p>
+            </header>
+
+            <div class="legal-body">
+
+                <nav class="toc" aria-label="Contents">
+                    <p class="toc-label">CONTENTS</p>
+                    <template for:each={sections} for:item="section">
+                        <button key={section.id} type="button" class={section.anchorClass} data-id={section.id} onclick={scrollToSection}>
+                            <span class="toc-number">{section.number}</span>
+                            {section.heading}
+                        </button>
+                    </template>
+                </nav>
+
+                <div class="sections">
+                    <template for:each={sections} for:item="section">
+                        <section key={section.id} class="section" data-section={section.id}>
+                            <span class="section-number">{section.number}</span>
+                            <h2 class="section-heading">{section.heading}</h2>
+                            <template for:each={section.paragraphs} for:item="paragraph">
+                                <p key={paragraph.key} class="section-text">{paragraph.text}</p>
+                            </template>
+                        </section>
+                    </template>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</template>

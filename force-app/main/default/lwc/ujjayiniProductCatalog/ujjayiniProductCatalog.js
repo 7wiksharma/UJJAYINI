@@ -819,7 +819,7 @@ export default class UjjayiniProductCatalog
     handleGuestSignup() {
 
         window.location.href =
-            '/ujjayini/self-register';
+            '/ujjayini/SelfRegister';
 
     }
 

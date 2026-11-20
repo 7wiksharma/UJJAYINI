@@ -1,0 +1,438 @@
+<template>
+
+    <main class="account-page">
+
+        <!-- Background: slow video over a night sky -->
+        <div class="backdrop" aria-hidden="true">
+            <div class="sky-glow glow-one"></div>
+            <div class="sky-glow glow-two"></div>
+            <video
+                class={videoClass}
+                src={videoUrl}
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                onloadeddata={handleVideoReady}
+            ></video>
+            <div class="backdrop-tint"></div>
+            <div class="stars"></div>
+        </div>
+
+        <div class="account-inner">
+
+            <template if:true={showGuestRedirect}>
+                <section class="state">
+                    <div class="loader"></div>
+                    <p class="eyebrow">TAKING YOU TO SIGN IN</p>
+                </section>
+            </template>
+
+            <template if:true={showLoader}>
+                <section class="state">
+                    <div class="loader"></div>
+                    <p class="eyebrow">OPENING YOUR ACCOUNT</p>
+                </section>
+            </template>
+
+            <template if:true={showError}>
+                <section class="state">
+                    <p class="eyebrow">ACCOUNT UNAVAILABLE</p>
+                    <p class="state-copy">{errorMessage}</p>
+                </section>
+            </template>
+
+
+            <template if:true={hasAccount}>
+
+                <!-- ===================== HERO ===================== -->
+                <header class="hero">
+
+                    <div>
+                        <p class="eyebrow">THE COLLECTOR'S ACCOUNT</p>
+
+                        <h1 class="hero-title">
+                            Welcome back,
+                            <em>{greetingName}.</em>
+                        </h1>
+
+                        <p class="hero-copy">
+                            Your time with the House of UJJAYINI, kept in one place.
+                        </p>
+                    </div>
+
+                    <button class="logout-button" type="button" onclick={handleLogout}>
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M14 4h5v16h-5"></path>
+                            <path d="M10 8l-4 4 4 4"></path>
+                            <path d="M6 12h10"></path>
+                        </svg>
+                        <span>SIGN OUT</span>
+                    </button>
+
+                </header>
+
+
+                <!-- ============ CARD + STANDING ============ -->
+                <section class="card-row">
+
+                    <div
+                        class="collector-card"
+                        style={cardStyle}
+                        onmousemove={handleCardMove}
+                        onmouseleave={handleCardLeave}
+                    >
+
+                        <div class="card-shine" aria-hidden="true"></div>
+                        <div class="card-guilloche" aria-hidden="true"></div>
+
+                        <div class="card-top">
+                            <span class="card-brand">UJJAYINI</span>
+                            <span class="card-kind">COLLECTOR</span>
+                        </div>
+
+                        <div class="card-middle">
+
+                            <div class="monogram">
+                                <div class="astrolabe" aria-hidden="true">
+                                    <span class="ring ring-outer"></span>
+                                    <span class="ring ring-inner"></span>
+                                    <span class="ring-dot"></span>
+                                </div>
+                                <span class="initials">{initials}</span>
+                            </div>
+
+                            <p class="card-name">{account.fullName}</p>
+
+                        </div>
+
+                        <div class="card-bottom">
+                            <div>
+                                <span class="card-label">MEMBER SINCE</span>
+                                <span class="card-value">{memberSinceLabel}</span>
+                            </div>
+                            <div class="card-right">
+                                <span class="card-label">STANDING</span>
+                                <span class="card-value">{tierUpper}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="standing">
+
+                        <p class="eyebrow">YOUR STANDING</p>
+
+                        <h2 class="standing-title">{account.tierName}</h2>
+
+                        <div class="progress">
+                            <div class="progress-fill" style={progressStyle}></div>
+                        </div>
+
+                        <p class="standing-copy">{nextTierLine}</p>
+
+                        <ol class="tier-steps">
+                            <template for:each={tierSteps} for:item="step">
+                                <li key={step.key} class={step.className}>
+                                    <span class="tier-dot"></span>
+                                    <span class="tier-label">{step.label}</span>
+                                </li>
+                            </template>
+                        </ol>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ===================== TABS ===================== -->
+                <nav class="tabs" aria-label="Account sections">
+                    <template for:each={tabs} for:item="tab">
+                        <button
+                            key={tab.key}
+                            class={tab.className}
+                            type="button"
+                            data-tab={tab.key}
+                            onclick={handleTab}
+                        >
+                            {tab.label}
+                        </button>
+                    </template>
+                </nav>
+
+
+                <!-- ===================== OVERVIEW ===================== -->
+                <template if:true={isOverview}>
+
+                    <section class="quick-links">
+
+                        <button class="quick" type="button" data-path="/collector-vault" onclick={goTo}>
+                            <span class="quick-icon">
+                                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <rect x="5" y="10.5" width="14" height="10" rx="1"></rect>
+                                    <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path>
+                                    <path d="M12 14.5v2.5"></path>
+                                </svg>
+                            </span>
+                            <span class="quick-title">Collector's Vault</span>
+                            <span class="quick-copy">Your timepieces, warranties and passports</span>
+                            <span class="quick-arrow">↗</span>
+                        </button>
+
+                        <button class="quick" type="button" data-path="/order-history" onclick={goTo}>
+                            <span class="quick-icon">
+                                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M7 3.5h7.5l3.5 3.5v13.5H7z"></path>
+                                    <path d="M14.5 3.5V7H18"></path>
+                                    <path d="M9.5 12h6M9.5 15.5h6"></path>
+                                </svg>
+                            </span>
+                            <span class="quick-title">Orders</span>
+                            <span class="quick-copy">Every acquisition, and its journey to you</span>
+                            <span class="quick-arrow">↗</span>
+                        </button>
+
+                        <button class="quick" type="button" data-path="/service" onclick={goTo}>
+                            <span class="quick-icon">
+                                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="6.5"></circle>
+                                    <path d="M12 8.5V12l2.5 1.5"></path>
+                                    <path d="M9.5 3.5h5M9.5 20.5h5"></path>
+                                </svg>
+                            </span>
+                            <span class="quick-title">Service</span>
+                            <span class="quick-copy">Care, repair and requests for your watch</span>
+                            <span class="quick-arrow">↗</span>
+                        </button>
+
+                        <button class="quick" type="button" data-path="/wishlist" onclick={goTo}>
+                            <span class="quick-icon">
+                                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 20s-7-4.4-7-10.1A4 4 0 0 1 12 7.3a4 4 0 0 1 7 2.6C19 15.6 12 20 12 20z"></path>
+                                </svg>
+                            </span>
+                            <span class="quick-title">Wishlist</span>
+                            <span class="quick-copy">The timepieces you are keeping an eye on</span>
+                            <span class="quick-arrow">↗</span>
+                        </button>
+
+                    </section>
+
+                    <section class="section">
+
+                        <div class="section-head">
+                            <p class="eyebrow">RECENT ACQUISITIONS</p>
+
+                            <template if:true={hasOrders}>
+                                <button class="text-button" type="button" onclick={showAllOrders}>
+                                    VIEW ALL →
+                                </button>
+                            </template>
+                        </div>
+
+                        <template if:true={hasOrders}>
+                            <div class="orders">
+                                <template for:each={recentOrders} for:item="order">
+                                    <article key={order.orderId} class="order" data-order-id={order.orderId} onclick={openOrder}>
+                                        <div class="order-visual">
+                                            <template if:true={order.firstProductImageUrl}>
+                                                <img class="order-image" src={order.firstProductImageUrl} alt={order.firstProductName} />
+                                            </template>
+                                        </div>
+                                        <div class="order-info">
+                                            <p class="order-date">ACQUIRED {order.formattedDate}</p>
+                                            <h3 class="order-name">{order.firstProductName}</h3>
+                                            <p class="order-meta">{order.itemLabel}</p>
+                                        </div>
+                                        <div class="order-side">
+                                            <span class={order.statusClass}>{order.displayStatus}</span>
+                                            <strong class="order-total">{order.formattedTotal}</strong>
+                                        </div>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={hasOrders}>
+                            <div class="empty">
+                                <p class="empty-copy">Your first acquisition will appear here.</p>
+                                <button class="ghost-button" type="button" data-path="/watches" onclick={goTo}>
+                                    EXPLORE THE TIMEPIECES
+                                </button>
+                            </div>
+                        </template>
+
+                    </section>
+
+                </template>
+
+
+                <!-- ===================== ORDERS ===================== -->
+                <template if:true={isOrders}>
+
+                    <section class="section">
+
+                        <template if:true={hasOrders}>
+                            <div class="orders">
+                                <template for:each={orders} for:item="order">
+                                    <article key={order.orderId} class="order" data-order-id={order.orderId} onclick={openOrder}>
+                                        <div class="order-visual">
+                                            <template if:true={order.firstProductImageUrl}>
+                                                <img class="order-image" src={order.firstProductImageUrl} alt={order.firstProductName} />
+                                            </template>
+                                        </div>
+                                        <div class="order-info">
+                                            <p class="order-date">ACQUIRED {order.formattedDate}</p>
+                                            <h3 class="order-name">{order.firstProductName}</h3>
+                                            <p class="order-meta">{order.itemLabel}</p>
+                                        </div>
+                                        <div class="order-side">
+                                            <span class={order.statusClass}>{order.displayStatus}</span>
+                                            <strong class="order-total">{order.formattedTotal}</strong>
+                                            <span class="order-view">VIEW ORDER →</span>
+                                        </div>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:false={hasOrders}>
+                            <div class="empty">
+                                <p class="empty-copy">No orders yet.</p>
+                                <button class="ghost-button" type="button" data-path="/watches" onclick={goTo}>
+                                    EXPLORE THE TIMEPIECES
+                                </button>
+                            </div>
+                        </template>
+
+                    </section>
+
+                </template>
+
+
+                <!-- ===================== DETAILS ===================== -->
+                <template if:true={isDetails}>
+
+                    <section class="details">
+
+                        <template if:true={saveNotice}>
+                            <p class="notice" role="status">{saveNotice}</p>
+                        </template>
+
+                        <template if:false={isEditing}>
+
+                            <div class="detail-grid">
+
+                                <div class="detail">
+                                    <span class="detail-label">NAME</span>
+                                    <span class="detail-value">{account.fullName}</span>
+                                </div>
+
+                                <div class="detail">
+                                    <span class="detail-label">EMAIL</span>
+                                    <span class="detail-value">{account.email}</span>
+                                </div>
+
+                                <div class="detail">
+                                    <span class="detail-label">PHONE</span>
+                                    <span class="detail-value">
+                                        <template if:true={account.phone}>{account.phone}</template>
+                                        <template if:false={account.phone}>Not added</template>
+                                    </span>
+                                </div>
+
+                                <div class="detail">
+                                    <span class="detail-label">DELIVERY ADDRESS</span>
+                                    <template if:true={hasAddress}>
+                                        <template for:each={addressLines} for:item="line">
+                                            <span key={line.key} class="detail-value">{line.text}</span>
+                                        </template>
+                                    </template>
+                                    <template if:false={hasAddress}>
+                                        <span class="detail-value">Not added</span>
+                                    </template>
+                                </div>
+
+                            </div>
+
+                            <button class="primary-button" type="button" onclick={startEditing}>
+                                <span class="primary-inner">EDIT DETAILS</span>
+                            </button>
+
+                        </template>
+
+
+                        <template if:true={isEditing}>
+
+                            <div class="form">
+
+                                <label class="field">
+                                    <span class="detail-label">PHONE</span>
+                                    <input class="field-control" type="tel" data-field="phone" value={phone} oninput={handleInput} />
+                                </label>
+
+                                <label class="field">
+                                    <span class="detail-label">ADDRESS</span>
+                                    <input class="field-control" type="text" data-field="street" value={street} oninput={handleInput} />
+                                </label>
+
+                                <div class="field-row">
+                                    <label class="field">
+                                        <span class="detail-label">CITY</span>
+                                        <input class="field-control" type="text" data-field="city" value={city} oninput={handleInput} />
+                                    </label>
+                                    <label class="field">
+                                        <span class="detail-label">STATE</span>
+                                        <input class="field-control" type="text" data-field="state" value={state} oninput={handleInput} />
+                                    </label>
+                                </div>
+
+                                <div class="field-row">
+                                    <label class="field">
+                                        <span class="detail-label">PIN CODE</span>
+                                        <input class="field-control" type="text" inputmode="numeric" data-field="postalCode" value={postalCode} oninput={handleInput} />
+                                    </label>
+                                    <label class="field">
+                                        <span class="detail-label">COUNTRY</span>
+                                        <input class="field-control" type="text" data-field="country" value={country} oninput={handleInput} />
+                                    </label>
+                                </div>
+
+                                <p class="form-note">
+                                    Your name and email are linked to your sign-in and
+                                    can be changed through UJJAYINI Service.
+                                </p>
+
+                                <template if:true={saveError}>
+                                    <p class="form-error" role="alert">{saveError}</p>
+                                </template>
+
+                                <div class="form-actions">
+                                    <button class="primary-button" type="button" onclick={saveDetails} disabled={isSaving}>
+                                        <span class="primary-inner">
+                                            <template if:true={isSaving}>SAVING</template>
+                                            <template if:false={isSaving}>SAVE DETAILS</template>
+                                        </span>
+                                    </button>
+                                    <button class="text-button" type="button" onclick={cancelEditing}>
+                                        CANCEL
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </template>
+
+                    </section>
+
+                </template>
+
+            </template>
+
+        </div>
+
+    </main>
+
+</template>
