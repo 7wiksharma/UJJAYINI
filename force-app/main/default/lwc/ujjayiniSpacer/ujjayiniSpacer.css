@@ -1,0 +1,15 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.spacer {
+    width: 100%;
+}
+
+@media (max-width: 1150px) {
+
+    .spacer {
+        max-height: 100px;
+    }
+}

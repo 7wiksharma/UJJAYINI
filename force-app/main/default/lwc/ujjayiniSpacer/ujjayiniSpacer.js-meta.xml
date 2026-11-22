@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+        <isExposed>true</isExposed>
+    <masterLabel>UJJAYINI Spacer</masterLabel>
+    <description>Empty space below the floating header for standard pages.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="height" type="Integer" label="Height (px)" default="140" />
+            <property name="background" type="String" label="Background colour" default="#05060a" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -61,7 +61,7 @@ export default class UjjayiniSiteHeader extends LightningElement {
         window.addEventListener('keydown', this.handleKeydown);
         window.addEventListener('resize', this.handleResize);
         window.addEventListener('pageshow', this.handlePageShow);
-
+        window.addEventListener('ujjayini:cartchange', this.handleCartChange);
         this._listenersAttached = true;
     }
 
@@ -76,7 +76,7 @@ export default class UjjayiniSiteHeader extends LightningElement {
         window.removeEventListener('keydown', this.handleKeydown);
         window.removeEventListener('resize', this.handleResize);
         window.removeEventListener('pageshow', this.handlePageShow);
-
+           window.removeEventListener('ujjayini:cartchange', this.handleCartChange);
         this._listenersAttached = false;
     }
 
@@ -147,6 +147,9 @@ export default class UjjayiniSiteHeader extends LightningElement {
             this.closeAllMenus();
             this.refreshHeaderInfo();
         }
+    };
+     handleCartChange = () => {
+        this.refreshHeaderInfo();
     };
 
 

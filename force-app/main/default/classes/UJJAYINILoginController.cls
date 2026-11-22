@@ -47,7 +47,9 @@ public without sharing class UJJAYINILoginController {
             fail(GENERIC_ERROR);
         }
 
-        return result.getUrl();
+        // Send the customer to the real site page, not the old
+        // "/ujjayinivforcesite/..." path Salesforce puts in retURL.
+        return withReturnUrl(result.getUrl(), toSitePath(startUrl));
     }
 
 
@@ -127,7 +129,51 @@ public without sharing class UJJAYINILoginController {
 
         return identifier;
     }
+    private static final String SITE_PATH = '/ujjayini';
 
+
+    /*
+     * Full site path to open after sign in, e.g. "/ujjayini/cart".
+     * Anything that is not a same-site path goes to My Account.
+     */
+    @TestVisible
+    private static String toSitePath(String startUrl) {
+
+        String value = startUrl == null ? '' : startUrl.trim();
+
+        if (
+            String.isBlank(value) ||
+            !value.startsWith('/') ||
+            value.startsWith('//') ||
+            value.contains('://') ||
+            value.contains('\\')
+        ) {
+            return SITE_PATH + '/my-account';
+        }
+
+        if (!(value == SITE_PATH || value.startsWith(SITE_PATH + '/'))) {
+            value = SITE_PATH + value;
+        }
+
+        return value;
+    }
+
+
+    /*
+     * Replaces the retURL in Salesforce's sign-in link.
+     */
+    @TestVisible
+    private static String withReturnUrl(String loginUrl, String sitePath) {
+
+        if (String.isBlank(loginUrl) || !loginUrl.contains('retURL=')) {
+            return loginUrl;
+        }
+
+        return loginUrl.replaceFirst(
+            'retURL=[^&]*',
+            'retURL=' + EncodingUtil.urlEncode(sitePath, 'UTF-8')
+        );
+    }
 
     /*
      * Only same-site paths are allowed (no open redirect).

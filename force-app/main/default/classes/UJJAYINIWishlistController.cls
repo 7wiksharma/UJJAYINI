@@ -84,7 +84,7 @@ public with sharing class UJJAYINIWishlistController {
     // GET WISHLIST ITEMS
     // =========================================================
 
-    @AuraEnabled(cacheable=true)
+        @AuraEnabled
     public static List<WishlistItemResponse> getWishlistItems() {
 
         try {

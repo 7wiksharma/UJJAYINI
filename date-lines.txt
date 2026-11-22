@@ -1,0 +1,120 @@
+﻿
+force-app\main\default\classes\AssetFulfillmentService.cls:32:                   Order.EffectiveDate
+force-app\main\default\classes\AssetFulfillmentService.cls:62:                   PurchaseDate
+force-app\main\default\classes\AssetFulfillmentService.cls:133:            asset.PurchaseDate =
+force-app\main\default\classes\AssetFulfillmentService.cls:134:                item.Order.EffectiveDate;
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:44:            EffectiveDate = Date.today(),
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:91:                   PurchaseDate,
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:121:            Date.today(),
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:122:            createdAsset.PurchaseDate
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:177:            EffectiveDate = Date.today(),
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:200:            PurchaseDate = Date.today(),
+force-app\main\default\classes\AssetFulfillmentServiceTest.cls:273:            EffectiveDate = Date.today(),
+force-app\main\default\classes\CollectorVaultPaymentVerificationTest.cls:18:            EffectiveDate = 
+Date.today(),
+force-app\main\default\classes\CollectorVaultService.cls:21:        @AuraEnabled public Date purchaseDate;
+force-app\main\default\classes\CollectorVaultService.cls:94:                   PurchaseDate,
+force-app\main\default\classes\CollectorVaultService.cls:100:            ORDER BY PurchaseDate DESC, 
+CreatedDate DESC
+force-app\main\default\classes\CollectorVaultService.cls:111:            result.purchaseDate = 
+asset.PurchaseDate;
+force-app\main\default\classes\CollectorVaultService.cls:153:        Integer year = asset.PurchaseDate != null
+force-app\main\default\classes\CollectorVaultService.cls:154:            ? asset.PurchaseDate.year()
+force-app\main\default\classes\CollectorVaultService.cls:155:            : (asset.CreatedDate != null ? 
+asset.CreatedDate.year() : Date.today().year());
+force-app\main\default\classes\CollectorVaultServiceTest.cls:41:        public Date purchaseDate;
+force-app\main\default\classes\CollectorVaultServiceTest.cls:101:                   PurchaseDate
+force-app\main\default\classes\CollectorVaultServiceTest.cls:105:            ORDER BY PurchaseDate DESC, 
+CreatedDate DESC
+force-app\main\default\classes\CollectorVaultServiceTest.cls:159:            result.purchaseDate =
+force-app\main\default\classes\CollectorVaultServiceTest.cls:160:                asset.PurchaseDate;
+force-app\main\default\classes\CustomerOrderCancellationService.cls:63:        if (since == null && 
+orderRecord.EffectiveDate != null) {
+force-app\main\default\classes\CustomerOrderCancellationService.cls:66:                
+orderRecord.EffectiveDate,
+force-app\main\default\classes\CustomerOrderCancellationService.cls:103:                   EffectiveDate,
+force-app\main\default\classes\CustomerOrderCancellationServiceTest.cls:49:            EffectiveDate = 
+Date.today(),
+force-app\main\default\classes\CustomerOrderCancellationServiceTest.cls:105:            Warranty_Start_Date__c 
+= Date.today(),
+force-app\main\default\classes\CustomerOrderCancellationServiceTest.cls:106:            Warranty_End_Date__c = 
+Date.today().addMonths(24)
+force-app\main\default\classes\InventoryReservationServiceTest.cls:23:            EffectiveDate = Date.today(),
+force-app\main\default\classes\InventoryReservationServiceTest.cls:90:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderCancellationServiceTest.cls:38:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderCancellationServiceTest.cls:162:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderCancellationServiceTest.cls:220:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderCancellationServiceTest.cls:277:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderCheckoutService.cls:35:                   EffectiveDate,
+force-app\main\default\classes\OrderCheckoutServiceTest.cls:70:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderCheckoutServiceTest.cls:178:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderDetailService.cls:46:        public Date effectiveDate;
+force-app\main\default\classes\OrderDetailService.cls:152:                   EffectiveDate,
+force-app\main\default\classes\OrderDetailService.cls:230:        result.effectiveDate =
+force-app\main\default\classes\OrderDetailService.cls:231:            orderRecord.EffectiveDate;
+force-app\main\default\classes\OrderDetailServiceTest.cls:65:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderHistoryService.cls:22:        public Date effectiveDate;
+force-app\main\default\classes\OrderHistoryService.cls:64:                   EffectiveDate,
+force-app\main\default\classes\OrderHistoryService.cls:79:            ORDER BY EffectiveDate DESC, CreatedDate 
+DESC
+force-app\main\default\classes\OrderHistoryService.cls:103:            result.effectiveDate =
+force-app\main\default\classes\OrderHistoryService.cls:104:                orderRecord.EffectiveDate;
+force-app\main\default\classes\OrderHistoryServiceTest.cls:65:            EffectiveDate = Date.today(),
+force-app\main\default\classes\OrderInvoiceService.cls:34:                   EffectiveDate,
+force-app\main\default\classes\OrderInvoiceService.cls:284:                            : Date.today()
+force-app\main\default\classes\OrderInvoiceService.cls:464:        return orderRecord.EffectiveDate != null
+force-app\main\default\classes\OrderInvoiceService.cls:465:            ? orderRecord.EffectiveDate
+force-app\main\default\classes\OrderInvoiceService.cls:466:            : Date.today();
+force-app\main\default\classes\OrderInvoiceServiceTest.cls:36:            EffectiveDate = Date.today(),
+force-app\main\default\classes\PaymentRefundServiceTest.cls:182:                EffectiveDate = Date.today(),
+force-app\main\default\classes\PaymentServiceTest.cls:69:            EffectiveDate = Date.today(),
+force-app\main\default\classes\PaymentServiceTest.cls:167:            EffectiveDate = Date.today(),
+force-app\main\default\classes\PaymentServiceTest.cls:212:            EffectiveDate = Date.today(),
+force-app\main\default\classes\RazorpayWebhookEndpointTest.cls:135:                EffectiveDate = 
+Date.today(),
+force-app\main\default\classes\RazorpayWebhookServiceTest.cls:127:                EffectiveDate = Date.today(),
+force-app\main\default\classes\RazorpayWebhookServiceTest.cls:301:                   PurchaseDate,
+force-app\main\default\classes\RazorpayWebhookServiceTest.cls:346:            Date.today(),
+force-app\main\default\classes\RazorpayWebhookServiceTest.cls:347:            createdAsset.PurchaseDate
+force-app\main\default\classes\ReservationExpiryServiceTest.cls:28:            EffectiveDate = Date.today(),
+force-app\main\default\classes\ReservationExpiryServiceTest.cls:120:            EffectiveDate = Date.today(),
+force-app\main\default\classes\ReservationReleaseServiceTest.cls:30:            EffectiveDate = Date.today()
+force-app\main\default\classes\ReservationReleaseServiceTest.cls:116:            EffectiveDate = Date.today()
+force-app\main\default\classes\ServiceRequestService.cls:221:            Date.today();
+force-app\main\default\classes\UJJAYINICartService.cls:253:                EffectiveDate = Date.today(),
+force-app\main\default\classes\UJJAYINICertificateController.cls:63:                   PurchaseDate,
+force-app\main\default\classes\UJJAYINICertificateController.cls:149:        Date acquired = 
+asset.PurchaseDate != null
+force-app\main\default\classes\UJJAYINICertificateController.cls:150:            ? asset.PurchaseDate
+force-app\main\default\classes\UJJAYINICertificateController.cls:151:            : (asset.CreatedDate != null 
+? asset.CreatedDate.date() : Date.today());
+force-app\main\default\classes\UJJAYINICertificateControllerTest.cls:17:            new Asset(Name = 'Owned', 
+AccountId = owner.Id, Product2Id = watch.Id, Quantity = 1, Status = 'Purchased', PurchaseDate = 
+Date.newInstance(2026, 11, 21)),
+force-app\main\default\classes\UJJAYINICheckoutAddressControllerTest.cls:24:                EffectiveDate = 
+Date.today(),
+force-app\main\default\classes\UJJAYINICheckoutControllerTest.cls:54:                EffectiveDate = 
+Date.today(),
+force-app\main\default\classes\UJJAYINICheckoutControllerTest.cls:125:                EffectiveDate = 
+Date.today(),
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:6:        Date purchaseDate
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:21:            PurchaseDate = purchaseDate
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:35:            Date.today()
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:58:        System.assertEquals(Date.today(), 
+warranty.Warranty_Start_Date__c);
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:60:            Date.today().addMonths(24),
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:71:            Date.today()
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:97:            Date.today().addMonths(-30)
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:119:            Date.today()
+force-app\main\default\classes\WarrantyAutoCreationTest.cls:124:            Date.today()
+force-app\main\default\classes\WarrantyService.cls:197:                asset.PurchaseDate != null
+force-app\main\default\classes\WarrantyService.cls:198:                    ? asset.PurchaseDate
+force-app\main\default\classes\WarrantyService.cls:199:                    : Date.today();
+force-app\main\default\classes\WarrantyService.cls:216:                        endDate >= Date.today()
+force-app\main\default\classes\WarrantyService.cls:273:                   PurchaseDate
+force-app\main\default\classes\WarrantyServiceTest.cls:37:            PurchaseDate = Date.today()
+force-app\main\default\classes\WarrantyServiceTest.cls:46:            Warranty_Start_Date__c = Date.today(),
+force-app\main\default\classes\WarrantyServiceTest.cls:47:            Warranty_End_Date__c = 
+Date.today().addMonths(12),
+
+

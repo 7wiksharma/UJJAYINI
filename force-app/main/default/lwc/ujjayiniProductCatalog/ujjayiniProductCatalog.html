@@ -1,59 +1,8 @@
 <template>
-    <!-- =========================================================
-     UJJAYINI NOTIFICATION
-========================================================= -->
 
-<template if:true={showNotification}>
+    <main class={pageClass}>
 
-    <div
-        class={notificationClass}
-        role="status"
-        aria-live="polite"
-    >
-
-        <div class="notification-symbol">
-
-            <template if:true={notificationType}>
-                <span>
-                    ✓
-                </span>
-            </template>
-
-        </div>
-
-        <div class="notification-content">
-
-            <p class="notification-kicker">
-                UJJAYINI · THE HOUSE OF TIME
-            </p>
-
-            <h3>
-                {notificationTitle}
-            </h3>
-
-            <p class="notification-message">
-                {notificationMessage}
-            </p>
-
-        </div>
-
-        <button
-            class="notification-close"
-            type="button"
-            onclick={closeNotification}
-            aria-label="Close notification"
-        >
-            ×
-        </button>
-
-    </div>
-
-</template>
-    <main class="watches-page">
-
-        <!-- =================================================
-             PANTHER VIDEO BACKGROUND
-        ================================================== -->
+        <!-- ================= PANTHER VIDEO ================= -->
         <div class="video-stage" aria-hidden="true">
             <video
                 class={videoClass}
@@ -65,441 +14,396 @@
                 preload="auto"
                 onloadeddata={handleVideoReady}
             ></video>
-
-            <div class="video-tint"></div>
-            <div class="video-vignette"></div>
+            <div class="video-glow"></div>
+            <div class="video-veil"></div>
+            <div class="video-grain"></div>
         </div>
 
 
-        <!-- =================================================
-             HERO
-        ================================================== -->
-        <section class="catalog-intro">
+        <!-- ================= HERO ================= -->
+        <section class="hero">
 
-            <div class="intro-content">
+            <div class="hero-copy">
 
-                <p class="eyebrow">
-                    THE HOUSE OF UJJAYINI
-                </p>
+                <p class="eyebrow">THE HOUSE OF UJJAYINI</p>
 
-                <h1>
+                <h1 class="hero-title">
                     Time,
                     <em>in three expressions.</em>
                 </h1>
 
-                <div class="intro-rule"></div>
+                <div class="hero-rule"></div>
 
-                <p class="intro-copy">
-                    Discover the timepieces of UJJAYINI —
-                    three distinct expressions of horology,
-                    shaped by gold, sapphire and steel.
+                <p class="hero-text">
+                    Discover the timepieces of UJJAYINI — three distinct expressions
+                    of horology, shaped by gold, sapphire and steel.
                 </p>
 
-                <button
-                    class="intro-cta"
-                    type="button"
-                    onclick={handleScrollToCatalog}
-                >
-                    <span>VIEW THE TIMEPIECES</span>
-                    <span class="intro-cta-arrow">↓</span>
+                <button class="hero-cta" type="button" onclick={handleScrollToCatalog}>
+                    <span>ENTER THE SALON</span>
+                    <span class="hero-cta-arrow" aria-hidden="true">↓</span>
                 </button>
 
             </div>
 
+            <div class="hero-side">
 
-            <div class="intro-side">
-
-                <div class="intro-index">
-
-                    <span class="index-roman">
-                        III
-                    </span>
-
-                    <span class="index-label">
-                        THE TIMEPIECES
-                    </span>
-
+                <div class="hero-index">
+                    <span class="hero-roman">III</span>
+                    <span class="hero-label">THE COLLECTIONS</span>
                 </div>
 
-
                 <template if:true={hasProducts}>
-
-                    <div class="intro-stats">
-
+                    <div class="hero-stats">
                         <div class="stat">
-
-                            <strong>
-                                {totalCount}
-                            </strong>
-
-                            <span>
-                                TIMEPIECES
-                            </span>
-
+                            <strong>{totalCount}</strong>
+                            <span>TIMEPIECES</span>
                         </div>
-
                         <div class="stat">
-
-                            <strong>
-                                03
-                            </strong>
-
-                            <span>
-                                COLLECTIONS
-                            </span>
-
+                            <strong>03</strong>
+                            <span>COLLECTIONS</span>
                         </div>
-
                     </div>
-
                 </template>
 
             </div>
 
+            <span class="scroll-hint" aria-hidden="true"><span></span></span>
+
         </section>
 
 
-
-        <!-- =================================================
-             CATALOG WORKSPACE
-        ================================================== -->
+        <!-- ================= SALON ================= -->
         <section class="catalog-workspace">
 
+            <!-- ============ LEFT RAIL: THE CROWN DIAL ============ -->
+            <aside class="rail" aria-label="Curate your time">
 
-            <!-- =================================================
-                 LEFT FILTER RAIL
-            ================================================== -->
-            <aside class="filter-section">
+                <div class="rail-glass">
 
-                <div class="filter-header">
-
-                    <div class="filter-brand">
-
-                        <span class="filter-eyebrow">
-                            CURATE
-                        </span>
-
-                        <span class="filter-eyebrow">
-                            YOUR TIME
-                        </span>
-
+                    <div class="rail-head">
+                        <span class="rail-eyebrow">CURATE YOUR TIME</span>
+                        <div class="rail-count">
+                            <strong>{visibleCount}</strong>
+                            <span>OF {totalCount} TIMEPIECES</span>
+                        </div>
                     </div>
 
+                    <!-- Rotating bezel (desktop) -->
+                    <div
+                        class="crown"
+                        role="radiogroup"
+                        aria-label="Collection"
+                        tabindex="0"
+                        onwheel={handleCrownWheel}
+                        onkeydown={handleCrownKey}
+                        onpointerdown={handleCrownDown}
+                    >
+                        <div class="crown-wheel" style={crownStyle}>
 
-                    <div class="product-count">
+                            <span class="crown-ring" aria-hidden="true"></span>
+                            <span class="crown-ring inner" aria-hidden="true"></span>
 
-                        {filteredProducts.length}
-                        <span>TIMEPIECES</span>
+                            <template for:each={crownTicks} for:item="tick">
+                                <span key={tick.key} class={tick.className} style={tick.style} aria-hidden="true"></span>
+                            </template>
 
+                            <template for:each={crownLabels} for:item="label">
+                                <button
+                                    key={label.value}
+                                    class={label.className}
+                                    style={label.style}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={label.checked}
+                                    tabindex={label.tabIndex}
+                                    data-index={label.index}
+                                    onclick={handleDialClick}
+                                >{label.label}</button>
+                            </template>
+
+                        </div>
+
+                        <span class="crown-needle" aria-hidden="true"></span>
+                        <span class="crown-hint" aria-hidden="true">SCROLL · DRAG</span>
                     </div>
 
-
-                    <div class="filter-controls">
-
-                        <template
-                            for:each={filterOptions}
-                            for:item="filter"
-                        >
-
-                            <button
-                                key={filter.value}
-                                class={filter.className}
-                                data-filter={filter.value}
-                                onclick={handleCollectionFilter}
-                            >
-                                {filter.label}
+                    <!-- Chips (tablet + mobile) -->
+                    <div class="chips" role="group" aria-label="Collection">
+                        <template for:each={collectionChips} for:item="chip">
+                            <button key={chip.value} class={chip.className} type="button" data-value={chip.value} onclick={handleChip}>
+                                {chip.label}
                             </button>
-
                         </template>
-
-
-                        <select
-                            class="sort-select"
-                            value={sortBy}
-                            onchange={handleSortChange}
-                        >
-
-                            <option value="featured">
-                                FEATURED
-                            </option>
-
-                            <option value="price-low">
-                                PRICE · LOW TO HIGH
-                            </option>
-
-                            <option value="price-high">
-                                PRICE · HIGH TO LOW
-                            </option>
-
-                            <option value="name">
-                                NAME · A–Z
-                            </option>
-
-                        </select>
-
                     </div>
 
+                    <button class="knob-row" type="button" onclick={handleKnob} aria-label="Turn the crown">
+                        <span class="knob" style={knobStyle} aria-hidden="true"></span>
+                        <span class="knob-text">{activeDialName}</span>
+                    </button>
 
-                    <div class="filter-vertical-line"></div>
+                    <button class="refine-button" type="button" onclick={openRefine}>
+                        <span>REFINE</span>
+                        <template if:true={hasRefineCount}>
+                            <span class="refine-badge">{refineCount}</span>
+                        </template>
+                        <span class="refine-arrow" aria-hidden="true">→</span>
+                    </button>
 
                 </div>
 
             </aside>
 
 
+            <!-- ============ RESULTS ============ -->
+            <div class="results">
 
-            <!-- =================================================
-                 PRODUCTS AREA
-            ================================================== -->
-            <div class="catalog-results">
-
-
-                <!-- =================================================
-                     LOADING
-                ================================================== -->
-                <template if:true={isLoading}>
-
-                    <section class="loading-state">
-
-                        <div class="loader-ring"></div>
-
-                        <p>
-                            ENTERING THE HOUSE OF UJJAYINI
-                        </p>
-
-                    </section>
-
-                </template>
-
-
-
-                <!-- =================================================
-                     ERROR
-                ================================================== -->
-                <template if:true={hasError}>
-
-                    <section class="catalog-state">
-
-                        <p class="state-eyebrow">
-                            COLLECTION UNAVAILABLE
-                        </p>
-
-                        <h2>
-                            The timepieces could not be loaded.
-                        </h2>
-
-                        <p>
-                            {errorMessage}
-                        </p>
-
-                    </section>
-
-                </template>
-
-
-
-                <!-- =================================================
-                     COLLECTIONS
-                ================================================== -->
+                <!-- Moods + active filters -->
                 <template if:true={hasProducts}>
+                    <div class="toolbar">
 
-                    <div class="collections-container">
+                        <!-- Search -->
+                        <div class={searchClass} role="search">
+                            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="11" cy="11" r="6.5"></circle>
+                                <path d="M16 16 L21 21"></path>
+                            </svg>
+                            <input
+                                class="search-input"
+                                type="search"
+                                placeholder="Search by name, collection, gold, diver, automatic…"
+                                aria-label="Search timepieces"
+                                autocomplete="off"
+                                value={searchText}
+                                oninput={handleSearchInput}
+                                onkeydown={handleSearchKey}
+                            />
+                            <template if:true={hasSearchText}>
+                                <button class="search-clear" type="button" onclick={clearSearch} aria-label="Clear search">✕</button>
+                            </template>
+                        </div>
 
-                        <template
-                            for:each={collectionSections}
-                            for:item="section"
-                        >
+                        <template if:true={hasMoods}>
+                            <div class="moods">
+                                <span class="moods-title">FIND YOUR MOOD</span>
+                                <template for:each={moods} for:item="mood">
+                                    <button key={mood.key} class={mood.className} type="button" data-key={mood.key} onclick={handleMood}>
+                                        {mood.label}
+                                    </button>
+                                </template>
+                            </div>
+                        </template>
 
-                            <section
-                                key={section.key}
-                                class={section.className}
-                            >
+                        <template if:true={hasTokens}>
+                            <div class="tokens">
+                                <template for:each={activeTokens} for:item="token">
+                                    <button
+                                        key={token.key}
+                                        class="token"
+                                        type="button"
+                                        data-type={token.type}
+                                        data-facet={token.facet}
+                                        data-value={token.value}
+                                        onclick={removeToken}
+                                        aria-label="Remove filter"
+                                    >
+                                        {token.label}<span aria-hidden="true">✕</span>
+                                    </button>
+                                </template>
+                                <button class="token-clear" type="button" onclick={resetFilters}>CLEAR ALL</button>
+                            </div>
+                        </template>
 
+                    </div>
+                </template>
 
-                                <!-- COLLECTION HEADER -->
-                                <div class="collection-header">
+                <!-- Loading -->
+                <template if:true={isLoading}>
+                    <div class="skeleton-grid">
+                        <div class="skeleton"></div>
+                        <div class="skeleton"></div>
+                        <div class="skeleton"></div>
+                    </div>
+                </template>
 
-                                    <div class="collection-number">
-                                        {section.number}
-                                    </div>
+                <!-- Error (never technical) -->
+                <template if:true={hasError}>
+                    <section class="state">
+                        <p class="eyebrow">COLLECTION RESTING</p>
+                        <h2>The salon will open <em>in a moment.</em></h2>
+                        <p>{errorMessage}</p>
+                    </section>
+                </template>
 
+                <!-- Collections -->
+                <template if:true={showResults}>
 
-                                    <div class="collection-title">
+                    <template for:each={collectionSections} for:item="section">
 
-                                        <p class="collection-eyebrow">
-                                            {section.eyebrow}
-                                        </p>
+                        <div key={section.key} class="section-wrap">
 
-                                        <h2>
-                                            {section.title}
-                                        </h2>
-
-                                        <p class="collection-tagline">
-                                            {section.tagline}
-                                        </p>
-
-                                    </div>
-
-
-                                    <div class="collection-signature">
-                                        {section.signature}
-                                    </div>
-
+                            <template if:true={section.hasDivider}>
+                                <div class="divider reveal" aria-hidden="true">
+                                    <span class="divider-line"></span>
+                                    <svg class="astrolabe" viewBox="0 0 120 120">
+                                        <circle class="astro-ring" cx="60" cy="60" r="56"></circle>
+                                        <circle class="astro-ring dashed" cx="60" cy="60" r="46"></circle>
+                                        <circle class="astro-ring" cx="60" cy="60" r="22"></circle>
+                                        <g class="astro-spin">
+                                            <line class="astro-line" x1="60" y1="6" x2="60" y2="114"></line>
+                                            <line class="astro-line" x1="6" y1="60" x2="114" y2="60"></line>
+                                            <ellipse class="astro-ring" cx="60" cy="60" rx="46" ry="18"></ellipse>
+                                        </g>
+                                        <g class="astro-spin reverse">
+                                            <circle class="astro-teeth" cx="60" cy="60" r="34"></circle>
+                                        </g>
+                                        <circle class="astro-core" cx="60" cy="60" r="4"></circle>
+                                    </svg>
+                                    <span class="divider-line"></span>
                                 </div>
+                            </template>
 
+                            <section class={section.className}>
 
+                                <header class="collection-head reveal">
+                                    <span class="collection-number">{section.number}</span>
+                                    <div class="collection-title">
+                                        <p class="collection-eyebrow">{section.eyebrow}</p>
+                                        <h2>{section.title}</h2>
+                                        <p class="collection-tagline">{section.tagline}</p>
+                                    </div>
+                                    <span class="collection-signature">{section.signature}</span>
+                                </header>
 
-                                <!-- PRODUCTS -->
                                 <div class="product-grid">
 
-                                    <template
-                                        for:each={section.products}
-                                        for:item="product"
-                                    >
+                                    <template for:each={section.products} for:item="product">
 
-                                        <article
-                                            key={product.productId}
-                                            class={product.cardClass}
-                                            data-product-id={product.productId}
-                                            onclick={handleProductClick}
-                                        >
+                                        <article key={product.productId} class="watch-card reveal">
 
+                                            <!-- ===== STAGE ===== -->
+                                            <div class={product.stageClass}>
 
-                                            <!-- IMAGE -->
-                                            <div class="watch-image">
+                                                    <!-- The dial -->
+                                                    <div
+                                                        class="face front"
+                                                        style={product.placeholderStyle}
+                                                        data-product-id={product.productId}
+                                                        data-hires={product.hiresSrc}
+                                                        onclick={handleProductClick}
+                                                        onpointerdown={handleStageDown}
+                                                        onpointermove={handleLoupeMove}
+                                                        onpointerleave={hideLoupe}
+                                                    >
+                                                        <template if:true={product.hasImage}>
+                                                            <img
+                                                                class={product.imageClass}
+                                                                src={product.imageSrc}
+                                                                srcset={product.imageSrcset}
+                                                                sizes="(max-width: 700px) 92vw, (max-width: 1200px) 46vw, 30vw"
+                                                                alt={product.productName}
+                                                                loading={product.imageLoading}
+                                                                decoding="async"
+                                                                draggable="false"
+                                                                data-product-id={product.productId}
+                                                                onload={handleImageLoad}
+                                                                onerror={handleImageLoad}
+                                                            />
+                                                        </template>
 
-                                                <template
-                                                    if:true={product.productImageUrl}
-                                                >
+                                                        <template if:false={product.hasImage}>
+                                                            <div class="image-placeholder">UJJAYINI</div>
+                                                        </template>
 
-                                                    <img
-                                                        src={product.productImageUrl}
-                                                        alt={product.productName}
-                                                        class="watch-image-file"
-                                                    />
+                                                        <span class="glare" aria-hidden="true"></span>
+                                                        <span class="shade" aria-hidden="true"></span>
 
-                                                </template>
-
-
-                                                <template
-                                                    if:false={product.productImageUrl}
-                                                >
-
-                                                    <div class="image-placeholder">
-                                                        UJJAYINI
+                                                        <!-- Specs reveal on hover -->
+                                                        <template if:true={product.hasSpecs}>
+                                                            <dl class="specs">
+                                                                <div><dt>MOVEMENT</dt><dd>{product.specMovement}</dd></div>
+                                                                <div><dt>CASE</dt><dd>{product.specCase}</dd></div>
+                                                                <div><dt>WATER</dt><dd>{product.specWater}</dd></div>
+                                                            </dl>
+                                                        </template>
                                                     </div>
 
-                                                </template>
+                                                <!-- Overlay controls -->
+                                                <span class="watch-index">{product.displayIndex}</span>
 
-
-                                                <div class="image-shade"></div>
-                                                                                                    <template if:true={product.isOutOfStock}>
-                                                    <span class="stock-badge stock-out">
-                                                        OUT OF STOCK
-                                                    </span>
-                                                </template>
-
-                                                <template if:true={product.isLowStock}>
-                                                    <span class="stock-badge stock-low">
-                                                        {product.lowStockLabel}
-                                                    </span>
-                                                </template>
-
-                                                <span class="watch-index">
-                                                    {product.displayIndex}
-                                                </span>
-
+                                                <div class="badges">
+                                                    <template if:true={product.isOutOfStock}>
+                                                        <span class="badge badge-archive">ARCHIVE PIECE</span>
+                                                    </template>
+                                                    <template if:true={product.isLowStock}>
+                                                        <span class="badge badge-low">{product.lowStockLabel}</span>
+                                                    </template>
+                                                    <template if:true={product.isLimited}>
+                                                        <span class="badge badge-limited">{product.limitedLabel}</span>
+                                                    </template>
+                                                </div>
 
                                                 <button
-                                                    class={product.wishlistClass}
+                                                    class="heart-button"
+                                                    type="button"
                                                     data-product-id={product.productId}
                                                     onclick={handleWishlist}
-                                                    disabled={product.isAddingToWishlist}
                                                     title={product.wishlistTitle}
                                                     aria-label={product.wishlistTitle}
+                                                    aria-pressed={product.wishlistPressed}
                                                 >
-                                                    {product.wishlistIcon}
+                                                    <svg class={product.heartClass} viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.4 4.5 6.9 4.5c2.1 0 3.6 1.2 5.1 3 1.5-1.8 3-3 5.1-3 3.5 0 5.5 3.5 4.2 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"></path>
+                                                    </svg>
                                                 </button>
 
                                             </div>
 
-
-
-                                            <!-- DETAILS -->
+                                            <!-- ===== DETAILS ===== -->
                                             <div class="watch-details">
 
-                                                <p class="card-collection">
-                                                    {product.collectionName}
-                                                </p>
+                                                <div class="details-top">
+                                                    <span class="card-collection">{product.collectionName}</span>
+                                                    <button
+                                                        class="grip"
+                                                        type="button"
+                                                        data-product-id={product.productId}
+                                                        onpointerdown={handleGripDown}
+                                                        onclick={stopClick}
+                                                        aria-label="Drag to compare"
+                                                        title="Drag into the compare tray"
+                                                    >⠿</button>
+                                                </div>
 
-
-                                                <h3>
+                                                <h3 class="watch-name" data-product-id={product.productId} onclick={handleProductClick}>
                                                     {product.productName}
                                                 </h3>
 
-
-                                                <template
-                                                    if:true={product.productCode}
-                                                >
-
-                                                    <p class="watch-code">
-                                                        {product.productCode}
-                                                    </p>
-
+                                                <template if:true={product.line}>
+                                                    <p class="watch-line">{product.line}</p>
                                                 </template>
-
-
-                                                <template
-                                                    if:true={product.description}
-                                                >
-
-                                                    <p class="watch-description">
-                                                        {product.description}
-                                                    </p>
-
-                                                </template>
-
 
                                                 <div class="watch-footer">
-
-                                                    <template
-                                                        if:true={product.price}
-                                                    >
-
-                                                        <span class="watch-price">
-                                                            ₹{product.formattedPrice}
-                                                        </span>
-
-                                                    </template>
-
-
-                                                    <button
-                                                        class="explore-button"
-                                                        data-product-id={product.productId}
-                                                        onclick={handleProductClick}
-                                                    >
-
-                                                        <span>
-                                                            EXPLORE
-                                                        </span>
-
-                                                        <span>
-                                                            ↗
-                                                        </span>
-
+                                                    <span class="watch-price">{product.formattedPrice}</span>
+                                                    <button class={product.compareClass} type="button" data-product-id={product.productId} onclick={toggleCompare} aria-pressed={product.comparePressed}>
+                                                        {product.compareLabel}
                                                     </button>
-
                                                 </div>
 
-
-                                                <button
-                                                    class="cart-button"
-                                                    data-product-id={product.productId}
-                                                    onclick={handleAddToCart}
-                                                    disabled={product.cartDisabled}
-                                                >
-                                                    {product.cartLabel}
-                                                </button>
+                                                <div class="watch-actions">
+                                                    <button class="explore-button" type="button" data-product-id={product.productId} onclick={handleProductClick}>
+                                                        EXPLORE <span aria-hidden="true">↗</span>
+                                                    </button>
+                                                    <button
+                                                        class={product.cartClass}
+                                                        type="button"
+                                                        data-product-id={product.productId}
+                                                        onclick={handleAddToCart}
+                                                        disabled={product.cartDisabled}
+                                                    >
+                                                        {product.cartLabel}
+                                                    </button>
+                                                </div>
 
                                             </div>
 
@@ -511,153 +415,273 @@
 
                             </section>
 
-                        </template>
+                        </div>
 
-                    </div>
+                    </template>
 
                 </template>
 
-
-
-                <!-- =================================================
-                     EMPTY
-                ================================================== -->
+                <!-- Empty -->
                 <template if:true={showEmpty}>
-
-                    <section class="catalog-state">
-
-                        <p class="state-eyebrow">
-                            UJJAYINI HOROLOGY
-                        </p>
-
-                        <h2>
-                            No timepieces found.
-                        </h2>
-
-                        <p>
-                            Try another collection or reset your filters.
-                        </p>
-
-                        <button
-                            class="reset-button"
-                            onclick={resetFilters}
-                        >
-                            RESET FILTERS
-                        </button>
-
+                    <section class="state">
+                        <p class="eyebrow">NOTHING MATCHES THIS MOMENT</p>
+                        <h2>No timepieces <em>found.</em></h2>
+                        <p>Turn the crown, loosen a filter, or begin again.</p>
+                        <button class="gold-button" type="button" onclick={resetFilters}>RESET FILTERS</button>
                     </section>
-
                 </template>
-
 
             </div>
 
         </section>
 
 
-
-        <!-- =================================================
-             CLOSING
-        ================================================== -->
-        <section class="catalog-closing">
-
-            <div class="closing-rule"></div>
-
+        <!-- ================= CLOSING ================= -->
+        <section class="closing reveal">
+            <span class="closing-rule"></span>
             <p>
                 TIME IS NOT SIMPLY MEASURED.
                 <em>IT IS REMEMBERED.</em>
             </p>
-
+            <span class="closing-rule"></span>
         </section>
 
 
+        <!-- ================= INSTRUMENTS ================= -->
+        <div class="instruments" role="toolbar" aria-label="Viewing instruments">
+            <button class={loupeClass} type="button" onclick={toggleLoupe} aria-pressed={loupePressed} title="Jeweller's loupe">
+                <span class="instrument-icon" aria-hidden="true">◎</span>
+                <span class="instrument-label">LOUPE</span>
+            </button>
+        </div>
 
-        <!-- =================================================
-             GUEST CART MODAL
-        ================================================== -->
-        <template if:true={showGuestCartModal}>
-
-            <div
-                class="guest-modal-backdrop"
-                onclick={closeGuestCartModal}
-            >
-
-                <div
-                    class="guest-modal"
-                    onclick={stopModalPropagation}
-                >
-
-                    <button
-                        class="guest-modal-close"
-                        type="button"
-                        onclick={closeGuestCartModal}
-                        aria-label="Close"
-                    >
-                        ×
-                    </button>
+        <!-- Loupe lens (moved by JS) -->
+        <div class="loupe" aria-hidden="true"></div>
 
 
-                    <div class="guest-modal-mark">
-                        U
+        <!-- ================= REFINE DRAWER ================= -->
+        <template if:true={refineOpen}>
+            <div class="drawer-backdrop" onclick={closeRefine}>
+
+                <aside class="drawer" role="dialog" aria-label="Refine" onclick={stopPropagation}>
+
+                    <header class="drawer-head">
+                        <div>
+                            <p class="eyebrow">REFINE</p>
+                            <h2>Shape the <em>salon.</em></h2>
+                        </div>
+                        <button class="close" type="button" onclick={closeRefine} aria-label="Close">✕</button>
+                    </header>
+
+                    <div class="drawer-body">
+
+                        <!-- Sort -->
+                        <div class="group">
+                            <p class="group-title">ORDER</p>
+                            <div class="segments">
+                                <template for:each={sortOptions} for:item="sort">
+                                    <button key={sort.value} class={sort.className} type="button" data-value={sort.value} onclick={handleSort}>
+                                        {sort.label}
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <template if:true={hasPriceRange}>
+                            <div class="group">
+                                <p class="group-title">
+                                    PRICE
+                                    <span class="group-value">{priceLowLabel} – {priceHighLabel}</span>
+                                </p>
+
+                                <div class="histogram" aria-hidden="true">
+                                    <template for:each={priceBars} for:item="bar">
+                                        <span key={bar.key} class={bar.className} style={bar.style}></span>
+                                    </template>
+                                </div>
+
+                                <div class="range">
+                                    <span class="range-track"></span>
+                                    <span class="range-fill" style={priceTrackStyle}></span>
+                                    <input
+                                        class="range-input"
+                                        type="range"
+                                        min={priceFloor}
+                                        max={priceCeil}
+                                        step={priceStep}
+                                        value={priceLow}
+                                        oninput={handlePriceLow}
+                                        aria-label="Minimum price"
+                                    />
+                                    <input
+                                        class="range-input"
+                                        type="range"
+                                        min={priceFloor}
+                                        max={priceCeil}
+                                        step={priceStep}
+                                        value={priceHigh}
+                                        oninput={handlePriceHigh}
+                                        aria-label="Maximum price"
+                                    />
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Facets -->
+                        <template for:each={facetGroups} for:item="group">
+                            <div key={group.key} class="group">
+                                <p class="group-title">{group.label}</p>
+                                <div class="facets">
+                                    <template for:each={group.options} for:item="option">
+                                        <button
+                                            key={option.key}
+                                            class={option.className}
+                                            type="button"
+                                            data-facet={group.key}
+                                            data-value={option.value}
+                                            aria-pressed={option.pressed}
+                                            onclick={handleFacet}
+                                        >
+                                            {option.value}<span class="facet-count">{option.count}</span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Switches -->
+                        <div class="group">
+                            <p class="group-title">THE RARE AND THE READY</p>
+                            <button class={limitedClass} type="button" onclick={toggleLimited} aria-pressed={limitedPressed}>
+                                <span class="switch-track"><span class="switch-dot"></span></span>
+                                LIMITED EDITIONS ONLY
+                            </button>
+                            <button class={stockClass} type="button" onclick={toggleInStock} aria-pressed={stockPressed}>
+                                <span class="switch-track"><span class="switch-dot"></span></span>
+                                AVAILABLE NOW (HIDE ARCHIVE PIECES)
+                            </button>
+                        </div>
+
                     </div>
 
+                    <footer class="drawer-foot">
+                        <button class="text-button" type="button" onclick={resetFilters}>RESET</button>
+                        <button class="gold-button" type="button" onclick={closeRefine}>{refineButtonLabel}</button>
+                    </footer>
 
-                    <p class="guest-modal-eyebrow">
-                        THE HOUSE OF UJJAYINI
-                    </p>
-
-
-                    <h2>
-                        Become part of
-                        <em>the family.</em>
-                    </h2>
-
-
-                    <div class="guest-modal-rule"></div>
-
-
-                    <p class="guest-modal-copy">
-                        Your collection deserves a place of its own.
-                        Sign in or create your UJJAYINI account to
-                        add this timepiece to your private collection.
-                    </p>
-
-
-                    <div class="guest-modal-actions">
-
-                        <button
-                            class="guest-login-button"
-                            type="button"
-                            onclick={handleGuestLogin}
-                        >
-                            SIGN IN
-                        </button>
-
-
-                        <button
-                            class="guest-signup-button"
-                            type="button"
-                            onclick={handleGuestSignup}
-                        >
-                            BECOME A MEMBER
-                        </button>
-
-                    </div>
-
-
-                    <button
-                        class="guest-continue"
-                        type="button"
-                        onclick={closeGuestCartModal}
-                    >
-                        CONTINUE EXPLORING
-                    </button>
-
-                </div>
+                </aside>
 
             </div>
+        </template>
 
+
+        <!-- ================= COMPARE TRAY ================= -->
+        <template if:true={showDock}>
+            <div class={dockClass}>
+                <span class="dock-title">HOROLOGY TRAY</span>
+                <template for:each={dockSlots} for:item="slot">
+                    <div key={slot.key} class={slot.className}>
+                        <template if:true={slot.filled}>
+                            <img src={slot.image} alt={slot.name} draggable="false" />
+                            <button class="slot-clear" type="button" data-product-id={slot.productId} onclick={removeFromDock} aria-label="Remove from tray">✕</button>
+                        </template>
+                    </div>
+                </template>
+                <button class="dock-open" type="button" onclick={openCompare} disabled={dockDisabled}>{dockLabel}</button>
+            </div>
+        </template>
+
+        <!-- Drag ghost -->
+        <div class="ghost" aria-hidden="true">
+            <template if:true={dragId}>
+                <img src={dragImage} alt="" draggable="false" />
+            </template>
+        </div>
+
+
+        <!-- ================= COMPARE ================= -->
+        <template if:true={showCompare}>
+            <div class="overlay" onclick={closeCompare}>
+
+                <section class="compare" role="dialog" aria-label="Compare timepieces" onclick={stopPropagation} style={compareGridStyle}>
+
+                    <header class="compare-head">
+                        <p class="eyebrow">SIDE BY SIDE</p>
+                        <div class="compare-head-actions">
+                            <button class="text-button" type="button" onclick={clearCompare}>CLEAR TRAY</button>
+                            <button class="close" type="button" onclick={closeCompare} aria-label="Close">✕</button>
+                        </div>
+                    </header>
+
+                    <div class="compare-pieces">
+                        <span class="compare-gutter"></span>
+                        <template for:each={comparePieces} for:item="piece">
+                            <div key={piece.productId} class="piece">
+                                <div class="piece-visual">
+                                    <img src={piece.image} alt={piece.productName} />
+                                </div>
+                                <span class="piece-collection">{piece.collectionName}</span>
+                                <h3>{piece.productName}</h3>
+                                <span class="piece-price">{piece.formattedPrice}</span>
+                                <span class="piece-bar"><span class="piece-bar-fill" style={piece.barStyle}></span></span>
+                                <button class="line-button" type="button" data-product-id={piece.productId} onclick={handleProductClick}>VIEW</button>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="compare-table">
+                        <template for:each={compareRows} for:item="row">
+                            <div key={row.key} class={row.className}>
+                                <span class="compare-label">{row.label}</span>
+                                <template for:each={row.cells} for:item="cell">
+                                    <span key={cell.key} class="compare-cell">{cell.value}</span>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                </section>
+
+            </div>
+        </template>
+
+
+        <!-- ================= NOTIFICATION ================= -->
+        <template if:true={showNotification}>
+            <div class={notificationClass} role="status" aria-live="polite">
+                <span class="notification-symbol">{notificationSymbol}</span>
+                <div class="notification-content">
+                    <p class="notification-kicker">UJJAYINI · THE HOUSE OF TIME</p>
+                    <h3>{notificationTitle}</h3>
+                    <p class="notification-message">{notificationMessage}</p>
+                </div>
+                <button class="notification-close" type="button" onclick={closeNotification} aria-label="Close notification">✕</button>
+            </div>
+        </template>
+
+
+        <!-- ================= GUEST MODAL ================= -->
+        <template if:true={showGuestCartModal}>
+            <div class="guest-backdrop" onclick={closeGuestCartModal}>
+                <div class="guest-modal" onclick={stopModalPropagation}>
+                    <button class="close guest-close" type="button" onclick={closeGuestCartModal} aria-label="Close">✕</button>
+                    <div class="guest-mark">U</div>
+                    <p class="eyebrow">THE HOUSE OF UJJAYINI</p>
+                    <h2>Become part of <em>the family.</em></h2>
+                    <p class="guest-copy">
+                        Your collection deserves a place of its own. Sign in or create
+                        your UJJAYINI account to keep this timepiece close.
+                    </p>
+                    <div class="guest-actions">
+                        <button class="gold-button" type="button" onclick={handleGuestLogin}>SIGN IN</button>
+                        <button class="line-button" type="button" onclick={handleGuestSignup}>BECOME A MEMBER</button>
+                    </div>
+                    <button class="text-button" type="button" onclick={closeGuestCartModal}>CONTINUE EXPLORING</button>
+                </div>
+            </div>
         </template>
 
     </main>
+
 </template>

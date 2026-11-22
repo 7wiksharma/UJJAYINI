@@ -326,6 +326,7 @@ export default class UjjayiniCart
             'CART UPDATED',
             'The quantity has been updated.'
         );
+                    window.dispatchEvent(new CustomEvent('ujjayini:cartchange'));
 
     }
 
@@ -340,6 +341,7 @@ export default class UjjayiniCart
             'CART UPDATED',
             'The quantity has been updated.'
         );
+        window.dispatchEvent(new CustomEvent('ujjayini:cartchange'));
 
     }
 
@@ -354,6 +356,7 @@ export default class UjjayiniCart
             'REMOVED FROM CART',
             'The timepiece has been removed from your collection.'
         );
+                    window.dispatchEvent(new CustomEvent('ujjayini:cartchange'));
 
     }
 

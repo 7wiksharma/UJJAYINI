@@ -80,4 +80,19 @@ private class UJJAYINILoginControllerTest {
             UJJAYINILoginController.forgotPassword('nobody@example.com')
         );
     }
+
+    @IsTest
+    static void returnUrlPointsToTheSitePage() {
+
+        System.assertEquals('/ujjayini/cart', UJJAYINILoginController.toSitePath('/ujjayini/cart'));
+        System.assertEquals('/ujjayini/cart', UJJAYINILoginController.toSitePath('/cart'));
+        System.assertEquals('/ujjayini/my-account', UJJAYINILoginController.toSitePath('https://evil.example'));
+
+        String fixedUrl = UJJAYINILoginController.withReturnUrl(
+            'https://x.example/secur/frontdoor.jsp?sid=1&retURL=%2Fujjayinivforcesite%2Fcart&a=2',
+            '/ujjayini/cart'
+        );
+
+        System.assert(fixedUrl.contains('retURL=%2Fujjayini%2Fcart&'));
+    }
 }

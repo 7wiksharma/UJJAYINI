@@ -1,516 +1,180 @@
 <template>
 
-   <section
-    class="vault"
-    style={vaultBackgroundStyle}
-    >
+    <section class="vault">
 
-        <!-- =========================================================
-             ATMOSPHERE
-        ========================================================== -->
-
-        <div class="vault-atmosphere"></div>
-
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="orbit orbit-three"></div>
-
-        <div class="star star-one"></div>
-        <div class="star star-two"></div>
-        <div class="star star-three"></div>
-        <div class="star star-four"></div>
-        <div class="star star-five"></div>
+        <!-- ================= THE EVENT HORIZON ================= -->
+        <canvas class="horizon" aria-hidden="true"></canvas>
+        <div class="veil" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
 
 
-        <!-- =========================================================
-             MAIN CONTENT
-        ========================================================== -->
+        <!-- ================= HERO ================= -->
+        <header class="hero">
 
-        <div class="vault-inner">
+            <div class="hero-copy">
 
-
-            <!-- =====================================================
-                 TOP MARKERS
-            ====================================================== -->
-
-            <div class="section-markers">
-
-                <span>
-                    
-                </span>
-
-                <span>
-                 
-                </span>
-
-            </div>
-
-
-            <!-- =====================================================
-                 HEADER
-            ====================================================== -->
-
-            <header class="vault-header">
-
-                <p class="eyebrow">
-                    THE PRIVATE COLLECTION
-                </p>
-
+                <p class="eyebrow"><span class="dot"></span>THE COLLECTOR'S VAULT</p>
 
                 <h1>
-                    Your time,<br>
+                    Your time,
                     <em>kept forever.</em>
                 </h1>
 
-
-                <div class="gold-rule"></div>
-
-
                 <p class="intro">
-                    A private record of the timepieces that
-                    have become part of your collection.
+                    A private orbit for the timepieces that have become yours:
+                    their ownership, their protection and their certificates, held in one place.
                 </p>
 
-            </header>
-
-
-            <!-- =====================================================
-                 PAYMENT CONFIRMATION
-            ====================================================== -->
-
-            <template if:true={showPaymentBanner}>
-
-                <div
-                    class={paymentBannerClass}
-                    role="status"
-                    aria-live="polite"
-                >
-
-                    <div class="payment-mark">
-
-                        <template if:true={isVerifyingPayment}>
-                            <span class="payment-spinner"></span>
-                        </template>
-
-                        <template if:false={isVerifyingPayment}>
-                            <span class="payment-check">✓</span>
-                        </template>
-
+                <template if:true={hasAssets}>
+                    <div class="stats">
+                        <div class="stat">
+                            <strong>{countLabel}</strong>
+                            <span>{countWord}</span>
+                        </div>
+                        <div class="stat">
+                            <strong>{protectedCount}</strong>
+                            <span>UNDER WARRANTY</span>
+                        </div>
+                        <div class="stat">
+                            <strong>{certifiedCount}</strong>
+                            <span>CERTIFIED</span>
+                        </div>
                     </div>
+                </template>
 
-
-                    <div class="payment-copy">
-
-                        <p class="micro-label">
-                            {paymentBannerEyebrow}
-                        </p>
-
-                        <h3>
-                            {paymentBannerTitle}
-                        </h3>
-
-                        <p class="payment-message">
-                            {paymentBannerMessage}
-                        </p>
-
-                    </div>
-
-
-                    <template if:true={showRefresh}>
-
-                        <button
-                            class="payment-action"
-                            type="button"
-                            onclick={handleRefreshVault}
-                        >
-                            REFRESH
-                        </button>
-
-                    </template>
-
-
-                    <template if:false={isVerifyingPayment}>
-
-                        <button
-                            class="payment-close"
-                            type="button"
-                            onclick={handleDismissPayment}
-                            aria-label="Dismiss"
-                        >
-                            ×
-                        </button>
-
-                    </template>
-
+                <div class="hero-actions">
+                    <button class="btn-primary" type="button" onclick={scrollToCollection}>
+                        <span>OPEN THE VAULT</span>
+                        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3 V13 M4 9 L8 13 L12 9"></path></svg>
+                    </button>
+                    <button class="btn-ghost" type="button" onclick={goToWatches}>ADD A TIMEPIECE</button>
                 </div>
 
-            </template>
+                <!-- Payment confirmation -->
+                <template if:true={showPaymentBanner}>
+                    <div class={paymentBannerClass} role="status" aria-live="polite">
+
+                        <div class="payment-mark">
+                            <template if:true={isVerifyingPayment}>
+                                <span class="payment-spinner"></span>
+                            </template>
+                            <template if:false={isVerifyingPayment}>
+                                <span class="payment-check">✓</span>
+                            </template>
+                        </div>
+
+                        <div class="payment-copy">
+                            <p class="micro">{paymentBannerEyebrow}</p>
+                            <h3>{paymentBannerTitle}</h3>
+                            <p class="payment-message">{paymentBannerMessage}</p>
+                        </div>
+
+                        <template if:true={showRefresh}>
+                            <button class="btn-ghost small" type="button" onclick={handleRefreshVault}>REFRESH</button>
+                        </template>
+
+                        <template if:true={isPaymentDone}>
+                            <button class="icon-button" type="button" onclick={handleDismissPayment} aria-label="Dismiss">✕</button>
+                        </template>
+
+                    </div>
+                </template>
+
+            </div>
+
+            <span class="scroll-cue" aria-hidden="true"><i></i>SCROLL INTO THE VAULT</span>
+
+        </header>
 
 
-            <!-- =====================================================
-                 LOADING
-            ====================================================== -->
+        <!-- ================= COLLECTION ================= -->
+        <section class="collection">
 
+            <!-- Loading -->
             <template if:true={isLoading}>
-
-                <div class="state loading-state">
-
-                    <div class="loading-mark">
-                        U
-                    </div>
-
-                    <p>
-                        Opening your collection...
-                    </p>
-
+                <div class="state">
+                    <div class="loader"></div>
+                    <p class="micro">OPENING YOUR COLLECTION</p>
                 </div>
-
             </template>
 
-
-            <!-- =====================================================
-                 ERROR
-            ====================================================== -->
-
+            <!-- Error (never technical) -->
             <template if:true={errorMessage}>
-
-                <div class="state error-state">
-
-                    <div class="state-label">
-                        COLLECTION UNAVAILABLE
-                    </div>
-
-                    <p>
-                        {errorMessage}
-                    </p>
-
+                <div class="state panel">
+                    <p class="micro">COLLECTION RESTING</p>
+                    <h2>The vault will open <em>in a moment.</em></h2>
+                    <p class="copy">{errorMessage}</p>
+                    <button class="btn-ghost" type="button" onclick={handleRefreshVault}>REFRESH</button>
                 </div>
-
             </template>
 
-
-            <!-- =====================================================
-                 COLLECTION
-            ====================================================== -->
-
+            <!-- Drawers -->
             <template if:true={hasAssets}>
 
-                <div class="collection-intro">
-
+                <div class="collection-head">
                     <div>
-
-                        <p class="micro-label">
-                            YOUR TIMEPIECES
-                        </p>
-
-                        <h2>
-                            The Collection
-                        </h2>
-
+                        <p class="micro">YOUR TIMEPIECES</p>
+                        <h2>The <em>Collection</em></h2>
                     </div>
-
-
-                    <div class="collection-count">
-
-                        <span>
-                            {assets.length}
-                        </span>
-
-                        <small>
-                            TIMEPIECE<span if:true={hasMultipleAssets}>S</span>
-                        </small>
-
+                    <div class="count">
+                        <strong>{countLabel}</strong>
+                        <span>{countWord}</span>
                     </div>
-
                 </div>
 
+                <div class="drawers">
 
-                <!-- =================================================
-                     WATCH GRID
-                ================================================== -->
+                    <template for:each={cards} for:item="card">
 
-                <div class="collection-grid">
+                        <article key={card.assetId} class={card.className}>
 
-                    <template
-                        for:each={assets}
-                        for:item="asset"
-                    >
-
-                        <article
-                            key={asset.assetId}
-                            class="watch-card"
-                        >
-
-
-                            <!-- =====================================
-                                 WATCH VISUAL
-                            ====================================== -->
-
-                            <div class="watch-visual">
-
-                                <div class="watch-orbit"></div>
-
-                                <div class="watch-glow"></div>
-
-
-                                <!-- =================================
-                                     PRODUCT IMAGE
-                                ================================== -->
-
-                                <template if:true={asset.productImageUrl}>
-
-                                    <img
-                                        class="product-image"
-                                        src={asset.productImageUrl}
-                                        alt={asset.productName}
-                                    />
-
+                            <button class="drawer-visual" type="button" data-id={card.assetId} onclick={openDetails} aria-label="Open details">
+                                <template if:true={card.hasImage}>
+                                    <span class="drawer-image" style={card.imageStyle}></span>
                                 </template>
-
-
-                                <!-- =================================
-                                     FALLBACK UJJAYINI SYMBOL
-                                ================================== -->
-
-                                <template if:false={asset.productImageUrl}>
-
-                                    <div class="watch-symbol">
-
-                                        <span class="watch-symbol-top">
-                                            XII
-                                        </span>
-
-                                        <span class="watch-symbol-center">
-                                            U
-                                        </span>
-
-                                        <span class="watch-symbol-bottom">
-                                            VI
-                                        </span>
-
-                                    </div>
-
+                                <template if:false={card.hasImage}>
+                                    <span class="drawer-fallback">U</span>
                                 </template>
+                                <span class="drawer-index">{card.index}</span>
+                                <span class="drawer-shine" aria-hidden="true"></span>
+                            </button>
 
+                            <div class="drawer-body">
 
-                                <span class="visual-caption">
-                                    UJJAYINI
-                                </span>
-
-                            </div>
-
-
-                            <!-- =====================================
-                                 WATCH INFORMATION
-                            ====================================== -->
-
-                            <div class="watch-content">
-
-
-                                <div class="watch-topline">
-
-                                    <p class="watch-label">
-                                        COLLECTOR ASSET
-                                    </p>
-
-                                    <span class="asset-status">
-                                        {asset.status}
-                                    </span>
-
+                                <div class="drawer-top">
+                                    <span class="collection-tag">{card.collectionLabel}</span>
+                                    <span class="status-chip">{card.statusLabel}</span>
                                 </div>
 
-
-                                <h3>
-                                    {asset.productName}
+                                <h3 class="drawer-name">
+                                    {card.productName}
+                                    <template if:true={card.hasQuantity}>
+                                        <span class="qty">{card.quantityLabel}</span>
+                                    </template>
                                 </h3>
 
+                                <dl class="meta">
+                                    <div><dt>ACQUIRED</dt><dd>{card.acquired}</dd></div>
+                                    <div><dt>VALUE</dt><dd>{card.value}</dd></div>
+                                    <div><dt>CERTIFICATE</dt><dd class="cert-no">{card.certificateNumber}</dd></div>
+                                </dl>
 
-                                <div class="watch-rule"></div>
-
-
-                                <!-- =================================
-                                     PRIMARY DETAILS
-                                ================================== -->
-
-                                <div class="details-grid">
-
-
-                                    <div class="detail">
-
-                                        <span>
-                                            PURCHASE DATE
-                                        </span>
-
-                                        <strong>
-                                            {asset.purchaseDate}
-                                        </strong>
-
+                                <div class={card.warrantyClass}>
+                                    <div class="warranty-line">
+                                        <span>{card.warrantyLabel}</span>
+                                        <span>{card.coverage}</span>
                                     </div>
-
-
-                                    <div class="detail">
-
-                                        <span>
-                                            QUANTITY
-                                        </span>
-
-                                        <strong>
-                                            {asset.quantity}
-                                        </strong>
-
-                                    </div>
-
-
-                                    <div class="detail">
-
-                                        <span>
-                                            VALUE
-                                        </span>
-
-                                        <strong>
-                                            ₹{asset.price}
-                                        </strong>
-
-                                    </div>
-
-
-                                    <div class="detail">
-
-                                        <span>
-                                            ASSET REFERENCE
-                                        </span>
-
-                                        <strong class="reference">
-                                            {asset.serialNumber}
-                                        </strong>
-
-                                    </div>
-
+                                    <div class="bar"><span class="bar-fill" style={card.barStyle}></span></div>
                                 </div>
 
-
-                                <!-- =================================
-                                     WARRANTY
-                                ================================== -->
-
-                                <template if:true={asset.warranty}>
-
-                                    <div class="warranty">
-
-                                        <div class="warranty-heading">
-
-                                            <div>
-
-                                                <p class="watch-label">
-                                                    WARRANTY
-                                                </p>
-
-                                                <h4>
-                                                    Protected time
-                                                </h4>
-
-                                            </div>
-
-
-                                            <span class="warranty-status">
-                                                {asset.warranty.status}
-                                            </span>
-
-                                        </div>
-
-
-                                        <div class="warranty-grid">
-
-
-                                            <div>
-
-                                                <span>
-                                                    COVERAGE
-                                                </span>
-
-                                                <strong>
-                                                    {asset.warranty.coverageType}
-                                                </strong>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <span>
-                                                    DURATION
-                                                </span>
-
-                                                <strong>
-                                                    {asset.warranty.durationMonths}
-                                                    months
-                                                </strong>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <span>
-                                                    START
-                                                </span>
-
-                                                <strong>
-                                                    {asset.warranty.startDate}
-                                                </strong>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <span>
-                                                    END
-                                                </span>
-
-                                                <strong>
-                                                    {asset.warranty.endDate}
-                                                </strong>
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <template
-                                            if:true={asset.warranty.notes}
-                                        >
-
-                                            <div class="warranty-note">
-
-                                                <span>
-                                                    NOTE
-                                                </span>
-
-                                                <p>
-                                                    {asset.warranty.notes}
-                                                </p>
-
-                                            </div>
-
-                                        </template>
-
-                                    </div>
-
-                                </template>
-
-
-                                <!-- =================================
-                                     NO WARRANTY
-                                ================================== -->
-
-                                <template if:false={asset.warranty}>
-
-                                    <div class="warranty-unavailable">
-                                        Warranty information unavailable.
-                                    </div>
-
-                                </template>
+                                <div class="drawer-actions">
+                                    <button class="btn-primary small" type="button" data-id={card.assetId} onclick={downloadCertificate} disabled={card.isDownloading}>
+                                        <span>{card.certLabel}</span>
+                                        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3 V13 M4 9 L8 13 L12 9"></path></svg>
+                                    </button>
+                                    <button class="btn-ghost small" type="button" data-id={card.assetId} onclick={openDetails}>DETAILS</button>
+                                    <button class="link" type="button" onclick={goToService}>REQUEST SERVICE</button>
+                                </div>
 
                             </div>
 
@@ -522,65 +186,116 @@
 
             </template>
 
-
-            <!-- =====================================================
-                 EMPTY VAULT
-            ====================================================== -->
-
+            <!-- Empty -->
             <template if:true={isEmpty}>
+                <div class="state empty">
+                    <div class="empty-hole" aria-hidden="true"><span></span></div>
+                    <p class="micro">THE COLLECTOR'S VAULT</p>
+                    <h2>Your collection <em>begins here.</em></h2>
+                    <p class="copy">Your UJJAYINI timepieces will appear here after a successful payment, with their warranty and certificate.</p>
+                    <button class="btn-primary" type="button" onclick={goToWatches}><span>EXPLORE THE TIMEPIECES</span></button>
+                </div>
+            </template>
 
-                <div class="empty-vault">
+            <footer class="vault-footer">
+                <span>VI — THE COLLECTOR'S VAULT</span>
+                <span>TIME, KEPT WITHIN.</span>
+            </footer>
 
-                    <div class="empty-orbit">
+        </section>
 
-                        <div class="empty-mark">
-                            U
+
+        <!-- ================= DETAIL PANEL ================= -->
+        <template if:true={showPanel}>
+            <div class="panel-backdrop" onclick={closeDetails}>
+
+                <aside class="detail" role="dialog" aria-label="Timepiece details" onclick={stopPropagation}>
+
+                    <button class="icon-button detail-close" type="button" onclick={closeDetails} aria-label="Close">✕</button>
+
+                    <div class="detail-visual">
+                        <template if:true={openCard.hasImage}>
+                            <span class="detail-image" style={openCard.imageLargeStyle}></span>
+                        </template>
+                        <span class="detail-ring" aria-hidden="true"></span>
+                    </div>
+
+                    <div class="detail-body">
+
+                        <p class="micro">{openCard.collectionLabel} · {openCard.statusLabel}</p>
+                        <h2>{openCard.productName}</h2>
+
+                        <dl class="detail-specs">
+                            <div><dt>ACQUIRED</dt><dd>{openCard.acquired}</dd></div>
+                            <div><dt>VALUE</dt><dd>{openCard.value}</dd></div>
+                            <template for:each={openCard.specs} for:item="spec">
+                                <div key={spec.key}><dt>{spec.label}</dt><dd>{spec.value}</dd></div>
+                            </template>
+                        </dl>
+
+                        <!-- Warranty timeline -->
+                        <div class="timeline-block">
+                            <p class="micro">PROTECTED TIME</p>
+                            <template if:true={openCard.hasWarranty}>
+                                <div class="timeline">
+                                    <span class="timeline-track"></span>
+                                    <span class="timeline-now" style={openCard.timelineStyle}><i></i><b>TODAY</b></span>
+                                </div>
+                                <div class="timeline-ends">
+                                    <span><b>{openCard.warrantyStart}</b>STARTED</span>
+                                    <span class="right"><b>{openCard.warrantyEnd}</b>ENDS</span>
+                                </div>
+                                <p class="timeline-label">{openCard.warrantyLabel} · {openCard.coverage} · {openCard.duration}</p>
+                                <template if:true={openCard.warrantyNotes}>
+                                    <p class="note">{openCard.warrantyNotes}</p>
+                                </template>
+                            </template>
+                            <template if:false={openCard.hasWarranty}>
+                                <p class="copy">Warranty details are being prepared for this timepiece.</p>
+                            </template>
                         </div>
+
+                        <!-- Certificate preview -->
+                        <div class="certificate">
+                            <div class="certificate-paper">
+                                <span class="cert-mono">U</span>
+                                <span class="cert-brand">UJJAYINI</span>
+                                <span class="cert-title">Certificate of Authenticity</span>
+                                <span class="cert-sub">and Ownership</span>
+                                <span class="cert-piece">{openCard.productName}</span>
+                                <span class="cert-number">{openCard.certificateNumber}</span>
+                            </div>
+                            <div class="certificate-copy">
+                                <p class="micro">YOUR CERTIFICATE</p>
+                                <p class="copy">A numbered record that this timepiece is an authentic UJJAYINI creation, held in your collection.</p>
+                                <button class="btn-primary" type="button" data-id={openCard.assetId} onclick={downloadCertificate} disabled={openCard.isDownloading}>
+                                    <span>DOWNLOAD PDF</span>
+                                    <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3 V13 M4 9 L8 13 L12 9"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button class="btn-ghost wide" type="button" onclick={goToService}>REQUEST A SERVICE FOR THIS TIMEPIECE</button>
 
                     </div>
 
+                </aside>
 
-                    <p class="micro-label">
-                        THE COLLECTOR'S VAULT
-                    </p>
-
-
-                    <h2>
-                        Your collection<br>
-                        <em>begins here.</em>
-                    </h2>
+            </div>
+        </template>
 
 
-                    <div class="gold-rule"></div>
-
-
-                    <p class="empty-copy">
-                        Your purchased UJJAYINI timepieces will
-                        appear here after a successful payment.
-                    </p>
-
+        <!-- ================= TOAST ================= -->
+        <template if:true={toastTitle}>
+            <div class={toastClass} role="status" aria-live="polite">
+                <div>
+                    <span class="micro">UJJAYINI · THE HOUSE OF TIME</span>
+                    <strong>{toastTitle}</strong>
+                    <p>{toastMessage}</p>
                 </div>
-
-            </template>
-
-
-            <!-- =====================================================
-                 FOOTER NOTE
-            ====================================================== -->
-
-            <footer class="vault-footer">
-
-                <div class="footer-marker">
-                    VI — THE COLLECTOR'S VAULT
-                </div>
-
-                <div class="footer-note">
-                    TIME, KEPT WITHIN.
-                </div>
-
-            </footer>
-
-        </div>
+                <button class="icon-button" type="button" onclick={closeToast} aria-label="Close">✕</button>
+            </div>
+        </template>
 
     </section>
 

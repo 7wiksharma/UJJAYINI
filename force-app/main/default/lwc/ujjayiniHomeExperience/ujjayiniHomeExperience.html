@@ -1,129 +1,169 @@
 <template>
 
-    <main class="home-experience">
+    <main class="home">
 
         <!-- =====================================================
-             CONTINUOUS CINEMATIC BACKGROUND
+             CINEMATIC BACKGROUND (static resource video)
         ====================================================== -->
-
         <video
-            class="page-video"
+            class={videoClass}
             autoplay
             muted
             loop
             playsinline
             preload="auto"
-            aria-hidden="true">
-
-            <source
-                src={videoUrl}
-                type="video/mp4" />
-
+            aria-hidden="true"
+            onloadeddata={handleVideoReady}
+        >
+            <source src={videoUrl} type="video/mp4" />
         </video>
+        <div class="video-grade" aria-hidden="true"></div>
+        <div class="video-vignette" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
 
-        <div class="page-video-overlay"></div>
 
         <!-- =====================================================
              HERO
         ====================================================== -->
-
         <section
             class="hero"
-            aria-labelledby="home-title">
+            aria-labelledby="home-title"
+            onpointermove={handleHeroPointer}
+            onpointerleave={handleHeroLeave}
+        >
 
-            <div class="hero-orbit hero-orbit-one"></div>
-            <div class="hero-orbit hero-orbit-two"></div>
+            <div class="hero-light" aria-hidden="true"></div>
+            <span class="orbit orbit-a" aria-hidden="true"></span>
+            <span class="orbit orbit-b" aria-hidden="true"></span>
 
             <div class="hero-copy">
 
-                <p class="eyebrow">
-                    <span></span>
-                    MAISON OF VEDIC HOROLOGY
-                </p>
+                <p class="eyebrow"><span class="eyebrow-rule"></span>MAISON OF VEDIC HOROLOGY · EST. UJJAIN</p>
 
-                <h1 id="home-title">
-                    UJJAYINI
+                <h1 id="home-title" class="headline">
+                    <span class="line"><span class="word">The</span><span class="word">beginning</span></span>
+                    <span class="line"><span class="word">of</span><span class="word">your</span><span class="word"><em>time.</em></span></span>
                 </h1>
 
-                <p class="hero-tagline">
-                    The beginning of your time.
-                </p>
-
                 <p class="hero-description">
-                    A modern expression of Indian horology,
-                    shaped by the skies that first taught us
-                    to measure time.
+                    A modern expression of Indian horology, shaped by the skies
+                    that first taught us to measure time.
                 </p>
 
-                <a
-                    class="cta"
-                    href="/ujjayini/collections">
-
-                    EXPLORE THE COLLECTION
-
-                    <span aria-hidden="true">
-                        ↗
-                    </span>
-
-                </a>
+                <div class="hero-actions">
+                    <a class="btn btn-gold" href="/ujjayini/watches">
+                        <span>EXPLORE TIMEPIECES</span>
+                        <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 L12 4 M6 4 H12 V10"></path></svg>
+                    </a>
+                    <a class="btn btn-glass" href="/ujjayini/collections">
+                        <span>THE COLLECTIONS</span>
+                    </a>
+                </div>
 
             </div>
 
-            <p class="hero-caption">
-                TIME · OBSERVED
-                &nbsp;&nbsp;/&nbsp;&nbsp;
-                UJJAYINI, INDIA
-            </p>
+            <button class="scroll-cue" type="button" onclick={scrollToStory} aria-label="Scroll to discover">
+                <span class="scroll-line"></span>
+                <span>DISCOVER</span>
+            </button>
 
         </section>
 
 
         <!-- =====================================================
-             ORIGIN / SKY
+             TICKER
         ====================================================== -->
-
-        <section
-            class="origin section-wrap"
-            aria-labelledby="origin-title">
-
-            <div
-                class="origin-orbit"
-                aria-hidden="true">
-
-                <span></span>
-
+        <div class="ticker" aria-hidden="true">
+            <div class="ticker-track">
+                <template for:each={tickerItems} for:item="item">
+                    <span key={item.key} class="ticker-item">{item.label}<i class="ticker-star">✦</i></span>
+                </template>
             </div>
+        </div>
 
-            <div class="origin-label">
 
-                <span class="eyebrow">
-                    01 — THE ORIGIN
-                </span>
+        <!-- =====================================================
+             ORIGIN
+        ====================================================== -->
+        <section class="origin band" aria-labelledby="origin-title">
 
-                <span class="origin-rule"></span>
-
-            </div>
-
-            <div class="origin-copy">
-
-                <h2 id="origin-title">
-
-                    Before the clock,
-                    <br />
-
-                    there was
-                    <em>the sky.</em>
-
-                </h2>
-
-                <p>
-                    Long before hours were divided into minutes,
-                    time was observed through the movement of
-                    celestial bodies. At UJJAYINI, we return to
-                    that beginning — where astronomy, ritual and
-                    horology meet.
+            <div class="origin-copy" data-reveal>
+                <p class="eyebrow"><span class="eyebrow-rule"></span>01 — THE ORIGIN</p>
+                <h2 id="origin-title">Before the clock, <br />there was <em>the sky.</em></h2>
+                <p class="body">
+                    Long before hours were divided into minutes, time was observed through the
+                    movement of celestial bodies. Indian astronomers once measured the day from
+                    a meridian running through Ujjain. At UJJAYINI, we return to that beginning —
+                    where astronomy, ritual and horology meet.
                 </p>
+            </div>
 
+            <div class="pillars" data-reveal>
+                <div class="pillar">
+                    <span class="pillar-value">III</span>
+                    <span class="pillar-label">EXPRESSIONS OF TIME</span>
+                </div>
+                <div class="pillar">
+                    <span class="pillar-value">COA</span>
+                    <span class="pillar-label">CERTIFICATE OF AUTHENTICITY</span>
+                </div>
+                <div class="pillar">
+                    <span class="pillar-value">36<small>mo</small></span>
+                    <span class="pillar-label">WARRANTY ON SELECT PIECES</span>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             THREE EXPRESSIONS
+        ====================================================== -->
+        <section class="expressions-band band" aria-labelledby="expressions-title">
+
+            <header class="band-head" data-reveal>
+                <p class="eyebrow"><span class="eyebrow-rule"></span>02 — THE HOUSES</p>
+                <h2 id="expressions-title">Three expressions <em>of time.</em></h2>
+            </header>
+
+            <div class="expressions" data-reveal>
+                <template for:each={expressions} for:item="item">
+                    <a key={item.key} class={item.className} href={item.href}>
+
+                        <span class="expression-bg" aria-hidden="true"></span>
+
+                        <span class="expression-symbol" aria-hidden="true">
+                            <svg viewBox="0 0 100 100">
+                                <template lwc:if={item.isMoon}>
+                                    <path d="M62 18 A34 34 0 1 0 82 62 A26 26 0 1 1 62 18 Z"></path>
+                                </template>
+                                <template lwc:if={item.isSun}>
+                                    <circle cx="50" cy="50" r="17"></circle>
+                                    <path d="M50 10 V24 M50 76 V90 M10 50 H24 M76 50 H90 M22 22 L32 32 M68 68 L78 78 M78 22 L68 32 M32 68 L22 78"></path>
+                                </template>
+                                <template lwc:if={item.isGear}>
+                                    <circle cx="50" cy="50" r="22"></circle>
+                                    <circle cx="50" cy="50" r="8"></circle>
+                                    <path d="M50 14 V26 M50 74 V86 M14 50 H26 M74 50 H86 M25 25 L33 33 M67 67 L75 75 M75 25 L67 33 M33 67 L25 75"></path>
+                                </template>
+                            </svg>
+                        </span>
+
+                        <span class="expression-number">{item.number}</span>
+
+                        <span class="expression-body">
+                            <span class="expression-eyebrow">{item.eyebrow}</span>
+                            <span class="expression-name">{item.name}</span>
+                            <span class="expression-line">{item.line}</span>
+                            <span class="expression-signature">{item.signature}</span>
+                            <span class="expression-cta">
+                                EXPLORE
+                                <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 L12 4 M6 4 H12 V10"></path></svg>
+                            </span>
+                        </span>
+
+                    </a>
+                </template>
             </div>
 
         </section>
@@ -132,163 +172,69 @@
         <!-- =====================================================
              FEATURED WATCHES
         ====================================================== -->
+        <section class="featured band" aria-labelledby="featured-title">
 
-        <section
-            class="featured section-wrap"
-            aria-labelledby="featured-title">
-
-            <div class="section-heading">
-
+            <header class="band-head split" data-reveal>
                 <div>
-
-                    <p class="eyebrow">
-                        02 — THE COLLECTION
-                    </p>
-
-                    <h2 id="featured-title">
-                        Timepieces
-                        <em>of Ujjayini</em>
-                    </h2>
-
+                    <p class="eyebrow"><span class="eyebrow-rule"></span>03 — THE SALON</p>
+                    <h2 id="featured-title">Timepieces <em>of Ujjayini.</em></h2>
                 </div>
-
-                <a
-                    class="text-link"
-                    href="/ujjayini/collections">
-
-                    DISCOVER ALL COLLECTIONS
-
-                    <span aria-hidden="true">
-                        ↗
-                    </span>
-
+                <a class="text-link" href="/ujjayini/watches">
+                    VIEW ALL TIMEPIECES
+                    <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 L12 4 M6 4 H12 V10"></path></svg>
                 </a>
+            </header>
 
-            </div>
-
-
-            <template lwc:if={watches.length}>
-
+            <template lwc:if={hasWatches}>
                 <div class="watch-grid">
-
-                    <template
-                        for:each={watches}
-                        for:item="watch">
-
+                    <template for:each={watches} for:item="watch">
                         <article
+                            key={watch.productId}
                             class="watch-card"
-                            key={watch.productId}>
-
-                            <!-- WATCH IMAGE -->
-
+                            data-reveal
+                            onpointermove={handleCardMove}
+                            onpointerleave={handleCardLeave}
+                        >
                             <button
-                                class="watch-image"
+                                class="watch-stage"
+                                type="button"
                                 data-product-id={watch.productId}
                                 onclick={handleProductClick}
-                                aria-label={watch.name}>
-
-                                <template lwc:if={watch.imageUrl}>
-
-                                    <img
-                                        src={watch.imageUrl}
-                                        alt={watch.name}
-                                        loading="lazy" />
-
+                                aria-label={watch.name}
+                            >
+                                <span class="stage-halo" aria-hidden="true"></span>
+                                <template lwc:if={watch.hasImage}>
+                                    <span class="watch-image" style={watch.imageStyle} role="img" aria-label={watch.name}></span>
                                 </template>
-
                                 <template lwc:else>
-
-                                    <span
-                                        class="image-mark"
-                                        aria-hidden="true">
-
-                                        U
-
-                                    </span>
-
+                                    <span class="image-mark" aria-hidden="true">U</span>
                                 </template>
-
-                                <span
-                                    class="image-index"
-                                    aria-hidden="true">
-
-                                    {watch.displayIndex}
-
-                                </span>
-
-                                <span
-                                    class="image-glow"
-                                    aria-hidden="true">
-                                </span>
-
+                                <span class="glare" aria-hidden="true"></span>
+                                <span class="watch-index" aria-hidden="true">{watch.displayIndex}</span>
                             </button>
 
-
-                            <!-- WATCH INFORMATION -->
-
                             <div class="watch-details">
-
-                                <!--
-                                    IMPORTANT:
-                                    Product Code / Product ID intentionally
-                                    NOT displayed here.
-                                -->
-
                                 <template lwc:if={watch.collection}>
-
-                                    <p class="watch-collection">
-                                        {watch.collection}
-                                    </p>
-
+                                    <p class="watch-collection">{watch.collection}</p>
                                 </template>
-
-                                <h3>
-                                    {watch.name}
-                                </h3>
-
-                                <p class="watch-meta">
-                                    {watch.metadata}
-                                </p>
-
-                                <button
-                                    class="watch-link"
-                                    data-product-id={watch.productId}
-                                    onclick={handleProductClick}>
-
+                                <h3>{watch.name}</h3>
+                                <p class="watch-meta">{watch.metadata}</p>
+                                <button class="watch-link" type="button" data-product-id={watch.productId} onclick={handleProductClick}>
                                     VIEW WATCH
-
-                                    <span aria-hidden="true">
-                                        ↗
-                                    </span>
-
+                                    <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 L12 4 M6 4 H12 V10"></path></svg>
                                 </button>
-
                             </div>
-
                         </article>
-
                     </template>
-
                 </div>
-
             </template>
-
 
             <template lwc:elseif={errorMessage}>
-
-                <p class="state-message">
-                    Featured timepieces are temporarily unavailable.
-                </p>
-
+                <p class="state-message">{errorMessage}</p>
             </template>
 
-
             <template lwc:elseif={showEmpty}>
-
-                <p class="state-message">
-                    The collection is being prepared.
-                </p>
-
+                <p class="state-message">The collection is being prepared.</p>
             </template>
 
         </section>
@@ -297,62 +243,35 @@
         <!-- =====================================================
              CRAFT
         ====================================================== -->
+        <section class="craft band" aria-labelledby="craft-title">
 
-        <section
-            class="craft section-wrap"
-            aria-labelledby="craft-title">
-
-            <div class="craft-heading">
-
-                <p class="eyebrow">
-                    03 — THE MAKING
-                </p>
-
-                <h2 id="craft-title">
-
-                    Crafted for
-                    <br />
-
-                    <em>the moment.</em>
-
-                </h2>
-
+            <div class="craft-heading" data-reveal>
+                <p class="eyebrow"><span class="eyebrow-rule"></span>04 — THE MAKING</p>
+                <h2 id="craft-title">Crafted for <br /><em>the moment.</em></h2>
             </div>
 
-
-            <div class="craft-copy">
-
-                <p class="craft-lead">
-                    Precision. Material. Movement.
-                </p>
-
-                <p>
-                    Every surface, every edge and every movement
-                    is considered before it becomes part of the
-                    whole. A quiet balance of enduring materials
-                    and measured mechanics gives each timepiece
-                    its character.
-                </p>
-
-                <div class="craft-details">
-
-                    <span>
-                        FORM
-                        <i></i>
-                    </span>
-
-                    <span>
-                        DEPTH
-                        <i></i>
-                    </span>
-
-                    <span>
-                        PRECISION
-                        <i></i>
-                    </span>
-
+            <div class="craft-steps" data-reveal>
+                <div class="craft-step">
+                    <span class="step-no">I</span>
+                    <div>
+                        <p class="step-title">FORM</p>
+                        <p class="body">Every surface and every edge is considered before it becomes part of the whole.</p>
+                    </div>
                 </div>
-
+                <div class="craft-step">
+                    <span class="step-no">II</span>
+                    <div>
+                        <p class="step-title">MATERIAL</p>
+                        <p class="body">Sapphire, gold, steel, titanium and ceramic — chosen to last for generations.</p>
+                    </div>
+                </div>
+                <div class="craft-step">
+                    <span class="step-no">III</span>
+                    <div>
+                        <p class="step-title">MOVEMENT</p>
+                        <p class="body">Measured mechanics give each timepiece its heartbeat and its character.</p>
+                    </div>
+                </div>
             </div>
 
         </section>
@@ -361,49 +280,31 @@
         <!-- =====================================================
              COLLECTOR VAULT
         ====================================================== -->
+        <section class="vault" aria-labelledby="vault-title">
 
-        <section
-            class="vault"
-            aria-labelledby="vault-title">
-
-            <div
-                class="vault-ornament"
-                aria-hidden="true">
+            <div class="vault-rings" aria-hidden="true">
+                <span class="ring ring-1"></span>
+                <span class="ring ring-2"></span>
+                <span class="ring ring-3"></span>
+                <span class="ring-core"></span>
             </div>
 
-            <div class="vault-copy">
-
-                <p class="eyebrow">
-                    PRIVATE COLLECTION
+            <div class="vault-copy" data-reveal>
+                <p class="eyebrow"><span class="eyebrow-rule"></span>PRIVATE COLLECTION</p>
+                <h2 id="vault-title">The Collector’s <em>Vault.</em></h2>
+                <p class="body">
+                    Your UJJAYINI timepieces, ownership, warranty and service — in one private space.
                 </p>
-
-                <h2 id="vault-title">
-
-                    The Collector’s
-                    <em>Vault</em>
-
-                </h2>
-
-                <p>
-                    Your UJJAYINI timepieces, ownership,
-                    warranty and service — in one private space.
-                </p>
-
+                <ul class="vault-list">
+                    <li><span aria-hidden="true">✦</span>Certificate of Authenticity, downloadable anytime</li>
+                    <li><span aria-hidden="true">✦</span>Warranty timeline for every piece</li>
+                    <li><span aria-hidden="true">✦</span>Service requests linked to your watch</li>
+                </ul>
+                <button class="btn btn-gold" type="button" onclick={handleEnterVault}>
+                    <span>ENTER VAULT</span>
+                    <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 L12 4 M6 4 H12 V10"></path></svg>
+                </button>
             </div>
-
-
-            <button
-                class="cta vault-cta"
-                type="button"
-                onclick={handleEnterVault}>
-
-                ENTER VAULT
-
-                <span aria-hidden="true">
-                    ↗
-                </span>
-
-            </button>
 
         </section>
 

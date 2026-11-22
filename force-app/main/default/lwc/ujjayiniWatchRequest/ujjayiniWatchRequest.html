@@ -1,88 +1,147 @@
 <template>
 
-    <section class="request-container">
+    <section class="request">
 
-        <div class="request-header">
+        <!-- ================= GUEST ================= -->
+        <template if:true={isGuest}>
 
-            <p class="eyebrow">
-                UJJAYINI
-            </p>
-
-            <h2>
-                Request This Watch
-            </h2>
-
-            <p class="description">
-                Can't find the watch you're looking for?
-                Submit a request and our team will get back to you.
-            </p>
-
-        </div>
-
-
-        <lightning-combobox
-            label="Request Type"
-            value={requestType}
-            options={requestTypeOptions}
-            onchange={handleRequestTypeChange}>
-        </lightning-combobox>
-
-
-        <lightning-input
-            type="number"
-            label="Quantity"
-            min="1"
-            value={requestedQuantity}
-            onchange={handleQuantityChange}>
-        </lightning-input>
-
-
-        <lightning-textarea
-            label="Message"
-            value={customerNote}
-            onchange={handleNoteChange}
-            placeholder="Tell us what you're looking for...">
-        </lightning-textarea>
-
-
-        <!-- SUCCESS MESSAGE -->
-        <template if:true={successMessage}>
-
-            <div class="success-message">
-                {successMessage}
+            <div class="panel">
+                <div class="mark">U</div>
+                <h3 class="panel-title">Sign in to request a <em>private viewing.</em></h3>
+                <p class="panel-copy">
+                    Requests are kept with your UJJAYINI account, so the House
+                    can reach you personally about this timepiece.
+                </p>
+                <div class="panel-actions">
+                    <button class="btn-gold" type="button" onclick={goToLogin}>SIGN IN</button>
+                    <button class="btn-line" type="button" onclick={goToRegister}>BECOME A MEMBER</button>
+                </div>
             </div>
 
         </template>
 
 
-        <!-- ERROR MESSAGE -->
-        <template if:true={errorMessage}>
+        <template if:true={isMember}>
 
-            <div class="error-message">
-                {errorMessage}
-            </div>
+            <!-- ================= SENT ================= -->
+            <template if:true={isSent}>
+
+                <div class="panel" role="status">
+                    <div class="mark">✓</div>
+                    <p class="eyebrow">REQUEST RECEIVED</p>
+                    <h3 class="panel-title">The House will be <em>in touch.</em></h3>
+                    <p class="panel-copy">{successMessage}</p>
+                    <button class="btn-text" type="button" onclick={startAnother}>
+                        MAKE ANOTHER REQUEST
+                    </button>
+                </div>
+
+            </template>
+
+
+            <!-- ================= FORM ================= -->
+            <template if:false={isSent}>
+
+                <div class="form">
+
+                    <!-- Step 1: request type -->
+                    <div class="block">
+                        <p class="label"><span class="step">01</span> WHAT WOULD YOU LIKE?</p>
+
+                        <div class="types" role="group" aria-label="Request type">
+                            <template for:each={typeCards} for:item="type">
+                                <button
+                                    key={type.value}
+                                    class={type.className}
+                                    type="button"
+                                    data-value={type.value}
+                                    aria-pressed={type.pressed}
+                                    onclick={selectType}
+                                >
+                                    <span class="type-icon">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d={type.icon}></path>
+                                        </svg>
+                                    </span>
+                                    <span class="type-title">{type.title}</span>
+                                    <span class="type-copy">{type.copy}</span>
+                                    <span class="type-dot" aria-hidden="true"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+
+                    <!-- Step 2: quantity -->
+                    <template if:true={showQuantity}>
+                        <div class="block block-row">
+                            <p class="label"><span class="step">02</span> HOW MANY PIECES?</p>
+
+                            <div class="stepper">
+                                <button type="button" class="step-btn" onclick={decrease} disabled={cannotDecrease} aria-label="Fewer">−</button>
+                                <span class="step-value">{requestedQuantity}</span>
+                                <button type="button" class="step-btn" onclick={increase} disabled={cannotIncrease} aria-label="More">+</button>
+                            </div>
+                        </div>
+                    </template>
+
+
+                    <!-- Step 3: message -->
+                    <div class="block">
+                        <div class="label-row">
+                            <p class="label"><span class="step">03</span> A NOTE FOR THE HOUSE</p>
+                            <span class="count">{noteCount}</span>
+                        </div>
+
+                        <textarea
+                            class="note"
+                            rows="4"
+                            maxlength={maxNote}
+                            value={customerNote}
+                            oninput={handleNoteChange}
+                            placeholder="Tell us what you have in mind…"
+                        ></textarea>
+
+                        <div class="chips">
+                            <template for:each={quickNotes} for:item="note">
+                                <button
+                                    key={note.key}
+                                    class="chip"
+                                    type="button"
+                                    data-text={note.text}
+                                    onclick={addQuickNote}
+                                >
+                                    + {note.text}
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+
+                    <template if:true={errorMessage}>
+                        <div class="error" role="alert">{errorMessage}</div>
+                    </template>
+
+
+                    <button
+                        class="submit"
+                        type="button"
+                        onclick={handleSubmit}
+                        disabled={isSubmitting}
+                    >
+                        <span>{submitLabel}</span>
+                        <span class="submit-arrow">→</span>
+                    </button>
+
+                    <p class="fine-print">
+                        No payment is taken now. A member of the House replies personally.
+                    </p>
+
+                </div>
+
+            </template>
 
         </template>
-
-
-        <div class="actions">
-
-            <button
-                class="submit-button"
-                onclick={handleSubmit}
-                disabled={isSubmitting}>
-
-                <template if:true={isSubmitting}>
-                    Submitting...
-                </template>
-
-                <template if:false={isSubmitting}>
-                    Submit Request
-                </template>
-
-            </button>
-
-        </div>
 
     </section>
 

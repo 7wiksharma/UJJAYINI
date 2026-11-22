@@ -1,42 +1,24 @@
 public without sharing class WishlistService {
 
-    // =========================================================
-    // WISHLIST RESULT
-    // =========================================================
-
     public class WishlistResult {
-
-        @AuraEnabled
-        public Id wishlistId;
-
-        @AuraEnabled
-        public Integer itemCount;
+        @AuraEnabled public Id wishlistId;
+        @AuraEnabled public Integer itemCount;
     }
 
-
-    // =========================================================
-    // WISHLIST ITEM RESULT
-    // =========================================================
-
     public class WishlistItemResult {
+        @AuraEnabled public Id wishlistItemId;
+        @AuraEnabled public Id productId;
+        @AuraEnabled public String productName;
+        @AuraEnabled public String productImageUrl;
+        @AuraEnabled public Decimal price;
+        @AuraEnabled public String collectionName;
 
-        @AuraEnabled
-        public Id wishlistItemId;
-
-        @AuraEnabled
-        public Id productId;
-
-        @AuraEnabled
-        public String productName;
-
-        @AuraEnabled
-        public String productImageUrl;
-
-        @AuraEnabled
-        public Decimal price;
-
-        @AuraEnabled
-        public String collectionName;
+        // Specifications for the comparison drawer
+        @AuraEnabled public String movement;
+        @AuraEnabled public String caseMaterial;
+        @AuraEnabled public String dialColor;
+        @AuraEnabled public String modelNumber;
+        @AuraEnabled public String productCode;
     }
 
 
@@ -44,427 +26,242 @@ public without sharing class WishlistService {
     // GET OR CREATE WISHLIST
     // =========================================================
 
-    /*
-     * Get the Wishlist belonging to the currently logged-in
-     * Experience Cloud customer.
-     */
     public static Id getOrCreateWishlist() {
 
-        User currentUser = [
-            SELECT Id,
-                   ContactId
-            FROM User
-            WHERE Id = :UserInfo.getUserId()
-            WITH SYSTEM_MODE
-            LIMIT 1
-        ];
+        Id contactId = currentContactId();
 
-        if (currentUser.ContactId == null) {
-
+        if (contactId == null) {
             throw new IllegalArgumentException(
-                'The current user is not associated with a Contact.'
+                'Please sign in to use your wishlist.'
             );
         }
 
-
-        List<Wishlist__c> existingWishlists = [
+        List<Wishlist__c> existing = [
             SELECT Id
             FROM Wishlist__c
-            WHERE Contact__c = :currentUser.ContactId
+            WHERE Contact__c = :contactId
             WITH SYSTEM_MODE
             LIMIT 1
         ];
 
-
-        if (!existingWishlists.isEmpty()) {
-
-            return existingWishlists[0].Id;
+        if (!existing.isEmpty()) {
+            return existing[0].Id;
         }
 
+        Wishlist__c wishlist = new Wishlist__c(Contact__c = contactId);
 
-        Wishlist__c wishlist =
-            new Wishlist__c(
-                Contact__c = currentUser.ContactId
-            );
-
-
-        Database.insert(
-            wishlist,
-            AccessLevel.SYSTEM_MODE
-        );
-
+        Database.insert(wishlist, AccessLevel.SYSTEM_MODE);
 
         return wishlist.Id;
     }
 
 
     // =========================================================
-    // ADD TO WISHLIST
+    // ADD
     // =========================================================
 
-    /*
-     * Add a Product to the customer's Wishlist.
-     */
-    public static Id addToWishlist(
-        Id productId
-    ) {
+    public static Id addToWishlist(Id productId) {
 
         if (productId == null) {
-
-            throw new IllegalArgumentException(
-                'Product Id is required.'
-            );
+            throw new IllegalArgumentException('Product Id is required.');
         }
 
+        Id wishlistId = getOrCreateWishlist();
 
-        Id wishlistId =
-            getOrCreateWishlist();
-
-
-        List<Wishlist_Item__c> existingItems = [
-
+        List<Wishlist_Item__c> existing = [
             SELECT Id
             FROM Wishlist_Item__c
             WHERE Wishlist__c = :wishlistId
             AND Product__c = :productId
             WITH SYSTEM_MODE
             LIMIT 1
-
         ];
 
-
-        if (!existingItems.isEmpty()) {
-
-            return existingItems[0].Id;
+        if (!existing.isEmpty()) {
+            return existing[0].Id;
         }
 
-
-        Wishlist_Item__c item =
-            new Wishlist_Item__c(
-                Wishlist__c = wishlistId,
-                Product__c = productId
-            );
-
-
-        Database.insert(
-            item,
-            AccessLevel.SYSTEM_MODE
+        Wishlist_Item__c item = new Wishlist_Item__c(
+            Wishlist__c = wishlistId,
+            Product__c = productId
         );
 
+        Database.insert(item, AccessLevel.SYSTEM_MODE);
 
         return item.Id;
     }
 
 
     // =========================================================
-    // REMOVE FROM WISHLIST
+    // REMOVE (all copies of the product, so it cannot come back)
     // =========================================================
 
-    /*
-     * Remove a Product from the customer's Wishlist.
-     */
-    public static void removeFromWishlist(
-        Id productId
-    ) {
+    public static void removeFromWishlist(Id productId) {
 
         if (productId == null) {
-
-            throw new IllegalArgumentException(
-                'Product Id is required.'
-            );
+            throw new IllegalArgumentException('Product Id is required.');
         }
 
-
-        Id wishlistId =
-            getOrCreateWishlist();
-
+        Id wishlistId = getOrCreateWishlist();
 
         List<Wishlist_Item__c> items = [
-
             SELECT Id
             FROM Wishlist_Item__c
             WHERE Wishlist__c = :wishlistId
             AND Product__c = :productId
             WITH SYSTEM_MODE
-
         ];
 
-
         if (!items.isEmpty()) {
-
-            Database.delete(
-                items,
-                AccessLevel.SYSTEM_MODE
-            );
+            Database.delete(items, AccessLevel.SYSTEM_MODE);
         }
     }
 
 
     // =========================================================
-    // GET WISHLIST ITEMS
+    // GET ITEMS
     // =========================================================
 
-    /*
-     * Return all products in the customer's Wishlist.
-     *
-     * Additional product information is returned for the
-     * UJJAYINI Wishlist UI:
-     *
-     * - Product Name
-     * - Product Image
-     * - Standard Price
-     * - Collection Name
-     */
     public static List<WishlistItemResult> getWishlistItems() {
 
-        User currentUser = [
-            SELECT Id,
-                   ContactId
-            FROM User
-            WHERE Id = :UserInfo.getUserId()
-            WITH SYSTEM_MODE
-            LIMIT 1
-        ];
+        List<WishlistItemResult> results = new List<WishlistItemResult>();
 
+        Id contactId = currentContactId();
 
-        if (currentUser.ContactId == null) {
-
-            return new List<WishlistItemResult>();
+        if (contactId == null) {
+            return results;
         }
-
-
-        // -----------------------------------------------------
-        // FIND CUSTOMER WISHLIST
-        // -----------------------------------------------------
 
         List<Wishlist__c> wishlists = [
-
             SELECT Id
             FROM Wishlist__c
-            WHERE Contact__c = :currentUser.ContactId
+            WHERE Contact__c = :contactId
             WITH SYSTEM_MODE
             LIMIT 1
-
         ];
 
-
         if (wishlists.isEmpty()) {
-
-            return new List<WishlistItemResult>();
+            return results;
         }
 
-
-        Id wishlistId =
-            wishlists[0].Id;
-
-
-        // -----------------------------------------------------
-        // GET WISHLIST ITEMS
-        // -----------------------------------------------------
-
         List<Wishlist_Item__c> items = [
-
             SELECT Id,
                    Product__c,
                    Product__r.Name,
+                   Product__r.ProductCode,
                    Product__r.Product_Image_URL__c,
-                   Product__r.Collection__r.Name
+                   Product__r.Collection__r.Name,
+                   Product__r.Movement_Type__c,
+                   Product__r.Case_Material__c,
+                   Product__r.Dial_Color__c,
+                   Product__r.Model_Number__c
             FROM Wishlist_Item__c
-            WHERE Wishlist__c = :wishlistId
+            WHERE Wishlist__c = :wishlists[0].Id
             WITH SYSTEM_MODE
             ORDER BY CreatedDate DESC
-
         ];
 
-
-        // -----------------------------------------------------
-        // COLLECT PRODUCT IDS
-        // -----------------------------------------------------
-
-        Set<Id> productIds =
-            new Set<Id>();
-
+        Set<Id> productIds = new Set<Id>();
 
         for (Wishlist_Item__c item : items) {
-
             if (item.Product__c != null) {
-
-                productIds.add(
-                    item.Product__c
-                );
+                productIds.add(item.Product__c);
             }
         }
 
-
-        // -----------------------------------------------------
-        // GET STANDARD PRICEBOOK
-        // -----------------------------------------------------
-
-        Map<Id, Decimal> productPrices =
-            new Map<Id, Decimal>();
-
+        Map<Id, Decimal> prices = new Map<Id, Decimal>();
 
         if (!productIds.isEmpty()) {
 
-            List<PricebookEntry> priceEntries = [
-
-                SELECT Product2Id,
-                       UnitPrice
+            for (PricebookEntry entry : [
+                SELECT Product2Id, UnitPrice
                 FROM PricebookEntry
                 WHERE Product2Id IN :productIds
                 AND IsActive = true
                 AND Pricebook2.IsActive = true
                 AND Pricebook2.IsStandard = true
                 WITH SYSTEM_MODE
-
-            ];
-
-
-            for (
-                PricebookEntry entry :
-                priceEntries
-            ) {
-
-                if (
-                    !productPrices.containsKey(
-                        entry.Product2Id
-                    )
-                ) {
-
-                    productPrices.put(
-                        entry.Product2Id,
-                        entry.UnitPrice
-                    );
+            ]) {
+                if (!prices.containsKey(entry.Product2Id)) {
+                    prices.put(entry.Product2Id, entry.UnitPrice);
                 }
             }
         }
 
+        // One card per product, even if an old duplicate row exists.
+        Set<Id> seen = new Set<Id>();
 
-        // -----------------------------------------------------
-        // BUILD RESPONSE
-        // -----------------------------------------------------
+        for (Wishlist_Item__c item : items) {
 
-        List<WishlistItemResult> results =
-            new List<WishlistItemResult>();
+            if (item.Product__c == null || seen.contains(item.Product__c)) {
+                continue;
+            }
 
+            seen.add(item.Product__c);
 
-        for (
-            Wishlist_Item__c item :
-            items
-        ) {
+            Product2 product = item.Product__r;
 
-            WishlistItemResult result =
-                new WishlistItemResult();
+            WishlistItemResult result = new WishlistItemResult();
 
-
-            result.wishlistItemId =
-                item.Id;
-
-
-            result.productId =
-                item.Product__c;
-
-
-            result.productName =
-                item.Product__r != null
-                    ? item.Product__r.Name
-                    : 'UJJAYINI Watch';
-
-
-            result.productImageUrl =
-                item.Product__r != null
-                    ? item.Product__r.Product_Image_URL__c
-                    : null;
-
-
+            result.wishlistItemId = item.Id;
+            result.productId = item.Product__c;
+            result.productName = product != null ? product.Name : 'UJJAYINI Timepiece';
+            result.productImageUrl = product != null ? product.Product_Image_URL__c : null;
             result.collectionName =
-                (
-                    item.Product__r != null &&
-                    item.Product__r.Collection__r != null
-                )
-                    ? item.Product__r.Collection__r.Name
+                product != null && product.Collection__r != null
+                    ? product.Collection__r.Name
                     : null;
+            result.price = prices.get(item.Product__c);
 
-
-            result.price =
-                productPrices.containsKey(
-                    item.Product__c
-                )
-                    ? productPrices.get(
-                        item.Product__c
-                    )
-                    : null;
-
+            if (product != null) {
+                result.movement = product.Movement_Type__c;
+                result.caseMaterial = product.Case_Material__c;
+                result.dialColor = product.Dial_Color__c;
+                result.modelNumber = product.Model_Number__c;
+                result.productCode = product.ProductCode;
+            }
 
             results.add(result);
         }
-
 
         return results;
     }
 
 
     // =========================================================
-    // CHECK IF PRODUCT IS WISHLISTED
+    // IS WISHLISTED
     // =========================================================
 
-    public static Boolean isWishlisted(
-        Id productId
-    ) {
+    public static Boolean isWishlisted(Id productId) {
 
-        if (productId == null) {
+        Id contactId = currentContactId();
 
+        if (productId == null || contactId == null) {
             return false;
         }
 
+        return [
+            SELECT COUNT()
+            FROM Wishlist_Item__c
+            WHERE Wishlist__r.Contact__c = :contactId
+            AND Product__c = :productId
+            WITH SYSTEM_MODE
+        ] > 0;
+    }
 
-        User currentUser = [
 
-            SELECT Id,
-                   ContactId
+    // =========================================================
+    // HELPERS
+    // =========================================================
+
+    private static Id currentContactId() {
+
+        return [
+            SELECT ContactId
             FROM User
             WHERE Id = :UserInfo.getUserId()
             WITH SYSTEM_MODE
             LIMIT 1
-
-        ];
-
-
-        if (currentUser.ContactId == null) {
-
-            return false;
-        }
-
-
-        List<Wishlist__c> wishlists = [
-
-            SELECT Id
-            FROM Wishlist__c
-            WHERE Contact__c = :currentUser.ContactId
-            WITH SYSTEM_MODE
-            LIMIT 1
-
-        ];
-
-
-        if (wishlists.isEmpty()) {
-
-            return false;
-        }
-
-
-        List<Wishlist_Item__c> items = [
-
-            SELECT Id
-            FROM Wishlist_Item__c
-            WHERE Wishlist__c = :wishlists[0].Id
-            AND Product__c = :productId
-            WITH SYSTEM_MODE
-            LIMIT 1
-
-        ];
-
-
-        return !items.isEmpty();
+        ].ContactId;
     }
 }

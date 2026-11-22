@@ -25,6 +25,14 @@ public without sharing class UJJAYINIProductCatalogController {
         @AuraEnabled public String dialColor;
         @AuraEnabled public String modelNumber;
 
+        // Extra specifications (Watches page filters + compare)
+        @AuraEnabled public String brand;
+        @AuraEnabled public String strapMaterial;
+        @AuraEnabled public String waterResistance;
+        @AuraEnabled public Boolean limitedEdition;
+        @AuraEnabled public Integer editionSize;
+        @AuraEnabled public Integer warrantyMonths;
+
         // Stock: IN_STOCK, LOW_STOCK or OUT_OF_STOCK
         @AuraEnabled public String stockStatus;
 
@@ -38,48 +46,33 @@ public without sharing class UJJAYINIProductCatalogController {
             Decimal priceValue
         ) {
 
-            productId =
-                product.Id;
-
-            productName =
-                product.Name;
-
-            productCode =
-                product.ProductCode;
-
-            description =
-                product.Description;
-
-            family =
-                product.Family;
+            productId       = product.Id;
+            productName     = product.Name;
+            productCode     = product.ProductCode;
+            description     = product.Description;
+            family          = product.Family;
+            productImageUrl = product.Product_Image_URL__c;
+            price           = priceValue;
 
             collectionName =
                 product.Collection__r != null
                     ? product.Collection__r.Name
                     : null;
 
-            productImageUrl =
-                product.Product_Image_URL__c;
+            // Product detail specifications
+            movement     = product.Movement_Type__c;
+            caseMaterial = product.Case_Material__c;
+            dialColor    = product.Dial_Color__c;
+            modelNumber  = product.Model_Number__c;
 
-            price =
-                priceValue;
-
-
-            // =====================================================
-            // PRODUCT DETAIL SPECIFICATIONS
-            // =====================================================
-
-            movement =
-                product.Movement_Type__c;
-
-            caseMaterial =
-                product.Case_Material__c;
-
-            dialColor =
-                product.Dial_Color__c;
-
-            modelNumber =
-                product.Model_Number__c;
+            // Read generically so the code works whether these
+            // fields are Text, Picklist or Number.
+            brand           = text(product.get('Brand__c'));
+            strapMaterial   = text(product.get('Strap_Material__c'));
+            waterResistance = text(product.get('Water_Resistance__c'));
+            limitedEdition  = product.get('Limited_Edition__c') == true;
+            editionSize     = whole(product.get('Edition_Size__c'));
+            warrantyMonths  = whole(product.get('Warranty_Period__c'));
         }
     }
 
@@ -95,13 +88,7 @@ public without sharing class UJJAYINIProductCatalogController {
         List<ProductWrapper> products =
             new List<ProductWrapper>();
 
-
-        // -----------------------------------------------------
-        // GET ACTIVE PRODUCTS
-        // -----------------------------------------------------
-
         List<Product2> productRecords = [
-
             SELECT
                 Id,
                 Name,
@@ -111,124 +98,49 @@ public without sharing class UJJAYINIProductCatalogController {
                 Collection__c,
                 Collection__r.Name,
                 Product_Image_URL__c,
-
-                // Product detail fields
                 Movement_Type__c,
                 Case_Material__c,
                 Dial_Color__c,
-                Model_Number__c
-
+                Model_Number__c,
+                Brand__c,
+                Strap_Material__c,
+                Water_Resistance__c,
+                Limited_Edition__c,
+                Edition_Size__c,
+                Warranty_Period__c
             FROM Product2
-
             WHERE IsActive = true
-
             WITH SYSTEM_MODE
-
             ORDER BY Name
         ];
 
-
-
-        // -----------------------------------------------------
-        // COLLECT PRODUCT IDS
-        // -----------------------------------------------------
-
-        Set<Id> productIds =
-            new Set<Id>();
-
+        Set<Id> productIds = new Set<Id>();
 
         for (Product2 product : productRecords) {
-
-            productIds.add(
-                product.Id
-            );
+            productIds.add(product.Id);
         }
-
-
-
-        // -----------------------------------------------------
-        // GET STANDARD PRICEBOOK PRICES
-        // -----------------------------------------------------
 
         Map<Id, Decimal> productPrices =
-            new Map<Id, Decimal>();
-
-
-        if (!productIds.isEmpty()) {
-
-            for (PricebookEntry entry : [
-
-                SELECT
-                    Product2Id,
-                    UnitPrice
-
-                FROM PricebookEntry
-
-                WHERE Product2Id IN :productIds
-
-                AND IsActive = true
-
-                AND Pricebook2.IsActive = true
-
-                AND Pricebook2.IsStandard = true
-
-                WITH SYSTEM_MODE
-
-            ]) {
-
-                if (
-                    !productPrices.containsKey(
-                        entry.Product2Id
-                    )
-                ) {
-
-                    productPrices.put(
-                        entry.Product2Id,
-                        entry.UnitPrice
-                    );
-                }
-            }
-        }
-
-
-
-        // -----------------------------------------------------
-        // GET STOCK
-        // -----------------------------------------------------
+            getPricesByProduct(productIds);
 
         Map<Id, Decimal> availability =
-            getAvailabilityByProduct(
-                productIds
-            );
-
-
-
-        // -----------------------------------------------------
-        // BUILD RESPONSE
-        // -----------------------------------------------------
+            getAvailabilityByProduct(productIds);
 
         for (Product2 product : productRecords) {
 
             ProductWrapper wrapper =
                 new ProductWrapper(
                     product,
-                    productPrices.get(
-                        product.Id
-                    )
+                    productPrices.get(product.Id)
                 );
 
             applyStock(
                 wrapper,
-                availability.get(
-                    product.Id
-                )
+                availability.get(product.Id)
             );
 
-            products.add(
-                wrapper
-            );
+            products.add(wrapper);
         }
-
 
         return products;
     }
@@ -245,16 +157,12 @@ public without sharing class UJJAYINIProductCatalogController {
     ) {
 
         if (productId == null) {
-
             throw new IllegalArgumentException(
                 'Product Id is required.'
             );
         }
 
-
-
         List<Product2> productRecords = [
-
             SELECT
                 Id,
                 Name,
@@ -264,96 +172,89 @@ public without sharing class UJJAYINIProductCatalogController {
                 Collection__c,
                 Collection__r.Name,
                 Product_Image_URL__c,
-
-                // Product detail fields
                 Movement_Type__c,
                 Case_Material__c,
                 Dial_Color__c,
-                Model_Number__c
-
+                Model_Number__c,
+                Brand__c,
+                Strap_Material__c,
+                Water_Resistance__c,
+                Limited_Edition__c,
+                Edition_Size__c,
+                Warranty_Period__c
             FROM Product2
-
             WHERE Id = :productId
-
             AND IsActive = true
-
             WITH SYSTEM_MODE
-
             LIMIT 1
         ];
 
-
-
         if (productRecords.isEmpty()) {
-
             throw new IllegalArgumentException(
                 'Product not found.'
             );
         }
 
+        Product2 product = productRecords[0];
 
-
-        Product2 product =
-            productRecords[0];
-
-
-
-        // -----------------------------------------------------
-        // GET PRICE
-        // -----------------------------------------------------
-
-        List<PricebookEntry> priceEntries = [
-
-            SELECT
-                Product2Id,
-                UnitPrice
-
-            FROM PricebookEntry
-
-            WHERE Product2Id = :product.Id
-
-            AND IsActive = true
-
-            AND Pricebook2.IsActive = true
-
-            AND Pricebook2.IsStandard = true
-
-            WITH SYSTEM_MODE
-
-            LIMIT 1
-        ];
-
-
-
-        Decimal priceValue =
-            priceEntries.isEmpty()
-                ? null
-                : priceEntries[0].UnitPrice;
-
-
+        Map<Id, Decimal> productPrices =
+            getPricesByProduct(new Set<Id>{ product.Id });
 
         ProductWrapper wrapper =
             new ProductWrapper(
                 product,
-                priceValue
+                productPrices.get(product.Id)
             );
-
 
         Map<Id, Decimal> availability =
-            getAvailabilityByProduct(
-                new Set<Id>{ product.Id }
-            );
-
+            getAvailabilityByProduct(new Set<Id>{ product.Id });
 
         applyStock(
             wrapper,
-            availability.get(
-                product.Id
-            )
+            availability.get(product.Id)
         );
 
-
         return wrapper;
+    }
+
+
+
+    // =========================================================
+    // PRICE HELPER
+    // =========================================================
+
+    private static Map<Id, Decimal> getPricesByProduct(
+        Set<Id> productIds
+    ) {
+
+        Map<Id, Decimal> productPrices =
+            new Map<Id, Decimal>();
+
+        if (productIds == null || productIds.isEmpty()) {
+            return productPrices;
+        }
+
+        for (PricebookEntry entry : [
+            SELECT
+                Product2Id,
+                UnitPrice
+            FROM PricebookEntry
+            WHERE Product2Id IN :productIds
+            AND IsActive = true
+            AND Pricebook2.IsActive = true
+            AND Pricebook2.IsStandard = true
+            WITH SYSTEM_MODE
+        ]) {
+
+            if (!productPrices.containsKey(entry.Product2Id)) {
+                productPrices.put(
+                    entry.Product2Id,
+                    entry.UnitPrice
+                );
+            }
+        }
+
+        return productPrices;
     }
 
 
@@ -374,42 +275,27 @@ public without sharing class UJJAYINIProductCatalogController {
         Map<Id, Decimal> availability =
             new Map<Id, Decimal>();
 
-
-        if (
-            productIds == null ||
-            productIds.isEmpty()
-        ) {
+        if (productIds == null || productIds.isEmpty()) {
             return availability;
         }
 
-
         for (Inventory__c inventory : [
-
             SELECT
                 Product__c,
                 Available__c
-
             FROM Inventory__c
-
             WHERE Product__c IN :productIds
-
             AND Inventory_Status__c = 'Active'
-
             WITH SYSTEM_MODE
-
         ]) {
 
-            Decimal current =
-                availability.get(
-                    inventory.Product__c
-                );
+            Decimal current = availability.get(inventory.Product__c);
 
             if (current == null) {
                 current = 0;
             }
 
-            Decimal available =
-                inventory.Available__c;
+            Decimal available = inventory.Available__c;
 
             if (available == null) {
                 available = 0;
@@ -421,7 +307,6 @@ public without sharing class UJJAYINIProductCatalogController {
             );
         }
 
-
         return availability;
     }
 
@@ -431,34 +316,53 @@ public without sharing class UJJAYINIProductCatalogController {
         Decimal available
     ) {
 
-        if (
-            available == null ||
-            available <= 0
-        ) {
-
-            wrapper.stockStatus =
-                'OUT_OF_STOCK';
-
-            wrapper.availableQuantity =
-                0;
-
+        if (available == null || available <= 0) {
+            wrapper.stockStatus = 'OUT_OF_STOCK';
+            wrapper.availableQuantity = 0;
             return;
         }
-
 
         if (available <= LOW_STOCK_THRESHOLD) {
-
-            wrapper.stockStatus =
-                'LOW_STOCK';
-
-            wrapper.availableQuantity =
-                Integer.valueOf(available);
-
+            wrapper.stockStatus = 'LOW_STOCK';
+            wrapper.availableQuantity = Integer.valueOf(available);
             return;
         }
 
+        wrapper.stockStatus = 'IN_STOCK';
+    }
 
-        wrapper.stockStatus =
-            'IN_STOCK';
+
+
+    // =========================================================
+    // VALUE HELPERS
+    // =========================================================
+
+    @TestVisible
+    private static String text(Object value) {
+
+        if (value == null) {
+            return null;
+        }
+
+        String result = String.valueOf(value).trim();
+
+        return String.isBlank(result) ? null : result;
+    }
+
+
+    @TestVisible
+    private static Integer whole(Object value) {
+
+        String raw = text(value);
+
+        if (raw == null) {
+            return null;
+        }
+
+        try {
+            return Decimal.valueOf(raw.replaceAll('[^0-9.]', '')).intValue();
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 }

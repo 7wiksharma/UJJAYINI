@@ -10,35 +10,34 @@ public with sharing class CollectorVaultService {
 
     public class AssetResult {
 
-        @AuraEnabled
-        public Id assetId;
+        @AuraEnabled public Id assetId;
+        @AuraEnabled public String name;
+        @AuraEnabled public String productName;
+        @AuraEnabled public Id productId;
+        @AuraEnabled public String productImageUrl;
+        @AuraEnabled public Decimal quantity;
+        @AuraEnabled public Decimal price;
+        @AuraEnabled public String status;
+        @AuraEnabled public Date purchaseDate;
 
-        @AuraEnabled
-        public String name;
+        /*
+         * Kept for compatibility, but never sent to the browser any
+         * more: the internal fulfilment marker (UJJAYINI-<OrderId>)
+         * must not be shown to customers.
+         */
+        @AuraEnabled public String serialNumber;
 
-        @AuraEnabled
-        public String productName;
+        // Customer-facing certificate number (stable per Asset)
+        @AuraEnabled public String certificateNumber;
 
-        @AuraEnabled
-        public Id productId;
-
-        @AuraEnabled
-        public String productImageUrl;
-
-        @AuraEnabled
-        public Decimal quantity;
-
-        @AuraEnabled
-        public Decimal price;
-
-        @AuraEnabled
-        public String status;
-
-        @AuraEnabled
-        public String serialNumber;
-
-        @AuraEnabled
-        public Date purchaseDate;
+        // Timepiece details for the Vault
+        @AuraEnabled public String collectionName;
+        @AuraEnabled public String movement;
+        @AuraEnabled public String caseMaterial;
+        @AuraEnabled public String dialColor;
+        @AuraEnabled public String modelNumber;
+        @AuraEnabled public Boolean limitedEdition;
+        @AuraEnabled public Integer editionSize;
     }
 
 
@@ -55,117 +54,111 @@ public with sharing class CollectorVaultService {
      */
     public class PaymentVerificationResult {
 
-        @AuraEnabled
-        public String state;
-
-        @AuraEnabled
-        public Boolean paymentConfirmed;
-
-        @AuraEnabled
-        public Boolean assetReady;
+        @AuraEnabled public String state;
+        @AuraEnabled public Boolean paymentConfirmed;
+        @AuraEnabled public Boolean assetReady;
     }
 
+
+    // =========================================================
+    // MY ASSETS
+    // =========================================================
 
     @AuraEnabled(cacheable=true)
     public static List<AssetResult> getMyAssets() {
 
-        User currentUser = [
-            SELECT Id,
-                   ContactId,
-                   Contact.AccountId
-            FROM User
-            WHERE Id = :UserInfo.getUserId()
-            WITH SYSTEM_MODE
-            LIMIT 1
-        ];
+        List<AssetResult> results = new List<AssetResult>();
 
+        Id accountId = getCurrentAccountId();
 
-        if (
-            currentUser.ContactId == null ||
-            currentUser.Contact.AccountId == null
-        ) {
-            return new List<AssetResult>();
+        if (accountId == null) {
+            return results;
         }
 
-
-        List<Asset> assets = [
+        for (Asset asset : [
             SELECT Id,
                    Name,
                    Product2Id,
                    Product2.Name,
                    Product2.Product_Image_URL__c,
+                   Product2.Collection__r.Name,
+                   Product2.Movement_Type__c,
+                   Product2.Case_Material__c,
+                   Product2.Dial_Color__c,
+                   Product2.Model_Number__c,
+                   Product2.Limited_Edition__c,
+                   Product2.Edition_Size__c,
                    Quantity,
                    Price,
                    Status,
-                   SerialNumber,
-                   PurchaseDate
-                    FROM Asset
-                     WHERE AccountId = :currentUser.Contact.AccountId
-                      AND Status != 'Obsolete'
-                    WITH SYSTEM_MODE
-                  ORDER BY PurchaseDate DESC, CreatedDate DESC
-        ];
+                   PurchaseDate,
+                   CreatedDate
+            FROM Asset
+            WHERE AccountId = :accountId
+            AND Status != 'Obsolete'
+            WITH SYSTEM_MODE
+            ORDER BY PurchaseDate DESC, CreatedDate DESC
+        ]) {
 
+            AssetResult result = new AssetResult();
 
-        List<AssetResult> results =
-            new List<AssetResult>();
+            result.assetId = asset.Id;
+            result.name = asset.Name;
+            result.productId = asset.Product2Id;
+            result.quantity = asset.Quantity;
+            result.price = asset.Price;
+            result.status = asset.Status;
+            result.purchaseDate = asset.PurchaseDate;
+            result.certificateNumber = certificateNumber(asset);
 
+            Product2 product = asset.Product2;
 
-        for (Asset asset : assets) {
+            if (product != null) {
 
-            AssetResult result =
-                new AssetResult();
+                result.productName = product.Name;
+                result.productImageUrl = product.Product_Image_URL__c;
+                result.collectionName = product.Collection__r != null ? product.Collection__r.Name : null;
+                result.movement = text(product.Movement_Type__c);
+                result.caseMaterial = text(product.Case_Material__c);
+                result.dialColor = text(product.Dial_Color__c);
+                result.modelNumber = text(product.Model_Number__c);
+                result.limitedEdition = product.Limited_Edition__c == true;
+                result.editionSize = product.Edition_Size__c == null
+                    ? null
+                    : Integer.valueOf(product.Edition_Size__c);
 
+            } else {
 
-            result.assetId =
-                asset.Id;
-
-
-            result.name =
-                asset.Name;
-
-
-            result.productId =
-                asset.Product2Id;
-
-
-            result.productName =
-                asset.Product2 != null
-                    ? asset.Product2.Name
-                    : 'UJJAYINI Watch';
-
-
-            result.productImageUrl =
-                asset.Product2 != null
-                    ? asset.Product2.Product_Image_URL__c
-                    : null;
-
-
-            result.quantity =
-                asset.Quantity;
-
-
-            result.price =
-                asset.Price;
-
-
-            result.status =
-                asset.Status;
-
-
-            result.serialNumber =
-                asset.SerialNumber;
-
-
-            result.purchaseDate =
-                asset.PurchaseDate;
-
+                result.productName = 'UJJAYINI Watch';
+                result.limitedEdition = false;
+            }
 
             results.add(result);
         }
 
-
         return results;
+    }
+
+
+    // =========================================================
+    // CERTIFICATE NUMBER
+    //
+    // Stable for the life of the Asset and derived only from it,
+    // so no new field is needed. It reveals no internal Id.
+    //   UJ-COA-<year>-<8 hex characters>
+    // =========================================================
+
+    public static String certificateNumber(Asset asset) {
+
+        Integer year = asset.PurchaseDate != null
+            ? asset.PurchaseDate.year()
+            : (asset.CreatedDate != null ? asset.CreatedDate.year() : Date.today().year());
+
+        String digest = EncodingUtil.convertToHex(
+            Crypto.generateDigest('SHA-256', Blob.valueOf('UJJAYINI-COA-' + String.valueOf(asset.Id)))
+        );
+
+        return 'UJ-COA-' + year + '-' + digest.substring(0, 8).toUpperCase();
     }
 
 
@@ -179,38 +172,27 @@ public with sharing class CollectorVaultService {
     // =========================================================
 
     @AuraEnabled
-    public static PaymentVerificationResult verifyPayment(
-        String paymentLinkId
-    ) {
+    public static PaymentVerificationResult verifyPayment(String paymentLinkId) {
 
-        PaymentVerificationResult result =
-            new PaymentVerificationResult();
-
+        PaymentVerificationResult result = new PaymentVerificationResult();
         result.state = 'NOT_FOUND';
         result.paymentConfirmed = false;
         result.assetReady = false;
 
-        Id accountId =
-            getCurrentAccountId();
+        Id accountId = getCurrentAccountId();
 
         if (accountId == null) {
             return result;
         }
 
-        Payment__c payment =
-            new PaymentLookup().findOwnedPayment(
-                accountId,
-                paymentLinkId
-            );
+        Payment__c payment = new PaymentLookup().findOwnedPayment(accountId, paymentLinkId);
 
         if (payment == null) {
             return result;
         }
 
         if (payment.Payment_Status__c != 'Captured') {
-
             result.state = 'PENDING';
-
             return result;
         }
 
@@ -221,8 +203,7 @@ public with sharing class CollectorVaultService {
          * AssetFulfillmentService marks every Asset of an Order
          * with the serial marker UJJAYINI-<OrderId>.
          */
-        String fulfillmentMarker =
-            'UJJAYINI-' + String.valueOf(payment.Order__c);
+        String fulfillmentMarker = 'UJJAYINI-' + String.valueOf(payment.Order__c);
 
         Integer assetCount = [
             SELECT COUNT()
@@ -233,7 +214,6 @@ public with sharing class CollectorVaultService {
         ];
 
         if (assetCount > 0) {
-
             result.assetReady = true;
             result.state = 'ASSET_READY';
         }
@@ -242,12 +222,13 @@ public with sharing class CollectorVaultService {
     }
 
 
-    private static Id getCurrentAccountId() {
+    // =========================================================
+    // HELPERS
+    // =========================================================
 
-        if (
-            Test.isRunningTest() &&
-            testAccountId != null
-        ) {
+    public static Id getCurrentAccountId() {
+
+        if (Test.isRunningTest() && testAccountId != null) {
             return testAccountId;
         }
 
@@ -268,6 +249,17 @@ public with sharing class CollectorVaultService {
         return currentUser.Contact.AccountId;
     }
 
+    private static String text(Object value) {
+
+        if (value == null) {
+            return null;
+        }
+
+        String result = String.valueOf(value).trim();
+
+        return String.isBlank(result) ? null : result;
+    }
+
 
     /*
      * Payment__c / Order records are created by the checkout and the
@@ -278,10 +270,7 @@ public with sharing class CollectorVaultService {
      */
     private without sharing class PaymentLookup {
 
-        public Payment__c findOwnedPayment(
-            Id accountId,
-            String paymentLinkId
-        ) {
+        public Payment__c findOwnedPayment(Id accountId, String paymentLinkId) {
 
             List<Payment__c> payments;
 
@@ -319,9 +308,7 @@ public with sharing class CollectorVaultService {
                 ];
             }
 
-            return payments.isEmpty()
-                ? null
-                : payments[0];
+            return payments.isEmpty() ? null : payments[0];
         }
     }
 }

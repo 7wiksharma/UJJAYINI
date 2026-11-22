@@ -1,14 +1,9 @@
 <template>
 
-    <main class="product-page">
+    <main class={pageClass}>
 
-
-        <!-- =================================================
-             CINEMATIC VIDEO BACKGROUND
-        ================================================== -->
-
-        <div class="video-background">
-
+        <!-- ================= VIDEO BACKGROUND ================= -->
+        <div class="backdrop" aria-hidden="true">
             <video
                 class="product-video"
                 src={videoUrl}
@@ -17,722 +12,381 @@
                 loop
                 playsinline
                 preload="metadata"
-                aria-hidden="true"
             ></video>
-
+            <div class="backdrop-tint"></div>
+            <div class="backdrop-glow"></div>
+            <div class="backdrop-grain"></div>
         </div>
 
 
-        <!-- DARK VIDEO OVERLAY -->
-
-        <div
-            class="video-overlay"
-            aria-hidden="true"
-        ></div>
-
-
-        <!-- ATMOSPHERIC DETAILS -->
-
-        <div
-            class="atmosphere-grid"
-            aria-hidden="true"
-        ></div>
-
-
-        <!-- =================================================
-             LOADING
-        ================================================== -->
-
+        <!-- ================= LOADING ================= -->
         <template if:true={isLoading}>
-
             <section class="state">
-
                 <div class="loader"></div>
-
-                <p>
-                    ENTERING THE HOUSE OF UJJAYINI
-                </p>
-
+                <p class="mono">OPENING THE VAULT</p>
             </section>
-
         </template>
 
 
-        <!-- =================================================
-             ERROR
-        ================================================== -->
-
-        <template if:true={errorMessage}>
-
+        <!-- ================= ERROR (never technical) ================= -->
+        <template if:true={showError}>
             <section class="state">
-
-                <p class="state-kicker">
-                    TIMEPIECE UNAVAILABLE
-                </p>
-
-                <h2>
-                    This watch could not be loaded.
-                </h2>
-
-                <p class="state-error">
-                    {errorMessage}
-                </p>
-
-                <button
-                    class="outline-button"
-                    onclick={goToWatches}
-                >
-                    BACK TO WATCHES
-                </button>
-
+                <p class="mono">TIMEPIECE UNAVAILABLE</p>
+                <h2>Resting in <em>the vault.</em></h2>
+                <p class="state-copy">{errorMessage}</p>
+                <button class="btn-line" type="button" onclick={goToWatches}>BACK TO THE COLLECTION</button>
             </section>
-
         </template>
 
 
-        <!-- =================================================
-             PRODUCT
-        ================================================== -->
-
+        <!-- ================= PRODUCT ================= -->
         <template if:true={hasProduct}>
 
-            <section class="product-shell">
+            <!-- Top bar -->
+            <header class="topbar">
+                <button class="back" type="button" onclick={goToWatches}>
+                    <span aria-hidden="true">←</span> THE COLLECTION
+                </button>
+                <p class="crumbs mono">
+                    UJJAYINI <span>/</span> {product.collectionName} <span>/</span> <b>{product.productName}</b>
+                </p>
+                <span class="mono edition">PRIVATE EDITION</span>
+            </header>
 
 
-                <!-- =================================================
-                     TOP
-                ================================================= -->
+            <!-- ============ THE STORY (scroll-driven camera) ============ -->
+            <section class="story">
 
-                <header class="product-header">
+                <div class={stageClass}>
 
-                    <button
-                        class="back-button"
-                        onclick={goToWatches}
-                    >
-                        ← WATCHES
-                    </button>
-
-
-                    <div class="breadcrumb">
-
-                        <span>
-                            UJJAYINI
-                        </span>
-
-                        <span>·</span>
-
-                        <span>
-                            {product.collectionName}
-                        </span>
-
-                        <span>·</span>
-
-                        <span class="current">
-                            {product.productName}
-                        </span>
-
+                    <!-- Ambient layers that react to the chapter -->
+                    <div class="aperture" aria-hidden="true">
+                        <span class="ring r1"></span>
+                        <span class="ring r2"></span>
+                        <span class="ring r3"></span>
                     </div>
 
+                    <svg class="blueprint" viewBox="0 0 400 400" aria-hidden="true">
+                        <circle class="bp-ring" cx="200" cy="200" r="190"></circle>
+                        <circle class="bp-ring dashed" cx="200" cy="200" r="160"></circle>
+                        <line class="bp-line" x1="10" y1="200" x2="390" y2="200"></line>
+                        <line class="bp-line" x1="200" y1="10" x2="200" y2="390"></line>
+                        <g class="gear ga">
+                            <circle class="teeth" cx="160" cy="180" r="70"></circle>
+                            <circle class="hub" cx="160" cy="180" r="52"></circle>
+                            <line class="hub" x1="108" y1="180" x2="212" y2="180"></line>
+                            <line class="hub" x1="160" y1="128" x2="160" y2="232"></line>
+                        </g>
+                        <g class="gear gb">
+                            <circle class="teeth" cx="268" cy="150" r="42"></circle>
+                            <circle class="hub" cx="268" cy="150" r="28"></circle>
+                        </g>
+                        <g class="gear gc">
+                            <circle class="teeth" cx="258" cy="262" r="34"></circle>
+                            <circle class="hub" cx="258" cy="262" r="20"></circle>
+                        </g>
+                        <text class="bp-text" x="20" y="30">CALIBRE · UJ-01</text>
+                        <text class="bp-text" x="280" y="388">28,800 VPH</text>
+                    </svg>
 
-                    <span class="edition">
-                        PRIVATE EDITION
-                    </span>
-
-                </header>
-
-
-                <!-- =================================================
-                     HERO
-                ================================================== -->
-
-                <div class="hero">
-
-
-                    <!-- =============================================
-                         LEFT EDITORIAL
-                    ============================================== -->
-
-                    <div class="editorial">
-
-                        <p class="eyebrow">
-                            {product.collectionName}
-                        </p>
-
-
-                        <h1>
-                            {product.productName}
-                        </h1>
-
-
-                        <p class="signature">
-                            {product.collectionName}
-                        </p>
-
-
-                        <div class="gold-line"></div>
-
-
-                        <p class="description">
-
-                            <template if:true={product.description}>
-
-                                {product.description}
-
+                    <!-- The camera -->
+                    <div class="frame">
+                        <div class="frame-clip">
+                            <template if:true={hasImage}>
+                                <img class="frame-image" src={imageSrc} alt={product.productName} />
                             </template>
-
-                            <template if:false={product.description}>
-
-                                A UJJAYINI timepiece created
-                                for those who understand the
-                                quiet language of precision.
-
+                            <template if:false={hasImage}>
+                                <span class="frame-fallback">U</span>
                             </template>
+                            <span class="sheen" aria-hidden="true"></span>
+                            <span class="vignette" aria-hidden="true"></span>
+                        </div>
+                        <span class="frame-edge" aria-hidden="true"></span>
+                    </div>
 
-                        </p>
+                    <!-- PROLOGUE -->
+                    <div class={prologueClass}>
+                        <p class="mono kicker">{product.collectionName} · UJJAYINI</p>
+                        <h1 class="name">{product.productName}</h1>
+                        <p class="lede">{description}</p>
 
-
-                        <div class="price-block">
-
-                            <span>
-                                UJJAYINI · PRIVATE COLLECTION
-                            </span>
-
-                            <strong>
-                                {formattedPrice}
-                            </strong>
-
-                            <template if:true={isOutOfStock}>
-
-                                <em class="stock-line stock-out">
-                                    OUT OF STOCK
-                                </em>
-
-                            </template>
-
-                            <template if:true={isLowStock}>
-
-                                <em class="stock-line stock-low">
-                                    {lowStockLabel}
-                                </em>
-
-                            </template>
-
+                        <div class="price-row">
+                            <strong class="price">{formattedPrice}</strong>
+                            <span class={stockClass}>{stockLabel}</span>
                         </div>
 
-
-                        <div class="actions">
-
-                            <button
-                                class={buyNowClass}
-                                onclick={handleBuyNow}
-                                disabled={disableActions}
-                            >
-                                <span>
-                                    {buyNowLabel}
-                                </span>
-
-                                <span>
-                                    ↗
-                                </span>
-
+                        <div class="cta-row">
+                            <button class="btn-primary" type="button" onclick={handleBuyNow} disabled={disableActions}>
+                                <span>{buyNowLabel}</span>
+                                <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true">
+                                    <path d="M4 12 L12 4 M6 4 H12 V10"></path>
+                                </svg>
                             </button>
-
-
-                            <button
-                                class={cartButtonClass}
-                                onclick={handleAddToCart}
-                                disabled={disableActions}
-                            >
-                                <span>
+                            <template if:true={showCartButton}>
+                                <button class="btn-line" type="button" onclick={handleAddToCart} disabled={disableActions}>
                                     {cartLabel}
-                                </span>
-
-                                <span>
-                                    +
-                                </span>
-
-                            </button>
-
-
-                            <button
-                                class="private-button"
-                                onclick={handlePrivateViewing}
-                            >
-                                PRIVATE VIEWING
-                            </button>
-
+                                </button>
+                            </template>
                         </div>
 
+                        <div class="quick-links">
+                            <button class="link" type="button" onclick={handlePrivateViewing}>PRIVATE VIEWING</button>
+                            <button class="link" type="button" onclick={goToInspect}>MACRO INSPECT</button>
+                            <button class="link" type="button" onclick={goToFit}>WRIST FIT</button>
+                        </div>
+
+                        <span class="scroll-cue mono" aria-hidden="true">SCROLL TO BEGIN THE STORY <i></i></span>
                     </div>
 
-
-                    <!-- =============================================
-                         CENTER WATCH
-                    ============================================== -->
-
-                    <div class="watch-composition">
-
-
-                        <!-- LARGE CIRCULAR ORBIT -->
-
-                        <div
-                            class="orbit orbit-outer"
-                            aria-hidden="true"
-                        ></div>
-
-
-                        <div
-                            class="orbit orbit-middle"
-                            aria-hidden="true"
-                        ></div>
-
-
-                        <div
-                            class="orbit orbit-inner"
-                            aria-hidden="true"
-                        ></div>
-
-
-                        <!-- GOLD CROSS HAIR -->
-
-                        <div
-                            class="crosshair horizontal"
-                            aria-hidden="true"
-                        ></div>
-
-                        <div
-                            class="crosshair vertical"
-                            aria-hidden="true"
-                        ></div>
-
-
-                        <!-- WATCH -->
-
-                        <div class="watch-frame">
-
-                            <div class="watch-glow"></div>
-
-                            <template
-                                if:true={product.productImageUrl}
-                            >
-
-                                <img
-                                    class="watch-image"
-                                    src={product.productImageUrl}
-                                    alt={product.productName}
-                                />
-
-                            </template>
-
-
-                            <template
-                                if:false={product.productImageUrl}
-                            >
-
-                                <div class="watch-placeholder">
-                                    U
-                                </div>
-
-                            </template>
-
-                        </div>
-
-
-                        <!-- =========================================
-                             CIRCULAR DETAILS
-                        ========================================== -->
-
-
-                        <!-- 01 MOVEMENT -->
-
-                        <div class="detail-node node-01">
-
-                            <span class="node-number">
-                                01
-                            </span>
-
-                            <div class="node-line"></div>
-
-                            <div class="node-content">
-
-                                <span>
-                                    MOVEMENT
-                                </span>
-
-                                <strong>
-                                    {product.movement}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- 02 CASE -->
-
-                        <div class="detail-node node-02">
-
-                            <span class="node-number">
-                                02
-                            </span>
-
-                            <div class="node-line"></div>
-
-                            <div class="node-content">
-
-                                <span>
-                                    CASE MATERIAL
-                                </span>
-
-                                <strong>
-                                    {product.caseMaterial}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- 03 DIAL -->
-
-                        <div class="detail-node node-03">
-
-                            <span class="node-number">
-                                03
-                            </span>
-
-                            <div class="node-line"></div>
-
-                            <div class="node-content">
-
-                                <span>
-                                    DIAL
-                                </span>
-
-                                <strong>
-                                    {product.dialColor}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- 04 FAMILY -->
-
-                        <div class="detail-node node-04">
-
-                            <span class="node-number">
-                                04
-                            </span>
-
-                            <div class="node-line"></div>
-
-                            <div class="node-content">
-
-                                <span>
-                                    FAMILY
-                                </span>
-
-                                <strong>
-                                    {product.family}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- 05 MODEL -->
-
-                        <div class="detail-node node-05">
-
-                            <span class="node-number">
-                                05
-                            </span>
-
-                            <div class="node-line"></div>
-
-                            <div class="node-content">
-
-                                <span>
-                                    MODEL
-                                </span>
-
-                                <strong>
-                                    {product.modelNumber}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- 06 PRODUCT CODE -->
-
-                        <div class="detail-node node-06">
-
-                            <span class="node-number">
-                                06
-                            </span>
-
-                            <div class="node-line"></div>
-
-                            <div class="node-content">
-
-                                <span>
-                                    PRODUCT CODE
-                                </span>
-
-                                <strong>
-                                    {product.productCode}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
+                    <!-- CHAPTERS -->
+                    <template for:each={chapters} for:item="chapter">
+                        <article key={chapter.key} class={chapter.className}>
+                            <p class="mono kicker"><span class="ch-no">{chapter.number}</span>{chapter.kicker}</p>
+                            <h2>{chapter.title} <em>{chapter.accent}</em></h2>
+                            <p class="copy">{chapter.copy}</p>
+                            <dl class="specs">
+                                <template for:each={chapter.specs} for:item="spec">
+                                    <div key={spec.key} class="spec">
+                                        <dt class="mono">{spec.label}</dt>
+                                        <dd>{spec.value}</dd>
+                                    </div>
+                                </template>
+                            </dl>
+                        </article>
+                    </template>
+
+                    <!-- Rarity counter (chapter 4) -->
+                    <div class="rarity" aria-hidden="true">
+                        <strong>{rarityNumber}</strong>
+                        <span class="mono">{rarityLabel}</span>
                     </div>
 
-
-                    <!-- =============================================
-                         RIGHT STORY
-                    ============================================== -->
-
-                    <aside class="story">
-
-                        <div class="story-marker">
-
-                            <span>
-                                06
-                            </span>
-
-                            <div></div>
-
+                    <!-- Chronograph progress -->
+                    <nav class="chrono" aria-label="Chapters">
+                        <div class="chrono-dial">
+                            <span class="chrono-hand"></span>
+                            <span class="chrono-pin"></span>
                         </div>
-
-
-                        <p class="story-kicker">
-                            THE DETAILS
-                        </p>
-
-
-                        <h2>
-                            Built to
-                            <em>be remembered.</em>
-                        </h2>
-
-
-                        <p class="story-copy">
-
-                            Every detail exists for a reason.
-                            From the movement beneath the dial
-                            to the material that surrounds it.
-
-                        </p>
-
-
-                        <div class="story-rule"></div>
-
-
-                        <div class="reference">
-
-                            <span>
-                                REFERENCE
-                            </span>
-
-                            <strong>
-                                {product.productCode}
-                            </strong>
-
+                        <span class="mono chrono-count">{chapterCounter}</span>
+                        <div class="dots">
+                            <template for:each={chapterDots} for:item="dot">
+                                <button key={dot.key} class={dot.className} type="button" data-index={dot.index} onclick={jumpToChapter} title={dot.name}>
+                                    <span class="dot-mark"></span>
+                                    <span class="mono dot-name">{dot.number} {dot.name}</span>
+                                </button>
+                            </template>
                         </div>
-
-
-                        <div class="reference">
-
-                            <span>
-                                COLLECTION
-                            </span>
-
-                            <strong>
-                                {product.collectionName}
-                            </strong>
-
-                        </div>
-
-
-                    </aside>
+                    </nav>
 
                 </div>
-
-
-                <!-- =================================================
-                     PRIVATE ACQUISITION
-                ================================================== -->
-
-                <section
-                    class="request-anchor"
-                >
-
-                    <div class="request-header">
-
-                        <p class="eyebrow">
-                            PRIVATE ACQUISITION
-                        </p>
-
-                        <h2>
-                            Make this timepiece
-                            <em>yours.</em>
-                        </h2>
-
-                        <p>
-                            Speak with the UJJAYINI house
-                            regarding availability, details,
-                            and your private acquisition.
-                        </p>
-
-                    </div>
-
-
-                    <div class="request-shell">
-
-                        <template if:true={product.productId}>
-
-                            <c-ujjayini-watch-request
-                                watch-id={product.productId}
-                            ></c-ujjayini-watch-request>
-
-                        </template>
-
-                    </div>
-
-                </section>
-
 
             </section>
 
-        </template>
 
+            <!-- ============ MACRO INSPECT ============ -->
+            <section class="inspect section">
 
-        <!-- =================================================
-             NOTIFICATION
-        ================================================== -->
-
-        <template if:true={showNotification}>
-
-            <div
-                class={notificationClass}
-                role="status"
-                aria-live="polite"
-            >
-
-                <div>
-
-                    <span>
-                        UJJAYINI · THE HOUSE OF TIME
-                    </span>
-
-                    <h3>
-                        {notificationTitle}
-                    </h3>
-
-                    <p>
-                        {notificationMessage}
-                    </p>
-
-                </div>
-
-
-                <button
-                    onclick={closeNotification}
-                    aria-label="Close"
-                >
-                    ×
-                </button>
-
-            </div>
-
-        </template>
-
-
-        <!-- =================================================
-             GUEST CART
-        ================================================== -->
-
-        <template if:true={showGuestCartModal}>
-
-            <div
-                class="guest-backdrop"
-                onclick={closeGuestCartModal}
-            >
+                <header class="section-head">
+                    <p class="mono kicker">05 · MACRO INSPECT</p>
+                    <h2>Bring the <em>loupe closer.</em></h2>
+                    <p class="copy">Move across the watch to see it at 2.5×, the way a watchmaker would at the bench. Or let the house guide your eye.</p>
+                    <button class="btn-line small" type="button" onclick={toggleTour}>{tourButtonLabel}</button>
+                </header>
 
                 <div
-                    class="guest-modal"
-                    onclick={stopModalPropagation}
+                    class={inspectClass}
+                    onpointerenter={handleInspectEnter}
+                    onpointerleave={handleInspectLeave}
+                    onpointermove={handleInspectMove}
                 >
+                    <template if:true={hasImage}>
+                        <img class="inspect-image" src={imageSrc} alt={product.productName} draggable="false" />
+                    </template>
+                    <span class="corner tl"></span>
+                    <span class="corner tr"></span>
+                    <span class="corner bl"></span>
+                    <span class="corner br"></span>
+                    <span class="lens" aria-hidden="true"></span>
+                    <template if:true={tourLabel}>
+                        <span class="tour-label mono">{tourLabel}</span>
+                    </template>
+                    <span class="inspect-hint mono">HOVER TO MAGNIFY · 2.5×</span>
+                </div>
 
-                    <button
-                        class="modal-close"
-                        onclick={closeGuestCartModal}
-                    >
-                        ×
-                    </button>
+            </section>
 
 
-                    <div class="modal-symbol">
-                        U
+            <!-- ============ WRIST FIT ============ -->
+            <section class="fit section">
+
+                <header class="section-head">
+                    <p class="mono kicker">06 · ON THE WRIST</p>
+                    <h2>See how it <em>sits on you.</em></h2>
+                    <p class="copy">Set your wrist size and tone. The watch is drawn to true proportion.</p>
+                </header>
+
+                <div class="fit-grid">
+
+                    <div class="fit-canvas">
+
+                        <svg class="arm-svg" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                            <path class="arm-shadow" d={armPath}></path>
+                            <path class="arm-skin" d={armPath} style={armFill}></path>
+                            <path class="arm-rim" d={armPath} stroke-width={rimWidth}></path>
+                            <path class="arm-light" d={armHighlightPath} stroke-width={highlightWidth}></path>
+                            <template for:each={tendons} for:item="tendon">
+                                <path key={tendon.key} class="arm-tendon" d={tendon.d}></path>
+                            </template>
+                            <template for:each={knuckles} for:item="knuckle">
+                                <circle key={knuckle.key} class="arm-knuckle" cx={knuckle.cx} cy={knuckle.cy} r={knuckle.r}></circle>
+                            </template>
+                        </svg>
+
+                        <div class="on-wrist">
+                            <span class={strapClass} style={strapStyle}></span>
+                            <div class="watch-disc" style={watchOnWristStyle}>
+                                <span class="disc-face" style={discFaceStyle}></span>
+                                <span class="disc-glass"></span>
+                            </div>
+                        </div>
+
+                        <span class="ruler mono">{caseLabel} CASE · {wristLabel} WRIST</span>
                     </div>
 
+                    <div class="fit-controls">
 
-                    <p>
-                        THE HOUSE OF UJJAYINI
-                    </p>
+                        <div class="control">
+                            <p class="mono label">WRIST CIRCUMFERENCE <b>{wristLabel}</b></p>
+                            <input class="slider" type="range" min="140" max="200" step="1" value={wristMm} oninput={handleWrist} aria-label="Wrist circumference in millimetres" />
+                            <div class="slider-ends mono"><span>140</span><span>200</span></div>
+                        </div>
 
+                        <div class="control">
+                            <p class="mono label">CASE SIZE PREVIEW <b>{caseLabel}</b></p>
+                            <div class="sizes">
+                                <template for:each={caseOptions} for:item="size">
+                                    <button key={size.key} class={size.className} type="button" data-value={size.value} aria-pressed={size.pressed} onclick={handleCaseSize}>{size.label}</button>
+                                </template>
+                            </div>
+                        </div>
 
-                    <h2>
-                        Become part of
-                        <em>the family.</em>
-                    </h2>
+                        <div class="control">
+                            <p class="mono label">SKIN TONE</p>
+                            <div class="swatches">
+                                <template for:each={skinOptions} for:item="tone">
+                                    <button key={tone.key} class={tone.className} style={tone.style} type="button" data-key={tone.key} aria-pressed={tone.pressed} aria-label={tone.label} title={tone.label} onclick={handleSkin}></button>
+                                </template>
+                            </div>
+                        </div>
 
-
-                    <div class="modal-line"></div>
-
-
-                    <span>
-                        Sign in or create your UJJAYINI account
-                        to make this timepiece part of your collection.
-                    </span>
-
-
-                    <div class="modal-actions">
-
-                        <button
-                            onclick={handleGuestLogin}
-                        >
-                            SIGN IN
-                        </button>
-
-                        <button
-                            onclick={handleGuestSignup}
-                        >
-                            BECOME A MEMBER
-                        </button>
+                        <div class="verdict">
+                            <div class="meter"><span class="meter-dot" style={fitMeterStyle}></span></div>
+                            <div class="meter-labels mono"><span>DISCREET</span><span>BALANCED</span><span>BOLD</span></div>
+                            <p class="verdict-title">{fitVerdict}</p>
+                            <p class="copy">{fitCopy}</p>
+                        </div>
 
                     </div>
-
-
-                    <button
-                        class="continue-button"
-                        onclick={closeGuestCartModal}
-                    >
-                        CONTINUE EXPLORING
-                    </button>
 
                 </div>
 
+            </section>
+
+
+            <!-- ============ PRIVATE VIEWING ============ -->
+            <section class="request-anchor section">
+                <header class="section-head center">
+                    <p class="mono kicker">07 · PRIVATE ACQUISITION</p>
+                    <h2>Make this timepiece <em>yours.</em></h2>
+                    <p class="copy">Speak with the UJJAYINI house about availability, details and your private acquisition.</p>
+                </header>
+                <div class="request-shell">
+                    <c-ujjayini-watch-request watch-id={product.productId}></c-ujjayini-watch-request>
+                </div>
+            </section>
+
+
+            <!-- ============ SIMILAR ============ -->
+            <template if:true={hasSimilar}>
+                <section class="similar section">
+                    <header class="section-head">
+                        <p class="mono kicker">08 · KINDRED TIMEPIECES</p>
+                        <h2>You may also <em>remember.</em></h2>
+                    </header>
+                    <div class="similar-grid">
+                        <template for:each={similar} for:item="item">
+                            <button key={item.productId} class={item.className} type="button" data-id={item.productId} onclick={openSimilar}>
+                                <span class="similar-visual">
+                                    <template if:true={item.hasImage}>
+                                        <img src={item.image} alt={item.productName} loading="lazy" />
+                                    </template>
+                                    <span class="similar-index mono">{item.index}</span>
+                                    <template if:true={item.isArchive}>
+                                        <span class="similar-badge mono">ARCHIVE PIECE</span>
+                                    </template>
+                                </span>
+                                <span class="similar-body">
+                                    <span class="mono similar-collection">{item.collectionName}</span>
+                                    <span class="similar-name">{item.productName}</span>
+                                    <span class="similar-foot">
+                                        <span class="similar-price">{item.price}</span>
+                                        <span class="similar-go mono">DISCOVER →</span>
+                                    </span>
+                                </span>
+                            </button>
+                        </template>
+                    </div>
+                </section>
+            </template>
+
+
+            <!-- ============ STICKY BUY BAR ============ -->
+            <div class={buyBarClass}>
+                <span class="bar-name">{product.productName}</span>
+                <span class="bar-price">{formattedPrice}</span>
+                <button class="btn-primary small" type="button" onclick={handleBuyNow} disabled={disableActions}>
+                    <span>{buyNowLabel}</span>
+                    <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M4 12 L12 4 M6 4 H12 V10"></path>
+                    </svg>
+                </button>
+                <template if:true={showCartButton}>
+                    <button class="btn-line small" type="button" onclick={handleAddToCart} disabled={disableActions}>{cartLabel}</button>
+                </template>
             </div>
 
+        </template>
+
+
+        <!-- ================= NOTIFICATION ================= -->
+        <template if:true={showNotification}>
+            <div class={notificationClass} role="status" aria-live="polite">
+                <div>
+                    <span class="mono">UJJAYINI · THE HOUSE OF TIME</span>
+                    <h3>{notificationTitle}</h3>
+                    <p>{notificationMessage}</p>
+                </div>
+                <button type="button" onclick={closeNotification} aria-label="Close">✕</button>
+            </div>
+        </template>
+
+
+        <!-- ================= GUEST MODAL ================= -->
+        <template if:true={showGuestCartModal}>
+            <div class="guest-backdrop" onclick={closeGuestCartModal}>
+                <div class="guest-modal" onclick={stopModalPropagation}>
+                    <button class="modal-close" type="button" onclick={closeGuestCartModal} aria-label="Close">✕</button>
+                    <div class="modal-symbol">U</div>
+                    <p class="mono">THE HOUSE OF UJJAYINI</p>
+                    <h2>Become part of <em>the family.</em></h2>
+                    <p class="copy">Sign in or create your UJJAYINI account to make this timepiece part of your collection.</p>
+                    <div class="modal-actions">
+                        <button class="btn-primary" type="button" onclick={handleGuestLogin}><span>SIGN IN</span></button>
+                        <button class="btn-line" type="button" onclick={handleGuestSignup}>BECOME A MEMBER</button>
+                    </div>
+                    <button class="link" type="button" onclick={closeGuestCartModal}>CONTINUE EXPLORING</button>
+                </div>
+            </div>
         </template>
 
     </main>

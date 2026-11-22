@@ -1,197 +1,306 @@
 <template>
 
-    <section class="service-shell">
+    <main class="service-page">
 
-        <div class="service-light" aria-hidden="true"></div>
+        <!-- ================= I. HERO ================= -->
+        <section class="hero">
 
-        <div class="service-inner">
+            <div class="hero-glow" aria-hidden="true"></div>
 
-            <header class="service-header">
+            <p class="eyebrow">UJJAYINI · THE ATELIER</p>
 
-                <p class="eyebrow">
-                    UJJAYINI · SERVICE
-                </p>
+            <h1 class="hero-title">Care for <em>your time.</em></h1>
 
-                <h2>
-                    Care for your <em>time.</em>
-                </h2>
+            <div class="gold-rule" aria-hidden="true"></div>
 
-                <div class="gold-rule"></div>
+            <p class="hero-copy">
+                Every UJJAYINI timepiece is cared for by hands that understand it.
+                Scroll to discover the atelier.
+            </p>
 
-                <p class="description">
-                    Request repair, maintenance, inspection,
-                    or other assistance for your timepiece.
-                </p>
+            <div class="hero-actions">
+                <button class="ghost-button" type="button" onclick={scrollToForm}>
+                    REQUEST SERVICE
+                </button>
+                <span class="scroll-cue" aria-hidden="true">
+                    SCROLL <span class="cue-line"></span>
+                </span>
+            </div>
 
-            </header>
-
-
-            <div class="service-form">
-
-                <template if:true={showAssetSelector}>
-
-                    <label class="field">
-
-                        <span class="field-label">
-                            TIMEPIECE
-                        </span>
-
-                        <span class="select-wrap">
-
-                            <select
-                                class="field-control"
-                                onchange={handleAssetChange}
-                            >
-                                <template
-                                    for:each={assetOptions}
-                                    for:item="option"
-                                >
-                                    <option
-                                        key={option.key}
-                                        value={option.value}
-                                        selected={option.selected}
-                                    >
-                                        {option.label}
-                                    </option>
-                                </template>
-                            </select>
-
-                        </span>
-
-                    </label>
-
-                </template>
+        </section>
 
 
-                <div class="field-row">
+        <!-- ================= II. THE ATELIER (horizontal) ================= -->
+        <section class="services-scroll">
 
-                    <label class="field">
+            <div class="services-stage">
 
-                        <span class="field-label">
-                            SERVICE TYPE
-                        </span>
+                <div class="stage-top">
 
-                        <span class="select-wrap">
+                    <span class="stage-index">II · THE ATELIER</span>
 
-                            <select
-                                class="field-control"
-                                onchange={handleServiceTypeChange}
-                            >
-                                <template
-                                    for:each={serviceTypeOptions}
-                                    for:item="option"
-                                >
-                                    <option
-                                        key={option.key}
-                                        value={option.value}
-                                        selected={option.selected}
-                                    >
-                                        {option.label}
-                                    </option>
-                                </template>
-                            </select>
+                    <div class="big-text" aria-hidden="true">
+                        OUR SERVICES · OUR SERVICES · OUR SERVICES
+                    </div>
 
-                        </span>
-
-                    </label>
-
-
-                    <label class="field">
-
-                        <span class="field-label">
-                            PRIORITY
-                        </span>
-
-                        <span class="select-wrap">
-
-                            <select
-                                class="field-control"
-                                onchange={handlePriorityChange}
-                            >
-                                <template
-                                    for:each={priorityOptions}
-                                    for:item="option"
-                                >
-                                    <option
-                                        key={option.key}
-                                        value={option.value}
-                                        selected={option.selected}
-                                    >
-                                        {option.label}
-                                    </option>
-                                </template>
-                            </select>
-
-                        </span>
-
-                    </label>
+                    <!-- The watch standing on the gold line -->
+                    <svg class="atelier-watch" viewBox="0 0 200 260" aria-hidden="true">
+                        <rect class="strap" x="72" y="0" width="56" height="74" rx="6"></rect>
+                        <rect class="strap" x="72" y="186" width="56" height="74" rx="6"></rect>
+                        <line class="strap-stitch" x1="80" y1="8" x2="80" y2="66"></line>
+                        <line class="strap-stitch" x1="120" y1="8" x2="120" y2="66"></line>
+                        <line class="strap-stitch" x1="80" y1="194" x2="80" y2="252"></line>
+                        <line class="strap-stitch" x1="120" y1="194" x2="120" y2="252"></line>
+                        <rect class="crown" x="164" y="120" width="14" height="20" rx="3"></rect>
+                        <circle class="case" cx="100" cy="130" r="68"></circle>
+                        <circle class="case-shine" cx="82" cy="108" r="40"></circle>
+                        <circle class="bezel" cx="100" cy="130" r="60"></circle>
+                        <circle class="bezel-marks" cx="100" cy="130" r="56"></circle>
+                        <circle class="dial" cx="100" cy="130" r="50"></circle>
+                        <circle class="dial-marks" cx="100" cy="130" r="44"></circle>
+                        <text class="dial-u" x="100" y="110" text-anchor="middle">U</text>
+                        <line class="hand-hour" x1="100" y1="130" x2="100" y2="102"></line>
+                        <line class="hand-minute" x1="100" y1="130" x2="100" y2="90"></line>
+                        <circle class="pivot" cx="100" cy="130" r="4"></circle>
+                    </svg>
 
                 </div>
 
+                <div class="stage-bottom">
 
-                <label class="field">
+                    <div class="services-track">
 
-                    <span class="field-label">
-                        SERVICE DESCRIPTION
-                    </span>
+                        <div class="track-intro">
+                            <h2>
+                                Everything your timepiece needs.
+                                <span>Under one house.</span>
+                            </h2>
+                            <p>
+                                From a complete service to a single strap, every
+                                request is handled by the UJJAYINI atelier and kept
+                                in your timepiece's history.
+                            </p>
+                        </div>
 
-                    <textarea
-                        class="field-control field-textarea"
-                        rows="5"
-                        value={description}
-                        oninput={handleDescriptionChange}
-                        placeholder="Describe the service you need..."
-                    ></textarea>
+                        <template for:each={services} for:item="service">
+                            <article key={service.value} class="service-card">
 
-                </label>
+                                <div class="card-head">
+                                    <span class="card-number">{service.number}</span>
+                                    <span class="card-icon">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d={service.icon}></path>
+                                        </svg>
+                                    </span>
+                                </div>
 
+                                <h3 class="card-title">{service.title}</h3>
+                                <p class="card-copy">{service.copy}</p>
 
-                <template if:true={successMessage}>
+                                <button
+                                    class="card-button"
+                                    type="button"
+                                    data-value={service.value}
+                                    onclick={chooseService}
+                                >
+                                    REQUEST THIS SERVICE <span>→</span>
+                                </button>
 
-                    <div class="message success-message" role="status">
-                        {successMessage}
+                            </article>
+                        </template>
+
                     </div>
 
-                </template>
-
-                <template if:true={errorMessage}>
-
-                    <div class="message error-message" role="alert">
-                        {errorMessage}
+                    <div class="services-progress" aria-hidden="true">
+                        <span class="services-progress-fill"></span>
                     </div>
-
-                </template>
-
-
-                <div class="actions">
-
-                    <button
-                        class="submit-button"
-                        type="button"
-                        onclick={handleSubmit}
-                        disabled={isSubmitting}
-                    >
-
-                        <span class="submit-inner">
-
-                            <template if:true={isSubmitting}>
-                                SUBMITTING
-                            </template>
-
-                            <template if:false={isSubmitting}>
-                                SUBMIT SERVICE REQUEST
-                            </template>
-
-                        </span>
-
-                    </button>
 
                 </div>
 
             </div>
 
-        </div>
+        </section>
 
-    </section>
+
+        <!-- ================= III. THE JOURNEY (vertical road) ================= -->
+        <section class="journey-scroll">
+
+            <div class="journey-stage">
+
+                <div class="journey-copy">
+                    <span class="stage-index dark">III · THE JOURNEY</span>
+                    <h2>Care at every <em>milestone.</em></h2>
+                    <p>
+                        One house, one accountable team. Your timepiece moves through
+                        the atelier with care, and you always know where it is.
+                    </p>
+                    <span class="step-counter">{stepCounter}</span>
+                </div>
+
+                <div class="road" aria-hidden="true">
+                    <div class="road-lines"></div>
+
+                    <!-- The watch, seen from above, travelling down the road -->
+                    <svg class="road-watch" viewBox="0 0 80 160">
+                        <rect class="strap" x="24" y="0" width="32" height="160" rx="5"></rect>
+                        <circle class="case" cx="40" cy="80" r="30"></circle>
+                        <circle class="dial" cx="40" cy="80" r="22"></circle>
+                        <line class="hand-minute" x1="40" y1="80" x2="40" y2="64"></line>
+                        <line class="hand-hour" x1="40" y1="80" x2="51" y2="80"></line>
+                        <rect class="crown" x="69" y="75" width="7" height="10" rx="2"></rect>
+                    </svg>
+                </div>
+
+                <ol class="journey-steps">
+                    <template for:each={journeySteps} for:item="step">
+                        <li key={step.key} class={step.className}>
+                            <span class="step-number">{step.number}</span>
+                            <h3 class="step-title">{step.title}</h3>
+                            <p class="step-copy">{step.copy}</p>
+                        </li>
+                    </template>
+                </ol>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= IV. THE REQUEST ================= -->
+        <section class="request-section">
+
+            <div class="request-inner">
+
+                <header class="request-header">
+                    <span class="stage-index">IV · YOUR REQUEST</span>
+                    <h2>Speak with <em>the atelier.</em></h2>
+                    <div class="gold-rule" aria-hidden="true"></div>
+                </header>
+
+
+                <!-- Guest -->
+                <template if:true={isGuest}>
+                    <div class="guest-panel">
+                        <div class="guest-mark">U</div>
+                        <h3>Sign in to request a service.</h3>
+                        <p>
+                            Service requests are linked to the timepieces in your
+                            Collector's Vault, so we ask you to sign in first.
+                        </p>
+                       <div class="guest-actions">
+                            <button class="primary-link" type="button" onclick={goToLogin}>
+                                SIGN IN
+                            </button>
+                            <button class="secondary-link" type="button" onclick={goToRegister}>
+                                BECOME A MEMBER
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
+
+                <!-- Member: sent -->
+                <template if:true={isMember}>
+
+                    <template if:true={isSent}>
+                        <div class="sent-panel" role="status">
+                            <div class="sent-mark">✓</div>
+                            <p class="eyebrow">REQUEST RECEIVED</p>
+                            <h3>Your timepiece is in <em>good hands.</em></h3>
+                            <p class="sent-copy">{successMessage}</p>
+                            <button class="text-button" type="button" onclick={startAnother}>
+                                SUBMIT ANOTHER REQUEST
+                            </button>
+                        </div>
+                    </template>
+
+
+                    <!-- Member: form -->
+                    <template if:false={isSent}>
+                        <div class="service-form">
+
+                            <template if:true={showAssetSelector}>
+                                <label class="field">
+                                    <span class="field-label">TIMEPIECE</span>
+                                    <span class="select-wrap">
+                                        <select class="field-control" onchange={handleAssetChange}>
+                                            <template for:each={assetOptions} for:item="option">
+                                                <option key={option.key} value={option.value} selected={option.selected}>
+                                                    {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </span>
+                                </label>
+                            </template>
+
+                            <div class="field-row">
+
+                                <label class="field">
+                                    <span class="field-label">SERVICE</span>
+                                    <span class="select-wrap">
+                                        <select class="field-control" onchange={handleServiceTypeChange}>
+                                            <template for:each={serviceTypeOptions} for:item="option">
+                                                <option key={option.key} value={option.value} selected={option.selected}>
+                                                    {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </span>
+                                </label>
+
+                                <label class="field">
+                                    <span class="field-label">PRIORITY</span>
+                                    <span class="select-wrap">
+                                        <select class="field-control" onchange={handlePriorityChange}>
+                                            <template for:each={priorityOptions} for:item="option">
+                                                <option key={option.key} value={option.value} selected={option.selected}>
+                                                    {option.label}
+                                                </option>
+                                            </template>
+                                        </select>
+                                    </span>
+                                </label>
+
+                            </div>
+
+                            <label class="field">
+                                <span class="field-label">TELL US WHAT YOUR TIMEPIECE NEEDS</span>
+                                <textarea
+                                    class="field-control field-textarea"
+                                    rows="5"
+                                    value={description}
+                                    oninput={handleDescriptionChange}
+                                    placeholder="For example: the watch has started to lose a few minutes a day."
+                                ></textarea>
+                            </label>
+
+                            <template if:true={errorMessage}>
+                                <div class="message error-message" role="alert">
+                                    {errorMessage}
+                                </div>
+                            </template>
+
+                            <div class="actions">
+                                <button
+                                    class="submit-button"
+                                    type="button"
+                                    onclick={handleSubmit}
+                                    disabled={isSubmitting}
+                                >
+                                    <span class="submit-inner">{submitLabel}</span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </template>
+
+                </template>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </template>

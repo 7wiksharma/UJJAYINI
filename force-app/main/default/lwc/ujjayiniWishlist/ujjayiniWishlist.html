@@ -1,268 +1,180 @@
 <template>
 
-    <section
-        class="wishlist-page"
-        style={backgroundStyle}
-    >
+    <main class={pageClass}>
 
-        <!-- ============================================= -->
-        <!-- ATMOSPHERE -->
-        <!-- ============================================= -->
-
-        <div class="atmosphere"></div>
-
-        <div class="gold-orbit orbit-one"></div>
-        <div class="gold-orbit orbit-two"></div>
+        <!-- ================= BACKDROP: the crowned cat ================= -->
+        <div class="backdrop" aria-hidden="true">
+            <div class="backdrop-image" style={backgroundUrl}></div>
+            <div class="backdrop-tint"></div>
+            <div class="backdrop-dust"></div>
+        </div>
 
 
-        <!-- ============================================= -->
-        <!-- MAIN CONTENT -->
-        <!-- ============================================= -->
+        <!-- ================= HERO ================= -->
+        <section class="hero">
 
-        <div class="wishlist-shell">
+            <div class="hero-copy">
 
+                <p class="eyebrow">UJJAYINI · THE PRIVATE VITRINE</p>
 
-            <!-- ========================================= -->
-            <!-- HEADER -->
-            <!-- ========================================= -->
+                <h1 class="title">My <em>Wishlist</em></h1>
 
-            <header class="wishlist-header">
+                <p class="subtitle">
+                    Timepieces worth remembering, kept behind glass until they are yours.
+                </p>
 
-                <div class="header-left">
+                <template if:true={hasItems}>
+                    <button class="cue" type="button" onclick={scrollToVitrine}>
+                        <span>VIEW THE VITRINE</span>
+                        <span class="cue-line" aria-hidden="true"></span>
+                    </button>
+                </template>
 
-                    <p class="eyebrow">
-                        UJJAYINI · THE PRIVATE COLLECTION
-                    </p>
-
-                    <h1>
-                        My Wishlist
-                    </h1>
-
-                    <p class="subtitle">
-                        Timepieces worth remembering.
-                    </p>
-
-                </div>
-
-
-                <div class="header-right">
-
-                    <span class="item-count">
-                        {itemCountLabel}
-                    </span>
-
-                </div>
-
-            </header>
-
-
-            <!-- ========================================= -->
-            <!-- GOLD DIVIDER -->
-            <!-- ========================================= -->
-
-            <div class="gold-divider">
-                <span></span>
             </div>
 
+            <template if:true={hasItems}>
+                <div class="orb" aria-label="Saved timepieces">
+                    <span class="orb-ring" aria-hidden="true"></span>
+                    <span class="orb-ring inner" aria-hidden="true"></span>
+                    <span class="orb-dot" aria-hidden="true"></span>
+                    <strong class="orb-count">{countValue}</strong>
+                    <span class="orb-word">{countWord}</span>
+                </div>
+            </template>
 
-            <!-- ========================================= -->
-            <!-- LOADING -->
-            <!-- ========================================= -->
+        </section>
 
+
+        <!-- ================= VITRINE ================= -->
+        <section class="vitrine">
+
+            <!-- Guest -->
+            <template if:true={isGuest}>
+                <div class="panel">
+                    <div class="mark">♡</div>
+                    <h2 class="panel-title">Sign in to keep <em>your wishlist.</em></h2>
+                    <p class="panel-copy">
+                        Your saved timepieces live with your UJJAYINI account,
+                        waiting for you on every device.
+                    </p>
+                    <div class="panel-actions">
+                        <button class="btn-gold" type="button" onclick={goToLogin}>SIGN IN</button>
+                        <button class="btn-line" type="button" onclick={goToRegister}>BECOME A MEMBER</button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Loading -->
             <template if:true={isLoading}>
-
-                <div class="state loading-state">
-
-                    <div class="loader-ring"></div>
-
-                    <p>
-                        CURATING YOUR SAVED TIMEPIECES
-                    </p>
-
+                <div class="grid">
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
                 </div>
-
             </template>
 
-
-            <!-- ========================================= -->
-            <!-- ERROR -->
-            <!-- ========================================= -->
-
-            <template if:true={errorMessage}>
-
-                <div class="state error-state">
-
-                    <p class="state-code">
-                        UJJAYINI · 04
-                    </p>
-
-                    <h2>
-                        Unable to access your collection.
-                    </h2>
-
-                    <p>
-                        {errorMessage}
-                    </p>
-
-                    <button
-                        class="secondary-button"
-                        onclick={handleBrowseCollection}
-                    >
-                        RETURN TO COLLECTION
-                    </button>
-
+            <!-- Error (never technical) -->
+            <template if:true={hasError}>
+                <div class="panel">
+                    <p class="eyebrow">UJJAYINI · 04</p>
+                    <h2 class="panel-title">Your vitrine is <em>resting.</em></h2>
+                    <p class="panel-copy">{friendlyError}</p>
+                    <div class="panel-actions">
+                        <button class="btn-gold" type="button" onclick={retry}>TRY AGAIN</button>
+                        <button class="btn-line" type="button" onclick={goToWatches}>THE TIMEPIECES</button>
+                    </div>
                 </div>
-
             </template>
 
-
-            <!-- ========================================= -->
-            <!-- WISHLIST ITEMS -->
-            <!-- ========================================= -->
-
+            <!-- Items -->
             <template if:true={hasItems}>
 
-                <div class="wishlist-grid">
+                <div class="toolbar">
 
-                    <template
-                        for:each={wishlistItems}
-                        for:item="item"
-                    >
+                    <template if:true={hasFilters}>
+                        <div class="filters" role="group" aria-label="Filter by movement">
+                            <template for:each={filters} for:item="item">
+                                <button key={item.value} class={item.className} type="button" data-value={item.value} onclick={handleFilter}>
+                                    {item.label}
+                                </button>
+                            </template>
+                        </div>
+                    </template>
 
-                        <article
-                            key={item.wishlistItemId}
-                            class="wishlist-card"
-                        >
+                    <p class="tip">
+                        <span class="tip-icon">⠿</span>
+                        Drag one timepiece onto another to compare them.
+                    </p>
 
+                </div>
 
-                            <!-- ================================= -->
-                            <!-- IMAGE -->
-                            <!-- ================================= -->
+                <div class="grid">
 
-                            <div
-                                class="watch-visual"
-                                data-product-id={item.productId}
-                                onclick={handleViewProduct}
-                            >
+                    <template for:each={cards} for:item="card">
 
-                                <template if:true={item.hasImage}>
+                        <article key={card.productId} class={card.className} data-id={card.productId}>
 
-                                    <img
-                                        src={item.productImageUrl}
-                                        alt={item.productName}
-                                        class="watch-image"
-                                    />
+                            <div class="card-inner" style={card.enterStyle}>
 
-                                </template>
+                                <!-- Glass case -->
+                                <div
+                                    class="case"
+                                    data-id={card.productId}
+                                    onclick={viewProduct}
+                                    onpointerdown={handleCasePointerDown}
+                                    onpointermove={handleTilt}
+                                    onpointerleave={handleTiltLeave}
+                                >
+                                    <template if:true={card.hasImage}>
+                                        <img class="case-blur" src={card.productImageUrl} alt="" aria-hidden="true" draggable="false" />
+                                        <img class="case-image" src={card.productImageUrl} alt={card.productName} loading="lazy" draggable="false" />
+                                    </template>
 
-                                <template if:false={item.hasImage}>
+                                    <template if:false={card.hasImage}>
+                                        <span class="case-fallback">U</span>
+                                    </template>
 
-                                    <div class="image-fallback">
-                                        UJJAYINI
+                                    <span class="glass" aria-hidden="true"></span>
+                                    <span class="shine" aria-hidden="true"></span>
+                                    <span class="case-index">{card.index}</span>
+                                    <span class="magnet" aria-hidden="true">COMPARE</span>
+                                </div>
+
+                                <!-- Brass plaque -->
+                                <div class="plaque">
+
+                                    <div class="plaque-top">
+                                        <span class="collection">{card.collectionName}</span>
+                                        <button
+                                            class="grip"
+                                            type="button"
+                                            data-id={card.productId}
+                                            onpointerdown={handleGripDown}
+                                            aria-label="Drag to compare"
+                                            title="Drag onto another timepiece"
+                                        >⠿ DRAG</button>
                                     </div>
 
-                                </template>
+                                    <h2 class="name">{card.productName}</h2>
 
+                                    <div class="price-row">
+                                        <span class="price">{card.formattedPrice}</span>
+                                        <template if:true={card.movement}>
+                                            <span class="tag">{card.movement}</span>
+                                        </template>
+                                    </div>
 
-                                <div class="image-overlay"></div>
-
-
-                                <span class="view-label">
-                                    VIEW TIMEPIECE
-                                </span>
-
-                            </div>
-
-
-                            <!-- ================================= -->
-                            <!-- CONTENT -->
-                            <!-- ================================= -->
-
-                            <div class="watch-content">
-
-
-                                <div class="watch-meta">
-
-                                    <template
-                                        if:true={item.hasCollection}
-                                    >
-
-                                        <span>
-                                            {item.collectionName}
-                                        </span>
-
-                                    </template>
-
-                                    <span>
-                                        SAVED
-                                    </span>
-
-                                </div>
-
-
-                                <h2>
-                                    {item.productName}
-                                </h2>
-
-
-                                <div class="watch-footer">
-
-
-                                    <template
-                                        if:true={item.hasPrice}
-                                    >
-
-                                        <span class="price">
-                                            {item.formattedPrice}
-                                        </span>
-
-                                    </template>
-
-
-                                    <template
-                                        if:false={item.hasPrice}
-                                    >
-
-                                        <span class="price unavailable">
-                                            PRICE UNAVAILABLE
-                                        </span>
-
-                                    </template>
-
-
-                                    <span class="saved-mark">
-                                        ✦
-                                    </span>
-
-                                </div>
-
-
-                                <!-- ================================= -->
-                                <!-- ACTIONS -->
-                                <!-- ================================= -->
-
-                                <div class="actions">
-
-
-                                    <button
-                                        class="cart-button"
-                                        data-product-id={item.productId}
-                                        onclick={handleAddToCart}
-                                        disabled={processingProductId}
-                                    >
-                                        ADD TO CART
-                                    </button>
-
-
-                                    <button
-                                        class="remove-button"
-                                        data-product-id={item.productId}
-                                        onclick={handleRemove}
-                                        disabled={processingProductId}
-                                    >
-                                        REMOVE
-                                    </button>
-
+                                    <div class="actions">
+                                        <button class="btn-cart" type="button" data-id={card.productId} onclick={handleAddToCart} disabled={card.isBusy}>
+                                            ADD TO CART
+                                        </button>
+                                        <button class={card.compareClass} type="button" data-id={card.productId} aria-pressed={card.comparePressed} onclick={toggleCompare}>
+                                            {card.compareLabel}
+                                        </button>
+                                        <button class="btn-remove" type="button" data-id={card.productId} onclick={handleRemove} disabled={card.isBusy} aria-label="Remove from wishlist" title="Remove">
+                                            ✕
+                                        </button>
+                                    </div>
 
                                 </div>
 
@@ -274,74 +186,167 @@
 
                 </div>
 
+                <div class="footnote">
+                    <span></span>
+                    <p>UJJAYINI · THE BEGINNING OF YOUR TIME</p>
+                    <span></span>
+                </div>
+
             </template>
 
-
-            <!-- ========================================= -->
-            <!-- EMPTY WISHLIST -->
-            <!-- ========================================= -->
-
+            <!-- Empty: turning blueprint -->
             <template if:true={isEmpty}>
+                <div class="panel empty">
 
-                <div class="empty-state">
+                    <svg class="blueprint" viewBox="0 0 320 240" aria-hidden="true">
+                        <line class="bp-line" x1="10" y1="120" x2="310" y2="120"></line>
+                        <line class="bp-line" x1="160" y1="10" x2="160" y2="230"></line>
+                        <circle class="bp-ring" cx="160" cy="120" r="104"></circle>
+                        <circle class="bp-ring dashed" cx="160" cy="120" r="92"></circle>
+                        <g class="gear gear-a">
+                            <circle class="teeth" cx="128" cy="110" r="40"></circle>
+                            <circle class="hub" cx="128" cy="110" r="28"></circle>
+                            <circle class="hub" cx="128" cy="110" r="6"></circle>
+                        </g>
+                        <g class="gear gear-b">
+                            <circle class="teeth" cx="196" cy="98" r="26"></circle>
+                            <circle class="hub" cx="196" cy="98" r="16"></circle>
+                            <circle class="hub" cx="196" cy="98" r="4"></circle>
+                        </g>
+                        <g class="gear gear-c">
+                            <circle class="teeth" cx="190" cy="160" r="20"></circle>
+                            <circle class="hub" cx="190" cy="160" r="11"></circle>
+                        </g>
+                        <g class="balance">
+                            <circle class="hub" cx="110" cy="172" r="18"></circle>
+                            <line class="hub" x1="92" y1="172" x2="128" y2="172"></line>
+                        </g>
+                        <text class="bp-text" x="18" y="22">CALIBRE U-01</text>
+                        <text class="bp-text" x="230" y="226">ø 30.0 MM</text>
+                    </svg>
+
+                    <p class="eyebrow">THE VITRINE IS EMPTY</p>
+                    <h2 class="panel-title">Nothing saved <em>yet.</em></h2>
+                    <p class="panel-copy">Tap the heart on any timepiece and it will wait for you here.</p>
+                    <button class="btn-gold" type="button" onclick={goToWatches}>EXPLORE THE TIMEPIECES</button>
+
+                </div>
+            </template>
+
+        </section>
 
 
-                    <div class="empty-symbol">
-                        ♡
+        <!-- ================= COMPARE TRAY ================= -->
+        <template if:true={showDock}>
+            <div class={dockClass}>
+
+                <template for:each={dockSlots} for:item="slot">
+                    <div key={slot.key} class={slot.className}>
+                        <template if:true={slot.filled}>
+                            <img src={slot.image} alt={slot.name} draggable="false" />
+                            <button class="slot-clear" type="button" data-id={slot.productId} onclick={removeFromTray} aria-label="Remove from comparison">✕</button>
+                        </template>
                     </div>
+                </template>
+
+                <button class="dock-label" type="button" onclick={openCompare} disabled={dockDisabled}>
+                    {dockLabel}
+                </button>
+
+            </div>
+        </template>
 
 
-                    <p class="empty-eyebrow">
-                        YOUR PRIVATE COLLECTION
-                    </p>
-
-
-                    <h2>
-                        Nothing saved yet.
-                    </h2>
-
-
-                    <p class="empty-copy">
-                        The watches you choose to remember
-                        will appear here.
-                    </p>
-
-
-                    <button
-                        class="primary-button"
-                        onclick={handleBrowseCollection}
-                    >
-                        EXPLORE THE COLLECTION
-                    </button>
-
-                </div>
-
+        <!-- ================= DRAG GHOST ================= -->
+        <div class="ghost" aria-hidden="true">
+            <template if:true={dragId}>
+                <img src={dragImage} alt="" draggable="false" />
             </template>
-
-
-            <!-- ========================================= -->
-            <!-- FOOT NOTE -->
-            <!-- ========================================= -->
-
-            <template if:true={hasItems}>
-
-                <div class="wishlist-note">
-
-                    <span class="note-line"></span>
-
-                    <p>
-                        UJJAYINI · THE BEGINNING OF YOUR TIME
-                    </p>
-
-                    <span class="note-line"></span>
-
-                </div>
-
-            </template>
-
-
         </div>
 
-    </section>
+
+        <!-- ================= SIDE BY SIDE ================= -->
+        <template if:true={showCompare}>
+            <div class="overlay" onclick={closeCompare}>
+
+                <section class="duel" role="dialog" aria-label="Compare timepieces" onclick={stopPropagation}>
+
+                    <header class="duel-head">
+                        <p class="eyebrow">SIDE BY SIDE</p>
+                        <div class="duel-head-actions">
+                            <button class="btn-text" type="button" onclick={clearCompare}>CLEAR</button>
+                            <button class="close" type="button" onclick={closeCompare} aria-label="Close">✕</button>
+                        </div>
+                    </header>
+
+                    <div class="duel-stage">
+
+                        <div class="duel-side left">
+                            <div class="duel-visual">
+                                <img src={duel.left.productImageUrl} alt={duel.left.productName} />
+                            </div>
+                            <h3>{duel.left.productName}</h3>
+                            <span class="duel-price">{duel.left.formattedPrice}</span>
+                            <button class="btn-line small" type="button" data-id={duel.left.productId} onclick={viewProduct}>VIEW</button>
+                        </div>
+
+                        <div class="duel-vs" aria-hidden="true">
+                            <span class="vs-line"></span>
+                            <span class="vs-mark">VS</span>
+                            <span class="vs-line"></span>
+                        </div>
+
+                        <div class="duel-side right">
+                            <div class="duel-visual">
+                                <img src={duel.right.productImageUrl} alt={duel.right.productName} />
+                            </div>
+                            <h3>{duel.right.productName}</h3>
+                            <span class="duel-price">{duel.right.formattedPrice}</span>
+                            <button class="btn-line small" type="button" data-id={duel.right.productId} onclick={viewProduct}>VIEW</button>
+                        </div>
+
+                    </div>
+
+                    <!-- Aligned comparison bars around a central spine -->
+                    <div class="spine">
+
+                        <div class="row price">
+                            <span class="bar left"><span class="bar-fill" style={duel.leftBar}></span></span>
+                            <span class="row-label">PRICE</span>
+                            <span class="bar right"><span class="bar-fill" style={duel.rightBar}></span></span>
+                        </div>
+
+                        <template for:each={duel.rows} for:item="row">
+                            <div key={row.key} class={row.className}>
+                                <span class="value left">{row.left}</span>
+                                <span class="row-label">
+                                    {row.label}
+                                    <span class="connector">{row.connector}</span>
+                                </span>
+                                <span class="value right">{row.right}</span>
+                            </div>
+                        </template>
+
+                    </div>
+
+                </section>
+
+            </div>
+        </template>
+
+
+        <!-- ================= TOAST ================= -->
+        <template if:true={toastTitle}>
+            <div class={toastClass} role="status" aria-live="polite">
+                <div>
+                    <span class="toast-kicker">UJJAYINI · THE HOUSE OF TIME</span>
+                    <strong class="toast-title">{toastTitle}</strong>
+                    <p class="toast-copy">{toastMessage}</p>
+                </div>
+                <button class="toast-close" type="button" onclick={closeToast} aria-label="Close">✕</button>
+            </div>
+        </template>
+
+    </main>
 
 </template>
