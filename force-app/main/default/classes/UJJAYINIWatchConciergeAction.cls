@@ -18,8 +18,15 @@ public with sharing class UJJAYINIWatchConciergeAction {
     private static final Integer MAX_RESULTS = 5;
     private static final Integer LOW_STOCK = 2;
 
-    // Change this if your Product Detail page has a different URL.
-     private static final String DETAIL_PATH = '/ujjayini/product-detail?productId=01tbm00000VJrZrAAL';
+    /*
+     * FULL site URL of the Product Detail page. It must be absolute:
+     * a relative link inside the chat window is not clickable and the
+     * AI may try to "complete" it with a wrong domain.
+     * Change this if the site domain or page URL changes.
+     */
+    private static final String DETAIL_URL =
+        'https://orgfarm-70c23216f9-dev-ed.develop.my.site.com/ujjayini/product-detail?productId=';
+
 
     public class Request {
 
@@ -53,7 +60,7 @@ public with sharing class UJJAYINIWatchConciergeAction {
 
         @InvocableVariable(
             label='Matching watches'
-            description='Up to 5 matching watches, one per line, with collection, specs, price in INR, availability and a link to the watch page. Show these to the customer.'
+            description='Up to 5 matching watches, one per line, with collection, specs, price in INR, availability and a ready-made "View this watch" link. Show these lines to the customer exactly as returned; never edit, merge or shorten the links.'
         )
         public String watches;
 
@@ -216,7 +223,7 @@ public with sharing class UJJAYINIWatchConciergeAction {
             + (product.Limited_Edition__c == true ? ' — limited edition' : '')
             + ' — ' + (price == null ? 'price on request' : 'INR ' + price.setScale(0).format())
             + ' — ' + availability
-            + ' — ' + DETAIL_PATH + product.Id;
+            + ' — [View this watch](' + DETAIL_URL + product.Id + ')';
     }
 
 
