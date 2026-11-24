@@ -137,12 +137,25 @@ public without sharing class UJJAYINICheckoutAddressController {
             cleanCountry = 'India';
         }
 
+        /*
+         * Indian mobile number: exactly 10 digits, starting 6-9.
+         * "+91 98765 43210" and "098765 43210" are accepted and
+         * saved as the plain 10 digits.
+         */
         String phoneDigits =
             cleanPhone.replaceAll('[^0-9]', '');
 
-        if (phoneDigits.length() < 10 || phoneDigits.length() > 13) {
-            fail('Please enter a valid phone number.');
+        if (phoneDigits.length() == 12 && phoneDigits.startsWith('91')) {
+            phoneDigits = phoneDigits.substring(2);
+        } else if (phoneDigits.length() == 11 && phoneDigits.startsWith('0')) {
+            phoneDigits = phoneDigits.substring(1);
         }
+
+        if (!Pattern.matches('[6-9][0-9]{9}', phoneDigits)) {
+            fail('Please enter a valid 10-digit mobile number.');
+        }
+
+        cleanPhone = phoneDigits;
 
         if (String.isBlank(cleanLine1)) {
             fail('Please enter your address.');

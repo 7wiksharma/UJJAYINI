@@ -45,6 +45,15 @@ private class UJJAYINICartServiceTest {
 
         insert product;
 
+        // The cart now checks real stock, so every test watch
+        // gets an Active inventory row with enough pieces.
+        Inventory__c inventory = new Inventory__c();
+        inventory.put('Product__c', product.Id);
+        inventory.put('On_Hand__c', 10);
+        inventory.put('Reserved__c', 0);
+        inventory.put('Inventory_Status__c', 'Active');
+        insert inventory;
+
 
         return product;
     }

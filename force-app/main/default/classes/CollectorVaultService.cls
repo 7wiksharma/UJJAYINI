@@ -192,8 +192,24 @@ public with sharing class CollectorVaultService {
         }
 
         if (payment.Payment_Status__c != 'Captured') {
-            result.state = 'PENDING';
-            return result;
+
+            /*
+             * Webhook not here yet: ask Razorpay directly.
+             * Any problem simply means "still pending" and the
+             * page asks again in a moment.
+             */
+            Boolean confirmed = false;
+
+            try {
+                confirmed = RazorpayWebhookService.confirmPaidPaymentLink(paymentLinkId);
+            } catch (Exception e) {
+                System.debug(LoggingLevel.WARN, 'UJJAYINI vault fallback: ' + e.getMessage());
+            }
+
+            if (!confirmed) {
+                result.state = 'PENDING';
+                return result;
+            }
         }
 
         result.paymentConfirmed = true;

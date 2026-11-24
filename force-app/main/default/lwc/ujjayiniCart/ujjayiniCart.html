@@ -192,13 +192,19 @@
                                             type="button"
                                             data-product-id={item.productId}
                                             onclick={handleIncrease}
-                                            disabled={isUpdating}
+                                            disabled={item.disableIncrease}
                                             aria-label="Increase quantity"
                                         >
                                             +
                                         </button>
 
                                     </div>
+
+                                    <template lwc:if={item.hasStockHint}>
+                                        <span class={item.stockHintClass}>
+                                            {item.stockHint}
+                                        </span>
+                                    </template>
 
                                 </div>
 

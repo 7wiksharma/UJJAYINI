@@ -631,3 +631,18 @@
 .cart-summary {
     position: static;
 }
+
+/* Stock limit note under the quantity box */
+.stock-hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    opacity: 0.85;
+}
+
+.stock-hint.is-over {
+    color: #e08a7a;
+    opacity: 1;
+}

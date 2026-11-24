@@ -93,8 +93,9 @@ export default class UjjayiniCheckoutAddress extends LightningElement {
         const phoneDigits =
             (this.phone || '').replace(/\D/g, '');
 
-        if (phoneDigits.length < 10 || phoneDigits.length > 13) {
-            return 'Please enter a valid phone number.';
+        // Exactly 10 digits, Indian mobile numbers start with 6-9.
+        if (!/^[6-9]\d{9}$/.test(phoneDigits)) {
+            return 'Please enter a valid 10-digit mobile number.';
         }
 
         if (!this.line1.trim()) {

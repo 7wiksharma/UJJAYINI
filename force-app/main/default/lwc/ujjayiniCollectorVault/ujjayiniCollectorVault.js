@@ -16,7 +16,7 @@ import getMyCertificate
 
 // Check every 2 seconds, at most 15 times (about 30 seconds).
 const POLL_INTERVAL_MS = 2000;
-const MAX_POLL_ATTEMPTS = 15;
+const MAX_POLL_ATTEMPTS = 45; // 45 x 2 s = 90 seconds
 
 const BANNER_COPY = {
     VERIFYING: {

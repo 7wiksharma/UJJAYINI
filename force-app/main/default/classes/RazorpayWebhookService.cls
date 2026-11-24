@@ -169,8 +169,9 @@ public without sharing class RazorpayWebhookService {
     WebhookResult duplicateResult =
         new WebhookResult();
 
+    // Point to the audit record of the first delivery.
     duplicateResult.webhookEventId =
-        null;
+        existingWebhookEventId(request.eventId);
 
     duplicateResult.processingStatus =
         'Processed';
@@ -215,6 +216,10 @@ public without sharing class RazorpayWebhookService {
             webhookEvent,
             AccessLevel.SYSTEM_MODE
         );
+
+        // Remember it, so a repeat delivery in this same
+        // transaction can point back to it.
+        RECEIVED_EVENTS.put(request.eventId, String.valueOf(webhookEvent.Id));
 
 
         /*
@@ -416,18 +421,25 @@ public without sharing class RazorpayWebhookService {
         Payment__c payment =
             findPaymentByGatewayIdentifiers(
                 razorpayPaymentId,
-                razorpayOrderId,
-                null
+                null,
+                razorpayOrderId // a Razorpay id is text, never a Salesforce Id
             );
 
         if (payment == null) {
-
-            throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Payment ID: ' +
-                razorpayPaymentId +
-                ' or Razorpay Order ID: ' +
-                razorpayOrderId
+            /*
+             * For a Payment Link payment, payment.captured can arrive
+             * BEFORE payment_link.paid, when our Payment__c does not
+             * know this Razorpay payment id yet. payment_link.paid
+             * completes the order. Throwing here made the webhook
+             * answer HTTP 400, and Razorpay disables a webhook that
+             * keeps failing. So we simply acknowledge it.
+             */
+            System.debug(
+                LoggingLevel.WARN,
+                'UJJAYINI: payment.captured with no matching Payment__c yet: ' +
+                razorpayPaymentId
             );
+            return;
         }
 
 
@@ -638,18 +650,17 @@ public without sharing class RazorpayWebhookService {
         Payment__c payment =
             findPaymentByGatewayIdentifiers(
                 razorpayPaymentId,
-                razorpayOrderId,
-                null
+                null,
+                razorpayOrderId // a Razorpay id is text, never a Salesforce Id
             );
 
         if (payment == null) {
-
-            throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Payment ID: ' +
-                razorpayPaymentId +
-                ' or Razorpay Order ID: ' +
-                razorpayOrderId
-            );
+            /*
+             * Same as payment.captured: for a Payment Link payment
+             * this event can arrive before payment_link.paid.
+             * Acknowledge it instead of answering HTTP 400.
+             */
+            return;
         }
 
 
@@ -747,8 +758,8 @@ public without sharing class RazorpayWebhookService {
         Payment__c payment =
             findPaymentByGatewayIdentifiers(
                 razorpayPaymentId,
-                razorpayOrderId,
-                null
+                null,
+                razorpayOrderId // a Razorpay id is text, never a Salesforce Id
             );
 
         if (payment == null) {
@@ -881,70 +892,65 @@ public without sharing class RazorpayWebhookService {
     ) {
 
         Map<String, Object> payload =
-            (Map<String, Object>)
-                JSON.deserializeUntyped(
-                    rawPayload
-                );
-
-        Map<String, Object> payloadData =
-            getMap(
-                payload,
-                'payload'
-            );
-
-        Map<String, Object> orderData =
-            getMap(
-                payloadData,
-                'order'
-            );
+            (Map<String, Object>) JSON.deserializeUntyped(rawPayload);
 
         Map<String, Object> orderEntity =
-            getMap(
-                orderData,
-                'entity'
-            );
+            getMap(getMap(getMap(payload, 'payload'), 'order'), 'entity');
 
-        String razorpayOrderId =
-            getString(
-                orderEntity,
-                'id'
-            );
-
+        String razorpayOrderId = getString(orderEntity, 'id');
 
         if (String.isBlank(razorpayOrderId)) {
-
-            throw new IllegalArgumentException(
-                'Razorpay order ID is missing from order.paid event.'
-            );
+            return;
         }
 
-
+        /*
+         * The Razorpay order id ("order_...") is TEXT. The old code
+         * passed it into a Salesforce Id parameter, which failed
+         * with "Invalid id" and made the webhook answer HTTP 400.
+         * It is now matched against Gateway_Order_ID__c as text.
+         *
+         * For Payment Link payments there is usually no match:
+         * payment_link.paid completes the order, so we just
+         * acknowledge the event.
+         */
         Payment__c payment =
-            findPaymentByGatewayIdentifiers(
-                null,
-                razorpayOrderId,
-                null
-            );
+            findPaymentByGatewayIdentifiers(null, null, razorpayOrderId);
+
+        if (payment != null && payment.Payment_Status__c == 'Captured') {
+            fulfillOrder(payment.Order__c);
+        }
+    }
 
 
-        if (payment == null) {
+    /*
+     * Audit record of an event already received (same Event ID),
+     * so a duplicate delivery can point back to it.
+     */
+    private static final Map<String, String> RECEIVED_EVENTS =
+        new Map<String, String>();
 
-            throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Order ID: ' +
-                razorpayOrderId
-            );
+    private static String existingWebhookEventId(
+        String eventId
+    ) {
+
+        if (String.isBlank(eventId)) {
+            return null;
         }
 
-
-        if (
-            payment.Payment_Status__c ==
-            'Captured'
-        ) {
-
-            fulfillOrder(
-                payment.Order__c
-            );
+        if (RECEIVED_EVENTS.containsKey(eventId)) {
+            return RECEIVED_EVENTS.get(eventId);
         }
+
+        List<Webhook_Event__c> events = [
+            SELECT Id
+            FROM Webhook_Event__c
+            WHERE Event_ID__c = :eventId
+            WITH SYSTEM_MODE
+            ORDER BY CreatedDate ASC
+            LIMIT 1
+        ];
+
+        return events.isEmpty() ? null : String.valueOf(events[0].Id);
     }
 
 
@@ -1076,6 +1082,89 @@ public without sharing class RazorpayWebhookService {
      * ORDER FULFILLMENT
      * ============================================================
      */
+    /*
+     * ============================================================
+     * FALLBACK: CONFIRM A PAID PAYMENT LINK DIRECTLY
+     *
+     * Used by the Collector's Vault when the customer is back but
+     * the webhook has not arrived yet (or failed). We ASK Razorpay
+     * for the link status. Callout first, DML after.
+     *
+     * Safe together with the webhook: fulfilment is idempotent,
+     * so whichever runs first wins.
+     * Returns true when Razorpay says the link is paid.
+     * ============================================================
+     */
+    public static Boolean confirmPaidPaymentLink(
+        String paymentLinkId
+    ) {
+
+        if (String.isBlank(paymentLinkId)) {
+            return false;
+        }
+
+        HttpRequest httpRequest = new HttpRequest();
+        httpRequest.setEndpoint(
+            'callout:Razorpay_API/v1/payment_links/' +
+            EncodingUtil.urlEncode(paymentLinkId, 'UTF-8')
+        );
+        httpRequest.setMethod('GET');
+        httpRequest.setTimeout(20000);
+
+        HttpResponse response = new Http().send(httpRequest);
+
+        if (response.getStatusCode() != 200) {
+            return false;
+        }
+
+        Map<String, Object> body =
+            (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+
+        if ((String) body.get('status') != 'paid') {
+            return false;
+        }
+
+        String razorpayPaymentId;
+        Object rawPayments = body.get('payments');
+
+        if (rawPayments instanceof List<Object>) {
+            for (Object item : (List<Object>) rawPayments) {
+                Map<String, Object> linkPayment = (Map<String, Object>) item;
+                if ((String) linkPayment.get('status') == 'captured') {
+                    razorpayPaymentId = (String) linkPayment.get('payment_id');
+                    break;
+                }
+            }
+        }
+
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(null, null, paymentLinkId);
+
+        if (payment == null) {
+            return false;
+        }
+
+        if (payment.Payment_Status__c != 'Captured') {
+
+            if (String.isNotBlank(razorpayPaymentId)) {
+                payment.Gateway_Payment_ID__c = razorpayPaymentId;
+            }
+
+            payment.Payment_Status__c = 'Captured';
+
+            if (payment.Paid_At__c == null) {
+                payment.Paid_At__c = System.now();
+            }
+
+            Database.update(payment, AccessLevel.SYSTEM_MODE);
+        }
+
+        fulfillOrder(payment.Order__c);
+
+        return true;
+    }
+
+
     private static void fulfillOrder(
         Id orderId
     ) {

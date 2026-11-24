@@ -253,12 +253,27 @@ export default class UjjayiniCart
 
             const quantity = Number(item.quantity);
 
+            // Stock this customer may hold (sent by Apex).
+            const limit = Number(item.availableStock);
+            const hasLimit = item.availableStock !== undefined
+                && item.availableStock !== null
+                && !Number.isNaN(limit);
+
             return {
                 ...item,
                 quantityNumber: quantity,
                 formattedUnitPrice: this.formatPrice(item.unitPrice),
                 formattedTotal: this.formatPrice(item.totalPrice),
-                disableDecrease: this.isUpdating || quantity <= 1
+                disableDecrease: this.isUpdating || quantity <= 1,
+                // "+" stops at the real stock limit.
+                disableIncrease: this.isUpdating || (hasLimit && quantity >= limit),
+                stockHint: !hasLimit
+                    ? ''
+                    : (quantity > limit
+                        ? 'Only ' + limit + ' available. Please reduce the quantity.'
+                        : (quantity >= limit ? 'Maximum available' : '')),
+                hasStockHint: hasLimit && quantity >= limit,
+                stockHintClass: hasLimit && quantity > limit ? 'stock-hint is-over' : 'stock-hint'
             };
 
         });

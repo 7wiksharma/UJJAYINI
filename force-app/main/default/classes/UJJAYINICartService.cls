@@ -39,6 +39,12 @@ public with sharing class UJJAYINICartService {
 
         @AuraEnabled
         public Decimal totalPrice;
+
+        // How many pieces this customer may have in the cart in
+        // total (stock left + pieces this cart already holds).
+        // The cart page disables "+" when quantity reaches it.
+        @AuraEnabled
+        public Decimal availableStock;
     }
 
 
@@ -109,7 +115,7 @@ public with sharing class UJJAYINICartService {
 
         if (!standardPricebook.IsActive) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Standard Pricebook is not active.'
             );
         }
@@ -130,14 +136,14 @@ public with sharing class UJJAYINICartService {
 
         if (productId == null) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Product Id is required.'
             );
         }
 
         if (quantity == null || quantity <= 0) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Quantity must be greater than zero.'
             );
         }
@@ -152,7 +158,7 @@ public with sharing class UJJAYINICartService {
 
         if (contactId == null) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Your user account is not linked to a Contact.'
             );
         }
@@ -172,7 +178,7 @@ public with sharing class UJJAYINICartService {
 
         if (customer.AccountId == null) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Your Contact is not linked to an Account.'
             );
         }
@@ -193,7 +199,7 @@ public with sharing class UJJAYINICartService {
 
         if (!product.IsActive) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'This product is not currently available.'
             );
         }
@@ -282,6 +288,36 @@ public with sharing class UJJAYINICartService {
 
 
         // -----------------------------------------------------
+        // STOCK CHECK
+        //
+        // The cart can never hold more pieces than are really
+        // available. (Earlier, stock was only checked at
+        // "Proceed to Payment", so any quantity could be added.)
+        // -----------------------------------------------------
+
+        Decimal alreadyInCart = existingItems.isEmpty()
+            ? 0
+            : existingItems[0].Quantity;
+
+        Decimal available =
+            availableFor(productId, cartOrder.Id);
+
+        if (available <= 0) {
+            throw friendlyError(
+                'This timepiece is currently sold out.'
+            );
+        }
+
+        if (alreadyInCart + quantity > available) {
+            throw friendlyError(
+                alreadyInCart >= available
+                    ? 'You already have every available piece of this timepiece in your cart.'
+                    : 'Only ' + available.intValue() + ' piece(s) of this timepiece are available.'
+            );
+        }
+
+
+        // -----------------------------------------------------
         // UPDATE EXISTING ITEM
         // -----------------------------------------------------
 
@@ -323,6 +359,106 @@ public with sharing class UJJAYINICartService {
 
 
     // =========================================================
+    // FRIENDLY ERROR
+    //
+    // An AuraHandledException made with only a constructor
+    // message returns "Script-thrown exception" from
+    // getMessage(). The controller re-throws using getMessage(),
+    // so the customer saw "Script-thrown exception".
+    // setMessage() makes getMessage() return the real text.
+    // =========================================================
+
+    private static AuraHandledException friendlyError(String message) {
+        AuraHandledException error = new AuraHandledException(message);
+        error.setMessage(message);
+        return error;
+    }
+
+
+    // =========================================================
+    // AVAILABLE STOCK FOR SEVERAL WATCHES (one query each, bulk)
+    // =========================================================
+
+    private static Map<Id, Decimal> availableByProduct(Set<Id> productIds, Id cartOrderId) {
+
+        Map<Id, Decimal> result = new Map<Id, Decimal>();
+
+        for (Id productId : productIds) {
+            result.put(productId, 0);
+        }
+
+        for (Inventory__c inventory : [
+            SELECT Product__c, Available__c
+            FROM Inventory__c
+            WHERE Product__c IN :productIds
+            AND Inventory_Status__c = 'Active'
+            WITH SYSTEM_MODE
+        ]) {
+            result.put(
+                inventory.Product__c,
+                result.get(inventory.Product__c)
+                    + (inventory.Available__c == null ? 0 : inventory.Available__c)
+            );
+        }
+
+        for (Reservation__c hold : [
+            SELECT Inventory__r.Product__c, Reserved_Quantity__c
+            FROM Reservation__c
+            WHERE Order__c = :cartOrderId
+            AND Reservation_Status__c = 'Pending'
+            AND Inventory__r.Product__c IN :productIds
+            WITH SYSTEM_MODE
+        ]) {
+            Id productId = hold.Inventory__r.Product__c;
+            result.put(
+                productId,
+                result.get(productId)
+                    + (hold.Reserved_Quantity__c == null ? 0 : hold.Reserved_Quantity__c)
+            );
+        }
+
+        return result;
+    }
+
+
+    // =========================================================
+    // AVAILABLE STOCK FOR ONE WATCH
+    //
+    // Available__c = On Hand - Reserved. Pieces that THIS cart
+    // already holds (after "Proceed to Payment") still belong to
+    // this customer, so they are added back.
+    // =========================================================
+
+    private static Decimal availableFor(Id productId, Id cartOrderId) {
+
+        Decimal available = 0;
+
+        for (Inventory__c inventory : [
+            SELECT Available__c
+            FROM Inventory__c
+            WHERE Product__c = :productId
+            AND Inventory_Status__c = 'Active'
+            WITH SYSTEM_MODE
+        ]) {
+            available += inventory.Available__c == null ? 0 : inventory.Available__c;
+        }
+
+        for (Reservation__c hold : [
+            SELECT Reserved_Quantity__c
+            FROM Reservation__c
+            WHERE Order__c = :cartOrderId
+            AND Reservation_Status__c = 'Pending'
+            AND Inventory__r.Product__c = :productId
+            WITH SYSTEM_MODE
+        ]) {
+            available += hold.Reserved_Quantity__c == null ? 0 : hold.Reserved_Quantity__c;
+        }
+
+        return available;
+    }
+
+
+    // =========================================================
     // GET CURRENT CART
     // =========================================================
 
@@ -334,7 +470,7 @@ public with sharing class UJJAYINICartService {
 
         if (contactId == null) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Your user account is not linked to a Contact.'
             );
         }
@@ -354,7 +490,7 @@ public with sharing class UJJAYINICartService {
 
         if (customer.AccountId == null) {
 
-            throw new AuraHandledException(
+            throw friendlyError(
                 'Your Contact is not linked to an Account.'
             );
         }
@@ -505,6 +641,15 @@ public with sharing class UJJAYINICartService {
         result.totalAmount = 0;
 
 
+        Set<Id> productIds = new Set<Id>();
+        for (OrderItem item : orderItems) {
+            productIds.add(item.Product2Id);
+        }
+
+        Map<Id, Decimal> stockByProduct =
+            availableByProduct(productIds, orderRecord.Id);
+
+
         for (OrderItem item : orderItems) {
 
             CartItemResult itemResult =
@@ -538,6 +683,9 @@ public with sharing class UJJAYINICartService {
 
             itemResult.totalPrice =
                 item.TotalPrice;
+
+            itemResult.availableStock =
+                stockByProduct.get(item.Product2Id);
 
             result.items.add(itemResult);
 
