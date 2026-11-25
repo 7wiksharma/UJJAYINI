@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Asks the system to give a newly registered customer their UJJAYINI permission set. Its trigger runs as the Automated Process user, which may assign permission sets (the site guest user may not).</description>
+    <eventType>HighVolume</eventType>
+    <label>UJJAYINI Access Request</label>
+    <pluralLabel>UJJAYINI Access Requests</pluralLabel>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
+</CustomObject>

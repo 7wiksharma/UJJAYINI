@@ -41,4 +41,28 @@ private class UJJAYINICustomerAccessServiceTest {
 
         System.assertEquals(0, Limits.getFutureCalls());
     }
-}
+
+    @IsTest
+    static void accessRequestEventAssignsTheCustomerPermissionSet() {
+
+        // The real customer permission set (setup data is visible in tests).
+        PermissionSet ps = [
+            SELECT Id
+            FROM PermissionSet
+            WHERE Name = 'UJJAYINI_Product_Catalog_Access'
+            LIMIT 1
+        ];
+
+        Test.startTest();
+        EventBus.publish(new UJJAYINI_Access_Request__e(
+            User_Id__c = UserInfo.getUserId()
+        ));
+        Test.stopTest(); // delivers the event to its trigger
+
+        System.assertEquals(
+            1,
+            [SELECT COUNT() FROM PermissionSetAssignment
+             WHERE AssigneeId = :UserInfo.getUserId()
+             AND PermissionSetId = :ps.Id]
+        );
+    }}

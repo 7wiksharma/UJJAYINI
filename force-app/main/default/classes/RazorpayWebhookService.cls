@@ -212,6 +212,17 @@ public without sharing class RazorpayWebhookService {
         webhookEvent.Signature_Verified__c =
             true;
 
+        // SHA-256 fingerprint of the exact body Razorpay sent.
+        webhookEvent.Payload_Hash__c =
+            EncodingUtil.convertToHex(
+                Crypto.generateDigest('SHA-256', Blob.valueOf(request.rawPayload))
+            );
+
+        // Link the audit record to our Payment, when we know it.
+        if (paymentRecord != null) {
+            webhookEvent.Related_Payment__c = paymentRecord.Id;
+        }
+
         Database.insert(
             webhookEvent,
             AccessLevel.SYSTEM_MODE
@@ -239,6 +250,27 @@ public without sharing class RazorpayWebhookService {
 
             webhookEvent.Processed_At__c =
                 System.now();
+
+            // Payment found only now (e.g. the first event of a
+            // payment): link the audit record to it.
+            if (webhookEvent.Related_Payment__c == null) {
+                Payment__c linkedPayment = null;
+                if (!String.isBlank(paymentLinkId)) {
+                    linkedPayment = findPaymentByGatewayIdentifiers(null, null, paymentLinkId);
+                }
+                if (linkedPayment == null && !String.isBlank(razorpayPaymentId)) {
+                    linkedPayment = findPaymentByGatewayIdentifiers(razorpayPaymentId, null, null);
+                }
+                if (linkedPayment == null) {
+                    // e.g. payment.failed: matched through the order id in the notes
+                    linkedPayment = findOpenPaymentForOrder(
+                        getString(getMap(paymentEntity, 'notes'), 'order_id')
+                    );
+                }
+                if (linkedPayment != null) {
+                    webhookEvent.Related_Payment__c = linkedPayment.Id;
+                }
+            }
 
             Database.update(
                 webhookEvent,
@@ -331,6 +363,16 @@ public without sharing class RazorpayWebhookService {
         } else if (eventType == 'order.paid') {
 
             processOrderPaid(
+                rawPayload
+            );
+
+        } else if (
+            eventType == 'payment_link.expired' ||
+            eventType == 'payment_link.cancelled'
+        ) {
+
+            processPaymentLinkClosed(
+                eventType,
                 rawPayload
             );
 
@@ -558,6 +600,15 @@ public without sharing class RazorpayWebhookService {
         payment.Gateway_Payment_ID__c =
             razorpayPaymentId;
 
+        // UPI / card / net banking etc., from Razorpay's payment.
+        String method = paymentMethodLabel(paymentEntity);
+        if (method != null) {
+            payment.Payment_Method__c = method;
+        }
+
+        // Paid now: clear the reason of any earlier failed attempt.
+        payment.Failure_Reason__c = null;
+
         payment.Payment_Status__c =
             'Captured';
 
@@ -690,102 +741,156 @@ public without sharing class RazorpayWebhookService {
     ) {
 
         Map<String, Object> payload =
-            (Map<String, Object>)
-                JSON.deserializeUntyped(
-                    rawPayload
-                );
-
-        Map<String, Object> payloadData =
-            getMap(
-                payload,
-                'payload'
-            );
-
-        Map<String, Object> paymentData =
-            getMap(
-                payloadData,
-                'payment'
-            );
+            (Map<String, Object>) JSON.deserializeUntyped(rawPayload);
 
         Map<String, Object> paymentEntity =
-            getMap(
-                paymentData,
-                'entity'
-            );
+            getMap(getMap(getMap(payload, 'payload'), 'payment'), 'entity');
 
-        Map<String, Object> orderData =
-            getMap(
-                payloadData,
-                'order'
-            );
+        String razorpayPaymentId = getString(paymentEntity, 'id');
 
-        Map<String, Object> orderEntity =
-            getMap(
-                orderData,
-                'entity'
-            );
+        String failureReason = getString(paymentEntity, 'error_description');
 
-        String razorpayPaymentId =
-            getString(
-                paymentEntity,
-                'id'
-            );
+        /*
+         * Find our Payment__c:
+         * 1. by the Razorpay payment id (if we already know it), or
+         * 2. by the Salesforce Order Id we put in the link's notes
+         *    (Razorpay copies the link notes onto its payments).
+         */
+        Payment__c payment = null;
 
-        String razorpayOrderId =
-            getString(
-                orderEntity,
-                'id'
-            );
-
-        String failureReason =
-            getString(
-                paymentEntity,
-                'error_description'
-            );
-
-
-        if (
-            String.isBlank(razorpayPaymentId) &&
-            String.isBlank(razorpayOrderId)
-        ) {
-
-            throw new IllegalArgumentException(
-                'Razorpay Payment ID and Order ID are both missing from payment.failed event.'
-            );
+        if (!String.isBlank(razorpayPaymentId)) {
+            payment = findPaymentByGatewayIdentifiers(razorpayPaymentId, null, null);
         }
-
-
-        Payment__c payment =
-            findPaymentByGatewayIdentifiers(
-                razorpayPaymentId,
-                null,
-                razorpayOrderId // a Razorpay id is text, never a Salesforce Id
-            );
 
         if (payment == null) {
-
-            throw new IllegalArgumentException(
-                'Payment record not found for Razorpay Payment ID: ' +
-                razorpayPaymentId +
-                ' or Razorpay Order ID: ' +
-                razorpayOrderId
+            payment = findOpenPaymentForOrder(
+                getString(getMap(paymentEntity, 'notes'), 'order_id')
             );
         }
 
-
-        payment.Payment_Status__c =
-            'Failed';
-
-        if (!String.isBlank(failureReason)) {
-
-            payment.Failure_Reason__c =
-                failureReason;
+        if (payment == null || payment.Payment_Status__c == 'Captured') {
+            // Not ours, or already paid by a later attempt: nothing to change.
+            return;
         }
 
-        Database.update(
-            payment,
-            AccessLevel.SYSTEM_MODE
+        /*
+         * The customer may still retry on the same link. If a later
+         * attempt succeeds, payment_link.paid sets it to Captured.
+         */
+        payment.Payment_Status__c = 'Failed';
+
+        payment.Failure_Reason__c = String.isBlank(failureReason)
+            ? 'The payment attempt was declined.'
+            : failureReason.left(255);
+
+        String method = paymentMethodLabel(paymentEntity);
+        if (method != null) {
+            payment.Payment_Method__c = method;
+        }
+
+        Database.update(payment, AccessLevel.SYSTEM_MODE);
+    }
+
+
+    /*
+     * ============================================================
+     * PAYMENT LINK EXPIRED / CANCELLED
+     *
+     * The customer never paid within the link's validity.
+     * (The stock hold is released by the reservation expiry job.)
+     * ============================================================
+     */
+    private static void processPaymentLinkClosed(
+        String eventType,
+        String rawPayload
+    ) {
+
+        Map<String, Object> payload =
+            (Map<String, Object>) JSON.deserializeUntyped(rawPayload);
+
+        String paymentLinkId = getString(
+            getMap(getMap(getMap(payload, 'payload'), 'payment_link'), 'entity'),
+            'id'
         );
+
+        if (String.isBlank(paymentLinkId)) {
+            return;
+        }
+
+        Payment__c payment =
+            findPaymentByGatewayIdentifiers(null, null, paymentLinkId);
+
+        if (payment == null || payment.Payment_Status__c == 'Captured') {
+            return;
+        }
+
+        payment.Payment_Status__c = 'Failed';
+
+        payment.Failure_Reason__c = eventType == 'payment_link.expired'
+            ? 'The payment link expired before payment was completed.'
+            : 'The payment link was cancelled.';
+
+        Database.update(payment, AccessLevel.SYSTEM_MODE);
+    }
+
+
+    /*
+     * Latest unpaid Payment__c of a Salesforce Order.
+     * The value comes from Razorpay notes, so it is checked first.
+     */
+    private static Payment__c findOpenPaymentForOrder(
+        String salesforceOrderId
+    ) {
+
+        if (String.isBlank(salesforceOrderId)
+            || !Pattern.matches('[a-zA-Z0-9]{15}([a-zA-Z0-9]{3})?', salesforceOrderId)) {
+            return null;
+        }
+
+        Id orderId = Id.valueOf(salesforceOrderId);
+
+        List<Payment__c> payments = [
+            SELECT Id, Order__c, Payment_Status__c, Gateway_Order_ID__c,
+                   Gateway_Payment_ID__c, Paid_At__c
+            FROM Payment__c
+            WHERE Order__c = :orderId
+            AND Payment_Status__c != 'Captured'
+            WITH SYSTEM_MODE
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+
+        return payments.isEmpty() ? null : payments[0];
+    }
+
+
+    /*
+     * Razorpay "method" -> our Payment_Method__c picklist value.
+     */
+    private static String paymentMethodLabel(
+        Map<String, Object> paymentEntity
+    ) {
+
+        String method = getString(paymentEntity, 'method');
+
+        if (String.isBlank(method)) {
+            return null;
+        }
+
+        method = method.toLowerCase();
+
+        if (method == 'upi') { return 'UPI'; }
+        if (method == 'netbanking') { return 'Net Banking'; }
+        if (method == 'wallet') { return 'Wallet'; }
+        if (method == 'emi' || method == 'cardless_emi') { return 'EMI'; }
+
+        if (method == 'card') {
+            String cardType = getString(getMap(paymentEntity, 'card'), 'type');
+            if (cardType == 'credit') { return 'Credit Card'; }
+            if (cardType == 'debit') { return 'Debit Card'; }
+        }
+
+        return 'Other';
     }
 
 
@@ -1125,6 +1230,7 @@ public without sharing class RazorpayWebhookService {
         }
 
         String razorpayPaymentId;
+        String paidMethod;
         Object rawPayments = body.get('payments');
 
         if (rawPayments instanceof List<Object>) {
@@ -1132,6 +1238,7 @@ public without sharing class RazorpayWebhookService {
                 Map<String, Object> linkPayment = (Map<String, Object>) item;
                 if ((String) linkPayment.get('status') == 'captured') {
                     razorpayPaymentId = (String) linkPayment.get('payment_id');
+                    paidMethod = paymentMethodLabel(linkPayment);
                     break;
                 }
             }
@@ -1151,6 +1258,11 @@ public without sharing class RazorpayWebhookService {
             }
 
             payment.Payment_Status__c = 'Captured';
+            payment.Failure_Reason__c = null;
+
+            if (paidMethod != null) {
+                payment.Payment_Method__c = paidMethod;
+            }
 
             if (payment.Paid_At__c == null) {
                 payment.Paid_At__c = System.now();
@@ -1261,7 +1373,8 @@ public without sharing class RazorpayWebhookService {
         Object value =
             parent.get(key);
 
-        if (value == null) {
+        if (!(value instanceof Map<String, Object>)) {
+            // null, or Razorpay's empty "notes": [] list
             return new Map<String, Object>();
         }
 
@@ -1458,6 +1571,12 @@ public without sharing class RazorpayWebhookService {
                     => 'Payment Captured',
 
                 'payment.failed'
+                    => 'Payment Failed',
+
+                'payment_link.expired'
+                    => 'Payment Failed',
+
+                'payment_link.cancelled'
                     => 'Payment Failed',
 
                 'payment.refunded'

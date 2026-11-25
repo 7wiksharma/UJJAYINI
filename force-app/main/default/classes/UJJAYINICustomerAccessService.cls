@@ -12,8 +12,9 @@ public without sharing class UJJAYINICustomerAccessService {
 
     /*
      * Called after new users are inserted. Customer users get
-     * their permission sets in a separate (future) transaction,
-     * because registration also creates an Account and a Contact.
+     * their permission sets in a separate transaction (platform
+     * event), because registration also creates an Account and a
+     * Contact, and because the site guest user cannot assign them.
      */
     public static void grantAccess(List<User> users) {
 
@@ -29,17 +30,34 @@ public without sharing class UJJAYINICustomerAccessService {
             return;
         }
 
-        if (System.isFuture() || System.isBatch() || System.isQueueable()) {
-            assign(customerIds);
-        } else {
-            assignLater(customerIds);
+        /*
+         * A customer who signs up on the site is created by the SITE
+         * GUEST USER. Anything that runs as the guest (this trigger,
+         * or an @future it starts) may not read PermissionSet:
+         * "sObject type 'PermissionSet' is not supported".
+         *
+         * So we publish a platform event. Its trigger
+         * (UJJAYINIAccessRequestTrigger) runs as the Automated
+         * Process user, which can assign permission sets.
+         */
+        List<UJJAYINI_Access_Request__e> requests =
+            new List<UJJAYINI_Access_Request__e>();
+
+        for (Id userId : customerIds) {
+            requests.add(new UJJAYINI_Access_Request__e(
+                User_Id__c = String.valueOf(userId)
+            ));
         }
-    }
 
-
-    @future
-    private static void assignLater(Set<Id> userIds) {
-        assign(userIds);
+        for (Database.SaveResult result : EventBus.publish(requests)) {
+            if (!result.isSuccess()) {
+                System.debug(
+                    LoggingLevel.ERROR,
+                    'UJJAYINI access request not published: ' +
+                    result.getErrors()[0].getMessage()
+                );
+            }
+        }
     }
 
 
@@ -60,8 +78,8 @@ public without sharing class UJJAYINICustomerAccessService {
     }
 
 
-    @TestVisible
-    private static void assign(Set<Id> userIds) {
+    // Public: also called by UJJAYINIAccessRequestTrigger.
+    public static void assign(Set<Id> userIds) {
 
         if (userIds == null || userIds.isEmpty()) {
             return;
