@@ -3,6 +3,7 @@
     <fullName>Fulfillment_Status__c</fullName>
     <label>Fulfillment Status</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>

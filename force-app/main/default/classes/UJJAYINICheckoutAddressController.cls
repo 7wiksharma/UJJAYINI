@@ -169,6 +169,24 @@ public without sharing class UJJAYINICheckoutAddressController {
             fail('Please enter your state.');
         }
 
+        /*
+         * The org uses State and Country picklists, so Salesforce only
+         * accepts a real state name ("Madhya Pradesh"), not "MP" or
+         * "m.p". Customers type short forms, so we convert them.
+         */
+        if (cleanCountry.equalsIgnoreCase('India')) {
+
+            cleanCountry = 'India';
+
+            String stateName = indianStateName(cleanState);
+
+            if (stateName == null) {
+                fail('Please enter your full state name, for example Madhya Pradesh.');
+            }
+
+            cleanState = stateName;
+        }
+
         if (
             cleanCountry.equalsIgnoreCase('India') &&
             !Pattern.matches('[0-9]{6}', cleanPostal)
@@ -214,10 +232,29 @@ public without sharing class UJJAYINICheckoutAddressController {
             BillingCountry = cleanCountry
         );
 
-        Database.update(
-            orderUpdate,
-            AccessLevel.SYSTEM_MODE
-        );
+        try {
+
+            Database.update(
+                orderUpdate,
+                AccessLevel.SYSTEM_MODE
+            );
+
+        } catch (DmlException e) {
+
+            // Technical detail stays in the log, never on the screen.
+            System.debug(LoggingLevel.ERROR, 'UJJAYINI address save failed: ' + e.getMessage());
+
+            String fields = String.join(e.getDmlFieldNames(0), ',').toLowerCase();
+
+            if (fields.contains('state')) {
+                fail('Please enter your full state name, for example Madhya Pradesh.');
+            }
+            if (fields.contains('country')) {
+                fail('Please check the country.');
+            }
+
+            fail('We could not save your address. Please check the details and try again.');
+        }
 
 
         /*
@@ -371,6 +408,132 @@ public without sharing class UJJAYINICheckoutAddressController {
             normalised.substring(0, breakAt),
             normalised.substring(breakAt + 1)
         };
+    }
+
+
+    // =========================================================
+    // INDIAN STATE NAMES
+    //
+    // Each row: the official name first, then other spellings and
+    // short forms people type. Matching ignores case, spaces, dots
+    // and "&".
+    // =========================================================
+
+    private static final List<List<String>> INDIAN_STATES = new List<List<String>>{
+        new List<String>{ 'Andhra Pradesh', 'AP' },
+        new List<String>{ 'Arunachal Pradesh', 'AR' },
+        new List<String>{ 'Assam', 'AS' },
+        new List<String>{ 'Bihar', 'BR' },
+        new List<String>{ 'Chhattisgarh', 'Chattisgarh', 'CG', 'CT' },
+        new List<String>{ 'Goa', 'GA' },
+        new List<String>{ 'Gujarat', 'GJ' },
+        new List<String>{ 'Haryana', 'HR' },
+        new List<String>{ 'Himachal Pradesh', 'HP' },
+        new List<String>{ 'Jharkhand', 'JH' },
+        new List<String>{ 'Karnataka', 'KA' },
+        new List<String>{ 'Kerala', 'KL' },
+        new List<String>{ 'Madhya Pradesh', 'MP' },
+        new List<String>{ 'Maharashtra', 'MH' },
+        new List<String>{ 'Manipur', 'MN' },
+        new List<String>{ 'Meghalaya', 'ML' },
+        new List<String>{ 'Mizoram', 'MZ' },
+        new List<String>{ 'Nagaland', 'NL' },
+        new List<String>{ 'Odisha', 'Orissa', 'OD', 'OR' },
+        new List<String>{ 'Punjab', 'PB' },
+        new List<String>{ 'Rajasthan', 'RJ' },
+        new List<String>{ 'Sikkim', 'SK' },
+        new List<String>{ 'Tamil Nadu', 'TN' },
+        new List<String>{ 'Telangana', 'TG', 'TS' },
+        new List<String>{ 'Tripura', 'TR' },
+        new List<String>{ 'Uttar Pradesh', 'UP' },
+        new List<String>{ 'Uttarakhand', 'Uttaranchal', 'UK', 'UT' },
+        new List<String>{ 'West Bengal', 'WB' },
+        new List<String>{ 'Andaman and Nicobar Islands', 'Andaman and Nicobar', 'AN' },
+        new List<String>{ 'Chandigarh', 'CH' },
+        new List<String>{ 'Dadra and Nagar Haveli and Daman and Diu', 'Dadra and Nagar Haveli', 'Daman and Diu', 'DN', 'DD', 'DH' },
+        new List<String>{ 'Delhi', 'New Delhi', 'NCT of Delhi', 'DL' },
+        new List<String>{ 'Jammu and Kashmir', 'JK' },
+        new List<String>{ 'Ladakh', 'LA' },
+        new List<String>{ 'Lakshadweep', 'LD' },
+        new List<String>{ 'Puducherry', 'Pondicherry', 'PY' }
+    };
+
+    /*
+     * "mp", "M.P", "madhya pradesh" -> the state name Salesforce
+     * accepts. When State and Country picklists are on, the name is
+     * taken from the org's own picklist (so its spelling always
+     * matches). Returns null when the state is not recognised.
+     */
+    @TestVisible
+    private static String indianStateName(String typed) {
+
+        String key = stateKey(typed);
+
+        if (String.isBlank(key)) {
+            return null;
+        }
+
+        List<String> row = null;
+
+        for (List<String> candidate : INDIAN_STATES) {
+            for (String spelling : candidate) {
+                if (stateKey(spelling) == key) {
+                    row = candidate;
+                    break;
+                }
+            }
+            if (row != null) {
+                break;
+            }
+        }
+
+        if (row == null) {
+            return null;
+        }
+
+        Map<String, String> picklistNames = statePicklistNames();
+
+        if (picklistNames.isEmpty()) {
+            return row[0]; // picklists off: plain text is fine
+        }
+
+        for (String spelling : row) {
+            String exact = picklistNames.get(stateKey(spelling));
+            if (exact != null) {
+                return exact;
+            }
+        }
+
+        return row[0];
+    }
+
+    // State names of the org's State picklist (empty when it is off).
+    private static Map<String, String> statePicklistNames() {
+
+        Map<String, String> names = new Map<String, String>();
+
+        Map<String, Schema.SObjectField> fields =
+            Schema.SObjectType.Order.fields.getMap();
+
+        if (!fields.containsKey('shippingstatecode')) {
+            return names;
+        }
+
+        for (Schema.PicklistEntry entry :
+             fields.get('shippingstatecode').getDescribe().getPicklistValues()) {
+            if (entry.isActive()) {
+                names.put(stateKey(entry.getLabel()), entry.getLabel());
+            }
+        }
+
+        return names;
+    }
+
+    private static String stateKey(String value) {
+        if (value == null) {
+            return '';
+        }
+        return value.toLowerCase().replace('&', 'and').replaceAll('[^a-z]', '');
     }
 
 

@@ -154,4 +154,20 @@ private class UJJAYINICheckoutAddressControllerTest {
         System.assertEquals(false, address.isSavedOnOrder);
         System.assertEquals('India', address.country);
     }
+
+    @IsTest
+    static void shortStateNamesAreConverted() {
+
+        // "mp", "M.P" and the full name all become the state Salesforce accepts.
+        String fromShort = UJJAYINICheckoutAddressController.indianStateName('mp');
+        String fromDots = UJJAYINICheckoutAddressController.indianStateName('M.P');
+        String fromFull = UJJAYINICheckoutAddressController.indianStateName('madhya pradesh');
+
+        System.assert(fromShort != null && fromShort.containsIgnoreCase('Madhya'));
+        System.assertEquals(fromShort, fromDots);
+        System.assertEquals(fromShort, fromFull);
+
+        // Something that is not an Indian state is not accepted.
+        System.assertEquals(null, UJJAYINICheckoutAddressController.indianStateName('Gotham'));
+    }
 }
